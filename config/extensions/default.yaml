@@ -1,0 +1,179 @@
+# 算法扩展系统默认配置
+
+version: "1.0.0"
+created_at: "2025-10-28T21:55:00Z"
+updated_at: "2025-10-28T21:55:00Z"
+
+# 全局设置
+global_settings:
+  # 默认算法类别
+  default_category: "general"
+
+  # 算法注册设置
+  auto_register: true
+  validate_on_register: true
+
+  # 生命周期设置
+  lifecycle_enabled: true
+  event_history_limit: 1000
+
+  # 性能设置
+  enable_metrics: true
+  metrics_interval: 60  # 秒
+
+# 默认参数模板
+parameter_templates:
+  # 通用参数
+  common:
+    batch_size:
+      type: int
+      default: 1
+      min: 1
+      max: 1000
+      description: "批处理大小"
+
+    max_workers:
+      type: int
+      default: 4
+      min: 1
+      max: 32
+      description: "最大工作线程数"
+
+    timeout:
+      type: float
+      default: 30.0
+      min: 0.1
+      max: 3600.0
+      description: "超时时间（秒）"
+
+  # 模型参数
+  model:
+    model_path:
+      type: str
+      default: ""
+      required: true
+      description: "模型文件路径"
+
+    model_version:
+      type: str
+      default: "1.0.0"
+      description: "模型版本"
+
+    precision:
+      type: str
+      default: "fp32"
+      enum: ["fp32", "fp16", "int8"]
+      description: "模型精度"
+
+  # 优化参数
+  optimization:
+    optimization_level:
+      type: int
+      default: 2
+      min: 0
+      max: 3
+      description: "优化级别"
+
+    enable_cache:
+      type: bool
+      default: true
+      description: "启用缓存"
+
+    cache_size:
+      type: int
+      default: 1000
+      min: 0
+      max: 100000
+      description: "缓存大小"
+
+# 算法类别配置
+algorithm_categories:
+  # 变换算法
+  transformer:
+    name: "变换算法"
+    description: "用于模型变换的算法"
+    default_parameters:
+      optimization_level: 2
+      precision: "fp16"
+
+  # 优化算法
+  optimization:
+    name: "优化算法"
+    description: "用于模型优化的算法"
+    default_parameters:
+      enable_cache: true
+      optimization_level: 2
+
+  # 验证算法
+  validation:
+    name: "验证算法"
+    description: "用于模型验证的算法"
+    default_parameters:
+      strict_mode: true
+      validate_output: true
+
+  # 分析算法
+  analysis:
+    name: "分析算法"
+    description: "用于模型分析的算法"
+    default_parameters:
+      detailed_analysis: false
+      save_intermediate: false
+
+# 事件钩子配置
+event_hooks:
+  # 初始化钩子
+  on_initialize:
+    - name: "log_initialize"
+      enabled: true
+      description: "记录初始化事件"
+
+  # 配置钩子
+  on_configure:
+    - name: "validate_config"
+      enabled: true
+      description: "验证配置参数"
+
+  # 执行钩子
+  on_execute:
+    - name: "measure_performance"
+      enabled: true
+      description: "测量执行性能"
+
+    - name: "log_execution"
+      enabled: true
+      description: "记录执行事件"
+
+# 监控设置
+monitoring:
+  # 性能监控
+  performance:
+    enabled: true
+    metrics:
+      - execution_time
+      - memory_usage
+      - cpu_usage
+      - accuracy
+
+  # 健康检查
+  health_check:
+    enabled: true
+    interval: 30  # 秒
+    timeout: 5  # 秒
+
+  # 告警设置
+  alerts:
+    enabled: true
+    thresholds:
+      execution_time: 10.0  # 秒
+      memory_usage: 1000  # MB
+      error_rate: 0.01  # 1%
+
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/algorithm_extension.log"
+  max_size: "10MB"
+  backup_count: 5
+  enable_console: true

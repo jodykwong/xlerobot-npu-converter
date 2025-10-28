@@ -1,0 +1,19 @@
+test_cases:
+- category: single_model
+  description: 用户自定义的测试用例示例
+  expected_results:
+    latency_p95: < 60 seconds
+    throughput: '> 10 models/minute'
+  id: TC-009
+  model_name: CustomASR
+  model_type: asr
+  name: 自定义测试用例
+  parameters:
+    batch_size: 4
+    model_path: /models/custom
+    precision: fp16
+  priority: medium
+  tags:
+  - custom
+  - example
+  timeout: 1800

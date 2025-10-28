@@ -1,0 +1,159 @@
+# SenseVoice ASR Accurate Configuration
+# Optimized for maximum accuracy - suitable for production applications
+# Story 2.3: SenseVoice ASR Complete Conversion Implementation
+# Generated: 2025-10-28
+
+model:
+  type: sensevoice
+  version: "1.0.0"
+  languages:
+    - zh  # Chinese (Mandarin)
+    - en  # English
+    - ja  # Japanese
+  voice_activity_detection: true
+  noise_reduction: true  # Enhanced noise reduction
+
+conversion:
+  level: production  # Maximum optimization
+  input_format: onnx
+  output_format: bpu
+  target_hardware: horizon_x5
+  processing_mode: batch  # Batch processing for accuracy
+  optimization:
+    multi_language_optimization: true  # Full multi-language support
+    audio_format_support: true  # All formats
+    streaming_optimization: false
+    batch_optimization: true  # Batch optimizations
+    noise_reduction: true  # Full noise reduction
+    audio_enhancement: true  # All enhancements
+
+audio_parameters:
+  sample_rate: 16000
+  bit_depth: 16
+  channels: 1
+  format: wav  # Lossless format
+  frame_length: 25
+  hop_length: 10
+  n_mels: 80  # Full feature dimensions
+  fmax: 8000
+  normalize: true
+  pre_emphasis: 0.97
+  # Additional quality settings
+  window_type: hann
+  dither: 0.0
+  pre_phase: true
+
+asr_parameters:
+  confidence_threshold: 0.8  # Higher threshold for accuracy
+  language_detection: true
+  endpoint_detection: true
+  max_segment_duration: 60  # Longer segments for context
+  min_segment_duration: 0.5
+  silence_duration: 0.5
+  vad_threshold: 0.6  # Higher VAD threshold
+  vad_min_duration: 150  # Longer VAD duration
+  # Additional accuracy settings
+  beam_search: true
+  beam_width: 10
+  lm_weight: 0.1
+  word_boundary_weight: 0.1
+
+processing:
+  batch_size: 16  # Smaller batch for careful processing
+  num_workers: 2  # Fewer workers for stability
+  buffer_size: 2048  # Larger buffer for quality
+  chunk_size: 1024  # Larger chunks
+  overlap: 0.5
+  streaming:
+    buffer_size: 1024
+    chunk_size: 512
+    overlap_ms: 15
+    real_time_factor: 1.0
+    max_delay_ms: 200
+  interactive:
+    response_time_ms: 300  # Allow more time for accuracy
+    confidence_threshold: 0.8
+    enable_correction: true
+
+quality:
+  accuracy_target: 0.98  # Maximum accuracy target
+  speed_target_ms: 300  # Relaxed speed for accuracy
+  precision_threshold: 0.99
+  success_rate_threshold: 0.98
+  validation_level: strict
+
+output:
+  formats:
+    - json
+    - html
+    - pdf
+  include_metrics: true
+  include_optimization_details: true
+  include_audio_analysis: true
+  include_confidence_scores: true
+  include_word_timestamps: true
+  include_detailed_metrics: true
+
+validation:
+  strict_mode: true
+  enable_validation: true
+  validation_dimensions:
+    - structure
+    - accuracy
+    - performance
+    - compatibility
+    - quality
+  precision_threshold: 0.99  # Highest precision
+  success_rate_threshold: 0.98  # Highest success rate
+  validation_level: strict
+  # Additional validation settings
+  regression_testing: true
+  accuracy_benchmarking: true
+  cross_language_validation: true
+
+# Quality Enhancement Settings
+enhancement:
+  noise_reduction:
+    enabled: true
+    strength: high
+    adaptive: true
+    spectral_subtraction: true
+    wiener_filtering: true
+
+  normalization:
+    enabled: true
+    type: rms
+    target_db: -23  # Broadcast standard
+
+  voice_activity_detection:
+    enabled: true
+    threshold: 0.6
+    min_duration_ms: 150
+    max_duration_ms: 30000
+    energy_based: true
+    cnn_based: true
+
+  audio_enhancement:
+    enabled: true
+    echo_cancellation: true
+    automatic_gain_control: true
+    dynamic_range_compression: true
+    high_pass_filter: true
+
+# Accurate Configuration Notes
+# Maximizes accuracy through:
+# - Higher confidence threshold (0.8 vs 0.7)
+# - Full multi-language support (3 languages)
+# - Complete noise reduction and audio enhancement
+# - Maximum feature dimensions (80 mel bins)
+# - Strict validation (99% precision, 98% success rate)
+# - Enhanced audio processing pipeline
+
+# PRD Requirements Tracking
+prd_requirements:
+  conversion_success_rate: ">98%"  # Highest target
+  performance_improvement: "2-4x"  # Balanced target
+  accuracy_target: ">98%"  # Maximum target
+  latency_target: "<300ms"  # Relaxed target
+  multi_language_support: true
+  streaming_support: false  # Batch mode for accuracy

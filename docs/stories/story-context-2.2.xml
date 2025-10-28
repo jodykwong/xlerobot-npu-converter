@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<context id="story-2.2" title="VITS-Cantonese TTS完整转换实现">
+  <!--
+    Story Context for Story 2.2: VITS-Cantonese TTS完整转换实现
+    Generated: 2025-10-27
+    Version: 1.0
+    Status: Draft - Strategic Realignment Completed
+
+    Strategic Background:
+    This story was redesigned based on systematic analysis and critical thinking.
+    The original plan prioritized Piper VITS (alternative model) over VITS-Cantonese (primary model),
+    which violated product requirements. This redesign ensures the primary TTS model receives
+    complete functionality implementation first, following the proper product strategy.
+  -->
+
+  <!-- === STORY METADATA === -->
+  <metadata>
+    <storyId>story-2.2</storyId>
+    <epicId>epic-2</epicId>
+    <epicPhase>Phase 1: 主要模型完整功能实现</epicPhase>
+    <priority>High</priority>
+    <complexity>Medium</complexity>
+    <estimatedDays>8</estimatedDays>
+    <status>Draft</status>
+    <createdDate>2025-10-27</createdDate>
+    <lastUpdated>2025-10-27</lastUpdated>
+    <version>1.0</version>
+  </metadata>
+
+  <!-- === STRATEGIC CONTEXT === -->
+  <strategicContext>
+    <background>
+      XLeRobot项目需要将AI模型转换为NPU可执行格式，以充分利用RDK X5硬件的10 TOPS算力。
+      TTS（文本转语音）模型是智能语音系统的核心组件。
+    </background>
+
+    <problemStatement>
+      VITS-Cantonese作为主要TTS模型，需要完整的NPU转换实现。
+      当前只有基础转换流程（Story 1.5），缺乏生产级别的完整功能。
+      备选模型Piper VITS被错误地设置为完整转换优先，这是违反产品策略的。
+    </problemStatement>
+
+    <solutionApproach>
+      基于Story 1.5的基础转换流程，扩展为完整的生产级转换系统，
+      包含粤语专用优化、完整参数配置、精确验证和专用报告。
+      确保转换成功率&gt;95%，性能提升2-5倍。
+    </solutionApproach>
+
+    <strategicAlignment>
+      <primaryModel>VITS-Cantonese TTS</primaryModel>
+      <alternativeModels>Piper VITS TTS, SenseVoice ASR</alternativeModels>
+      <justification>
+        PRD明确指定VITS-Cantonese为主要TTS模型，Piper VITS为备选模型。
+        战略重新设计确保主要模型优先获得完整功能，这是产品成功的关键。
+      </justification>
+    </strategicAlignment>
+
+    <criticalSuccessFactors>
+      <factor>粤语声调的精确处理和建模</factor>
+      <factor>与Horizon X5 BPU工具链的完整集成</factor>
+      <factor>转换质量和性能的验证</factor>
+      <factor>与Epic 1基础设施的完美集成</factor>
+    </criticalSuccessFactors>
+  </strategicContext>
+
+  <!-- === BUSINESS CONTEXT === -->
+  <businessContext>
+    <businessObjective>
+      实现VITS-Cantonese TTS模型的完整NPU转换流程，支持高质量粤语语音合成在RDK X5硬件上的高效部署。
+    </businessObjective>
+
+    <businessValue>
+      <value-proposition>
+        为XLeRobot智能语音系统提供高性能的粤语语音合成能力，
+        实现2-5倍的推理性能提升，降低计算成本，提升用户体验。
+      </value-proposition>
+
+      <targetUsers>
+        <user type="AI模型工程师">
+          需要将粤语TTS模型部署到NPU硬件上，实现高效推理
+        </user>
+        <user type="语音系统开发者">
+          寻求可靠的NPU模型转换工具，降低部署复杂度
+        </user>
+        <user type="产品经理">
+          需要可衡量的性能提升和转换成功率指标
+        </user>
+      </targetUsers>
+
+      <keyMetrics>
+        <metric name="转换成功率" target="&gt;95%" measurement="成功转换模型数/总转换尝试数"/>
+        <metric name="性能提升倍数" target="2-5x" measurement="NPU推理速度/CPU推理速度"/>
+        <metric name="音频质量评分" target="&gt;8.5/10" measurement="主观质量评估+客观指标"/>
+        <metric name="代码覆盖率" target="&gt;90%" measurement="测试覆盖代码行数/总代码行数"/>
+      </keyMetrics>
+
+      <businessRisks>
+        <risk level="High" description="粤语声调处理的复杂性可能导致质量下降" mitigation="采用成熟算法，进行充分测试"/>
+        <risk level="Medium" description="Horizon X5工具链对VITS-Cantonese的支持度未知" mitigation="提前验证兼容性，准备备选方案"/>
+        <risk level="Low" description="代码质量问题影响系统稳定性" mitigation="严格代码审查，测试驱动开发"/>
+      </businessRisks>
+    </businessValue>
+
+    <stakeholders>
+      <stakeholder role="产品经理" interest="High" influence="High">
+        关注业务价值实现和市场需求满足
+      </stakeholder>
+      <stakeholder role="AI模型工程师" interest="High" influence="Medium">
+        关注技术实现质量和开发效率
+      </stakeholder>
+      <stakeholder role="架构师" interest="Medium" influence="High">
+        关注系统架构一致性和扩展性
+      </stakeholder>
+      <stakeholder role="QA工程师" interest="Medium" influence="Medium">
+        关注质量保证和测试覆盖
+      </stakeholder>
+    </stakeholders>
+  </businessContext>
+
+  <!-- === TECHNICAL CONTEXT === -->
+  <technicalContext>
+    <architecture>
+      <description>
+        基于Epic 1建立的核心基础设施，扩展转换流程以支持VITS-Cantonese TTS模型的完整功能。
+        严格继承Story 1.3的BaseConverter架构，集成Story 1.4的配置管理系统，
+        扩展Story 1.5的VITSCantoneseConversionFlow基础流程。
+      </description>
+
+      <components>
+        <component name="VITSCantoneseCompleteFlow" inheritance="BaseConversionFlow" purpose="完整的VITS-Cantonese转换流程"/>
+        <component name="CantoneseOptimizer" purpose="粤语语音合成专用优化器"/>
+        <component name="CantoneseValidator" purpose="VITS-Cantonese转换结果验证器"/>
+        <component name="CantoneseReportGenerator" purpose="专用转换报告生成器"/>
+      </components>
+
+      <interfaces>
+        <interface name="BaseConverter" provider="Story 1.3" consumer="VITSCantoneseCompleteFlow"/>
+        <interface name="ConfigurationManager" provider="Story 1.4" consumer="VITSCantoneseCompleteFlow"/>
+        <interface name="ONNXModelLoader" provider="Story 2.1.2" consumer="VITSCantoneseCompleteFlow"/>
+      </interfaces>
+
+      <dependencies>
+        <dependency type="Mandatory" component="Horizon X5 BPU Toolchain" version="Latest" description="转换执行环境"/>
+        <dependency type="Mandatory" component="Story 1.3 Core Framework" version="1.0.0" description="核心转换框架"/>
+        <dependency type="Mandatory" component="Story 1.4 Configuration System" version="1.0.0" description="参数配置管理"/>
+        <dependency type="Mandatory" component="Story 1.5 Base Flow" version="1.0.0" description="VITS-Cantonese基础流程"/>
+        <dependency type="Mandatory" component="Story 2.1.2 ONNX Loader" version="1.0.0" description="模型加载支持"/>
+      </dependencies>
+
+      <constraints>
+        <constraint type="Performance" requirement="推理性能提升2-5倍" impact="High"/>
+        <constraint type="Reliability" requirement="转换成功率&gt;95%" impact="High"/>
+        <constraint type="Quality" requirement="代码覆盖率&gt;90%" impact="Medium"/>
+        <constraint type="Compatibility" requirement="与Epic 1架构100%兼容" impact="High"/>
+      </constraints>
+    </architecture>
+
+    <technologyStack>
+      <layer name="Runtime" components="Python 3.10, Ubuntu 20.04, Docker"/>
+      <layer name="Toolchain" components="Horizon X5 BPU Toolchain, ONNX Runtime"/>
+      <layer name="Framework" components="XLeRobot Core Framework (Story 1.3)"/>
+      <layer name="Configuration" components="ConfigurationManager (Story 1.4)"/>
+      <layer name="Conversion" components="VITSCantoneseConversionFlow (Story 1.5)"/>
+      <layer name="Models" components="VITS-Cantonese TTS Model"/>
+    </technologyStack>
+
+    <implementationDetails>
+      <pattern name="Template Method" usage="BaseConversionFlow定义转换流程骨架"/>
+      <pattern name="Strategy" usage="ConfigurationManager管理不同模型配置策略"/>
+      <pattern name="Observer" usage="ProgressTracker监控转换进度"/>
+      <pattern name="Factory" usage="ReportGenerator创建不同格式报告"/>
+
+      <keyAlgorithms>
+        <algorithm name="CantoneseToneModeling" description="粤语九声六调的数学建模"/>
+        <algorithm name="ProsodyOptimization" description="韵律和语调的优化算法"/>
+        <algorithm name="AudioQualityAssessment" description="音频质量的自动评估"/>
+      </keyAlgorithms>
+
+      <dataFlow>
+        <flow step="1" component="ONNXModelLoader" description="加载VITS-Cantonese ONNX模型"/>
+        <flow step="2" component="CantoneseValidator" description="验证模型格式和兼容性"/>
+        <flow step="3" component="CantoneseOptimizer" description="粤语专用优化处理"/>
+        <flow step="4" component="VITSCantoneseCompleteFlow" description="执行完整转换流程"/>
+        <flow step="5" component="BPU Toolchain" description="生成BPU可执行格式"/>
+        <flow step="6" component="CantoneseValidator" description="验证转换结果"/>
+        <flow step="7" component="CantoneseReportGenerator" description="生成转换报告"/>
+      </dataFlow>
+    </implementationDetails>
+  </technicalContext>
+
+    <!-- === ACCEPTANCE CRITERIA DETAILS === -->
+    <acceptanceCriteria>
+      <criterion id="AC1" priority="High" type="Functional">
+        <title>增强VITS-Cantonese模型的端到端转换能力</title>
+        <description>
+          基于Story 1.5的基础转换流程（VITSCantoneseConversionFlow），
+          扩展为支持完整生产场景的转换系统，确保转换成功率达到>95%。
+        </description>
+
+        <acceptanceTests>
+          <test id="AC1-T1" name="基础转换流程验证">
+            Given: VITS-Cantonese ONNX模型
+            When: 执行完整转换流程
+            Then: 转换成功，BPU格式模型可用
+          </test>
+          <test id="AC1-T2" name="转换成功率测试">
+            Given: 100个不同配置的VITS-Cantonese模型
+            When: 批量转换
+            Then: 成功率>95%
+          </test>
+        </acceptanceTests>
+
+        <dependencies>
+          <dependency type="Requires" component="Story 1.5" requirement="VITSCantoneseConversionFlow基础实现"/>
+          <dependency type="Requires" component="Story 2.1.2" requirement="ONNX模型加载功能"/>
+        </dependencies>
+      </criterion>
+
+      <criterion id="AC2" priority="High" type="Functional">
+        <title>实现粤语语音合成的专用优化</title>
+        <description>
+          针对粤语语音特性的预处理优化，包括音调、语速、韵律的精确控制，
+          支持多音色（男声、女声、儿童声音）的语音合成。
+        </description>
+
+        <acceptanceTests>
+          <test id="AC2-T1" name="粤语声调处理测试">
+            Given: 包含九声六调的测试文本
+            When: 执行语音合成
+            Then: 声调准确率>95%
+          </test>
+          <test id="AC2-T2" name="多音色支持测试">
+            Given: 三种音色配置的VITS-Cantonese模型
+            When: 分别执行语音合成
+            Then: 生成三种不同音色的音频
+          </test>
+        </acceptanceTests>
+
+        <dependencies>
+          <dependency type="Requires" component="CantoneseOptimizer" requirement="粤语专用优化算法"/>
+        </dependencies>
+      </criterion>
+
+      <criterion id="AC3" priority="Medium" type="Functional">
+        <title>支持VITS-Cantonese模型的完整参数配置</title>
+        <description>
+          集成Story 1.4的VITS-Cantonese配置策略，支持用户自定义参数调优，
+          提供配置模板和预设选项。
+        </description>
+
+        <acceptanceTests>
+          <test id="AC3-T1" name="参数配置验证">
+            Given: 有效参数配置
+            When: 应用配置到转换流程
+            Then: 配置生效，转换按配置执行
+          </test>
+          <test id="AC3-T2" name="配置模板测试">
+            Given: 系统提供的默认模板
+            When: 用户使用模板
+            Then: 无需额外配置即可转换
+          </test>
+        </acceptanceTests>
+
+        <dependencies>
+          <dependency type="Requires" component="Story 1.4" requirement="ConfigurationManager和VITS-Cantonese策略"/>
+        </dependencies>
+      </criterion>
+
+      <criterion id="AC4" priority="Medium" type="Functional">
+        <title>实现VITS-Cantonese转换结果的精确验证</title>
+        <description>
+          包括音频质量验证（采样率、比特率、格式）、语音合成质量评估（可懂度、自然度）、
+          粤语语义准确性检查。
+        </description>
+
+        <acceptanceTests>
+          <test id="AC4-T1" name="音频格式验证">
+            Given: 转换后的BPU模型
+            When: 执行音频生成
+            Then: 输出格式正确（采样率44.1kHz，16-bit）
+          </test>
+          <test id="AC4-T2" name="语义准确性测试">
+            Given: 标准粤语测试文本
+            When: 语音合成
+            Then: 音频语义与文本匹配度>90%
+          </test>
+        </acceptanceTests>
+
+        <dependencies>
+          <dependency type="Requires" component="CantoneseValidator" requirement="多维度验证体系"/>
+        </dependencies>
+      </criterion>
+
+      <criterion id="AC5" priority="Low" type="Functional">
+        <title>提供VITS-Cantonese专用转换报告</title>
+        <description>
+          生成详细的转换参数记录，包含转换前后的模型结构对比，
+          提供性能指标，支持多种输出格式（JSON, HTML, PDF）。
+        </description>
+
+        <acceptanceTests>
+          <test id="AC5-T1" name="报告生成测试">
+            Given: 完成转换的VITS-Cantonese模型
+            When: 生成转换报告
+            Then: 报告包含完整参数和性能数据
+          </test>
+          <test id="AC5-T2" name="多格式输出测试">
+            Given: 转换报告数据
+            When: 分别生成JSON、HTML、PDF格式
+            Then: 三种格式内容一致且可读
+          </test>
+        </acceptanceTests>
+
+        <dependencies>
+          <dependency type="Requires" component="CantoneseReportGenerator" requirement="多格式报告支持"/>
+        </dependencies>
+      </criterion>
+    </acceptanceCriteria>
+
+  <!-- === REQUIREMENTS TRACEABILITY === -->
+  <requirementsTraceability>
+    <reqMap source="PRD-FR002" target="Story 2.2-AC1" type="Implements">
+      "支持VITS-Cantonese TTS模型从ONNX到BPU格式的端到端转换"
+    </reqMap>
+    <reqMap source="PRD-FR003" target="Story 2.2-AC2" type="Implements">
+      "转换成功率>95%"
+    </reqMap>
+    <reqMap source="PRD-FR008" target="Story 2.2-AC4" type="Implements">
+      "模型精度验证 - 确保转换后模型保持原有的推理精度"
+    </reqMap>
+    <reqMap source="PRD-FR010" target="Story 2.2-AC5" type="Implements">
+      "转换报告生成 - 自动生成包含精度、性能、转换参数的详细报告"
+    </reqMap>
+  </requirementsTraceability>
+
+  <!-- === QUALITY ATTRIBUTES === -->
+  <qualityAttributes>
+    <attribute name="Performance">
+      <description>推理性能提升2-5倍，转换时间&lt;5分钟</description>
+      <scenarios>
+        <scenario>转换中等规模VITS-Cantonese模型（&lt;100MB）</scenario>
+        <scenario>批量转换多个模型</scenario>
+      </scenarios>
+    </attribute>
+
+    <attribute name="Reliability">
+      <description>转换成功率>95%，错误自动恢复</description>
+      <scenarios>
+        <scenario>模型格式轻微异常</scenario>
+        <scenario>资源临时不足</scenario>
+      </scenarios>
+    </attribute>
+
+    <attribute name="Usability">
+      <description>一键式转换，清晰的错误提示和修复建议</description>
+      <scenarios>
+        <scenario>新用户首次使用</scenario>
+        <scenario>批量转换操作</scenario>
+      </scenarios>
+    </attribute>
+
+    <attribute name="Maintainability">
+      <description>模块化设计，清晰的代码结构，完整文档</description>
+      <scenarios>
+        <scenario>添加新模型类型支持</scenario>
+        <scenario>修复转换问题</scenario>
+      </scenarios>
+    </attribute>
+  </qualityAttributes>
+
+  <!-- === RISKS AND MITIGATION === -->
+  <riskAssessment>
+    <risk id="RISK-1" category="Technical" probability="Medium" impact="High">
+      <title>粤语声调处理的复杂性</title>
+      <description>
+        粤语九声六调的精确建模和语音合成优化是一项复杂的任务，
+        可能导致语音质量下降或转换失败。
+      </description>
+      <mitigation>
+        <strategy>Research existing Cantonese TTS implementations and adopt proven algorithms</strategy>
+        <actions>
+          <action>研究现有的粤语TTS实现</action>
+          <action>采用经过验证的声调建模算法</action>
+          <action>建立全面的测试集验证声调准确性</action>
+        </actions>
+        <contingency>
+          如果粤语优化复杂度过高，先实现基础转换，再逐步优化声调处理。
+        </contingency>
+      </mitigation>
+    </risk>
+
+    <risk id="RISK-2" category="Technical" probability="Medium" impact="High">
+      <title>Horizon X5工具链适配</title>
+      <description>
+        BPU工具链对VITS-Cantonese模型的支持度未知，
+        可能存在不兼容算子或转换失败。
+      </description>
+      <mitigation>
+        <strategy>提前进行工具链兼容性测试</strategy>
+        <actions>
+          <action>在开发初期进行小规模兼容性测试</action>
+          <action>建立备选转换方案（如果需要）</action>
+          <action>与Horizon技术支持团队保持沟通</action>
+        </actions>
+        <contingency>
+          如果工具链完全不兼容，探索其他NPU平台或纯CPU优化方案。
+        </contingency>
+      </mitigation>
+    </risk>
+
+    <risk id="RISK-3" category="Quality" probability="Low" impact="Medium">
+      <title>代码质量和覆盖率</title>
+      <description>
+        复杂的功能可能导致代码质量问题或测试覆盖不足，
+        影响系统稳定性和可维护性。
+      </description>
+      <mitigation>
+        <strategy>严格代码审查和测试驱动开发</strategy>
+        <actions>
+          <action>每次提交前进行代码审查</action>
+          <action>新功能必须同时编写测试</action>
+          <action>持续集成中强制覆盖率检查</action>
+        </actions>
+        <contingency>
+          如果时间有限，优先保证核心功能测试，辅助功能测试可延后。
+        </contingency>
+      </mitigation>
+    </risk>
+  </riskAssessment>
+
+  <!-- === ASSUMPTIONS AND DEPENDENCIES === -->
+  <assumptions>
+    <assumption>Horizon X5 BPU工具链稳定且可用</assumption>
+    <assumption>Story 1.5的VITSCantoneseConversionFlow基础流程稳定</assumption>
+    <assumption>VITS-Cantonese模型格式标准化且兼容ONNX</assumption>
+    <assumption>开发团队具备粤语语音处理相关知识</assumption>
+  </assumptions>
+
+  <dependencies>
+    <dependency type="External" name="Horizon X5 BPU Toolchain" version="Latest" criticality="High" description="模型转换执行环境"/>
+    <dependency type="Internal" name="Story 1.3" version="1.0.0" criticality="High" description="核心转换框架"/>
+    <dependency type="Internal" name="Story 1.4" version="1.0.0" criticality="High" description="配置管理系统"/>
+    <dependency type="Internal" name="Story 1.5" version="1.0.0" criticality="High" description="基础转换流程"/>
+    <dependency type="Internal" name="Story 2.1.2" version="1.0.0" criticality="High" description="ONNX模型加载"/>
+  </dependencies>
+
+  <!-- === TESTING STRATEGY === -->
+  <testingStrategy>
+    <testTypes>
+      <testType name="Unit Testing" coverage=">90%" framework="pytest">
+        测试各个组件的独立功能
+      </testType>
+      <testType name="Integration Testing" coverage="100%" framework="pytest">
+        测试组件间的交互和集成
+      </testType>
+      <testType name="System Testing" coverage="100%" framework="pytest">
+        测试完整的端到端转换流程
+      </testType>
+      <testType name="Performance Testing" coverage="N/A" framework="custom">
+        测试转换性能和资源消耗
+      </testType>
+      <testType name="Quality Testing" coverage="N/A" framework="manual">
+        测试音频质量和语音合成效果
+      </testType>
+    </testTypes>
+
+    <testEnvironments>
+      <env name="Development" purpose="开发阶段单元测试"/>
+      <env name="CI/CD" purpose="持续集成自动化测试"/>
+      <env name="Staging" purpose="生产环境前系统测试"/>
+      <env name="Production" purpose="最终部署和验证"/>
+    </testEnvironments>
+
+    <testData>
+      <data name="VITS-Cantonese ONNX Models" source="Standard test models"/>
+      <data name="Cantonese Text Corpus" source="Public Cantonese text datasets"/>
+      <data name="Audio Quality Metrics" source="Standard audio assessment tools"/>
+    </testData>
+  </testingStrategy>
+
+  <!-- === DEPLOYMENT AND RELEASE === -->
+  <deployment>
+    <releasePhases>
+      <phase name="Alpha" criteria="核心功能完成，单元测试通过">
+        内部测试和基础功能验证
+      </phase>
+      <phase name="Beta" criteria="集成测试通过，性能测试达标">
+        扩展测试和性能优化
+      </phase>
+      <phase name="Production" criteria="所有测试通过，质量指标达标">
+        生产环境部署
+      </phase>
+    </releasePhases>
+
+    <rolloutStrategy>
+      <strategy name="Gradual Rollout">
+        <step>灰度发布：10%用户</step>
+        <step>扩大范围：50%用户</step>
+        <step>全量发布：100%用户</step>
+      </strategy>
+    </rolloutStrategy>
+
+    <monitoring>
+      <metric name="转换成功率" threshold="&gt;95%"/>
+      <metric name="平均转换时间" threshold="&lt;5分钟"/>
+      <metric name="错误率" threshold="&lt;5%"/>
+      <metric name="用户满意度" threshold="&gt;4.0/5"/>
+    </monitoring>
+  </deployment>
+
+  <!-- === DOCUMENTATION REQUIREMENTS === -->
+  <documentation>
+    <docs required="true" format="Markdown">
+      <doc type="User Guide" path="docs/guides/cantonese-tts-conversion-guide.md">
+        用户使用指南和最佳实践
+      </doc>
+      <doc type="API Reference" path="docs/api/vits-cantonese-api.md">
+        API参考文档
+      </doc>
+      <doc type="Architecture" path="docs/architecture/cantonese-flow-architecture.md">
+        架构设计文档
+      </doc>
+      <doc type="Testing" path="docs/testing/cantonese-testing-strategy.md">
+        测试策略和用例
+      </doc>
+    </docs>
+  </documentation>
+
+  <!-- === ESTIMATION AND PLANNING === -->
+  <estimation>
+    <effort estimate="8 person-days" confidence="Medium">
+      基于类似功能和Epic 1的经验估算
+    </effort>
+
+    <resourceRequirements>
+      <resource type="Developer" count="1" skills="Python, AI/ML, Audio Processing"/>
+      <resource type="QA Engineer" count="0.5" skills="Testing, Audio Quality Assessment"/>
+      <resource type="Documentation Writer" count="0.2" skills="Technical Writing"/>
+    </resourceRequirements>
+
+    <schedule>
+      <milestone name="Phase 1 Complete" date="+2 days" description="架构扩展完成"/>
+      <milestone name="Phase 2 Complete" date="+5 days" description="核心功能实现完成"/>
+      <milestone name="Phase 3 Complete" date="+7 days" description="验证和测试完成"/>
+      <milestone name="Story Complete" date="+8 days" description="所有交付物完成"/>
+    </schedule>
+  </estimation>
+
+  <!-- === APPROVAL AND SIGN-OFF === -->
+  <approvals>
+    <approval role="Product Manager" status="Pending" date="" comments=""/>
+    <approval role="Technical Lead" status="Pending" date="" comments=""/>
+    <approval role="QA Lead" status="Pending" date="" comments=""/>
+  </approvals>
+
+  <!-- === CHANGE HISTORY === -->
+  <changeHistory>
+    <change version="1.0" date="2025-10-27" author="System" type="Create">
+      初始创建，基于战略重新设计
+    </change>
+  </changeHistory>
+
+</context>

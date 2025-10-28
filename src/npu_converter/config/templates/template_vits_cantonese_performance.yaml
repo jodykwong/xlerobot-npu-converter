@@ -1,0 +1,193 @@
+_metadata:
+  name: "vits_cantonese_performance"
+  description: "High-performance configuration template for VITS-Cantonese TTS models"
+  model_type: "vits_cantonese"
+  version: "1.0.0"
+  author: "NPU Converter Configuration Team"
+  created_at: "2024-01-26"
+  tags: ["performance", "vits_cantonese", "tts", "cantonese", "optimized", "production"]
+
+project:
+  name: "xlerobot_perf"
+  version: "1.0.0"
+  model_type: "vits_cantonese"
+  description: "High-performance VITS-Cantonese TTS model for xlerobot NPU platform"
+
+hardware:
+  target_device: "horizon_x5"
+  optimization_level: "O3"
+  memory_limit: "8GB"
+  compute_units: 10
+  cache_size: "512MB"
+
+conversion_params:
+  input_format: "onnx"
+  output_format: "bpu"
+  precision: "int8"
+  calibration_method: "entropy"
+  batch_size: 4
+  num_workers: 8
+
+model_specific:
+  vits_cantonese:
+    # VITS Model Architecture Configuration (same as default)
+    inter_channels: 192
+    hidden_channels: 192
+    filter_channels: 768
+    n_heads: 2
+    n_layers: 4
+    kernel_size: 3
+    p_dropout: 0.05  # Reduced dropout for better inference
+    resblock: "1"
+    resblock_kernel_sizes: [3, 7, 11]
+    resblock_dilation_sizes: [[1, 3, 5], [1, 3, 5], [1, 3, 5]]
+    upsample_rates: [8, 8, 2, 2]
+    upsample_initial_channel: 512
+    upsample_kernel_sizes: [16, 16, 4, 4]
+    n_layers_q: 3
+    use_spectral_norm: false
+    gin_channels: 256
+
+    # Audio Processing Parameters (optimized for performance)
+    sampling_rate: 22050
+    filter_length: 1024
+    hop_length: 256
+    win_length: 1024
+    n_mel_channels: 80
+    mel_fmin: 0.0
+    mel_fmax: 8000.0
+    max_wav_value: 32768.0
+    normalize: true
+    trim_silence: true
+    trim_threshold: 0.01
+
+    # Voice Characteristics
+    speaker_embedding_size: 192
+    num_speakers: 1
+    speaker_id: 0
+    use_speaker_embedding: true
+
+    # Cantonese TTS Synthesis Parameters (performance-optimized)
+    noise_scale: 0.5  # Reduced for cleaner output
+    noise_scale_w: 0.6  # Reduced for cleaner output
+    length_scale: 0.9  # Slightly faster speech
+    inference_noise_scale: 0.5
+
+    # Cantonese Phoneme System Configuration (larger vocab for performance)
+    cantonese_vocab_size: 8000
+    phoneme_set: "jyutping_extended"
+    phoneme_language: "cantonese"
+    phonemizer: "espeak"
+    tone_embedding: true
+    num_tones: 6
+    use_jyutping: true
+    character_coverage: 0.998
+
+    # Cantonese Phoneme Inventory
+    phoneme_inventory:
+      initials: ["b", "p", "m", "f", "d", "t", "n", "l", "g", "k",
+                 "ng", "h", "gw", "kw", "w", "z", "c", "s", "j"]
+      finals: ["aa", "aai", "aau", "aam", "aan", "aang", "aap", "aat", "aak",
+               "ai", "au", "am", "an", "ang", "ap", "at", "ak", "e", "ei",
+               "eu", "em", "en", "eng", "ep", "et", "i", "iu", "im", "in",
+               "ing", "ip", "it", "o", "oi", "ou", "on", "ong", "ot", "ok",
+               "oe", "oeng", "oek", "u", "ui", "un", "ung", "ut", "uk", "oe"]
+      tones: [1, 2, 3, 4, 5, 6]
+      tone_values:
+        "1": 55  # High level
+        "2": 25  # High rising
+        "3": 33  # Mid level
+        "4": 21  # Low falling
+        "5": 23  # Low rising
+        "6": 22  # Low level
+
+    # Cantonese Text Processing
+    text_cleaners: ["cantonese_cleaners"]
+    jyutping_to_phoneme: true
+    tone_normalization: true
+    regional_accent: "hong_kong"
+    regional_variants:
+      hong_kong:
+        preference: "standard"
+        tone_contours: "standard"
+        vowel_system: "9_vowel"
+      guangzhou:
+        preference: "standard"
+        tone_contours: "slightly_modified"
+        vowel_system: "8_vowel"
+
+    # Data Preprocessing Settings
+    add_blank: true
+    n_speakers: 1
+    cleaned_text: true
+
+performance:
+  target_latency_ms: 150  # More aggressive latency target
+  max_realtime_factor: 0.8  # Better real-time performance
+  enable_streaming: true
+  enable_caching: true
+  max_batch_size: 8  # Larger batch size for throughput
+  synthesis_buffer_size: 4096  # Larger buffer for performance
+  execution_mode: "streaming"
+  chunk_size: 1024
+  overlap_size: 64
+  buffer_management:
+    input_buffer_size: 8  # Larger input buffer
+    output_buffer_size: 16  # Larger output buffer
+    prefetch_enabled: true
+
+optimization:
+  enable_quantization: true
+  quantization_precision: "int8"
+  quantization_method: "dynamic_quantization"
+  enable_fusion: true
+  enable_pruning: true  # Enable pruning for performance
+  enable_weight_sharing: true  # Enable weight sharing
+  enable_dynamic_shapes: false
+  torch_compile: true
+  gradient_checkpointing: false
+  use_efficient_attention: true
+  max_memory_usage: "4GB"  # Allow more memory for performance
+  model_pruning:
+    enabled: true
+    method: "magnitude"
+    sparsity: 0.2  # More aggressive pruning
+
+export:
+  format: "onnx"
+  opset_version: 14
+  dynamic_axes:
+    input: {0: "batch_size", 1: "sequence_length"}
+    output: {0: "batch_size", 1: "audio_length"}
+  optimization:
+    constant_folding: true
+    shape_inference: true
+    model_simplification: true
+
+npu_deployment:
+  target_platform: "generic_npu"
+  compiler_options:
+    optimization_level: "O3"
+    memory_optimization: true
+    parallelization: true
+  memory_mapping:
+    input_buffer_size: "auto"
+    output_buffer_size: "auto"
+    workspace_size: "auto"
+  precision_requirements:
+    input_precision: "fp16"
+    output_precision: "fp16"
+    internal_precision: "fp16"
+
+validation:
+  strict_validation: false  # Skip some validations for speed
+  warn_on_deprecated: false
+  validate_paths: false
+  quality_metrics:
+    objective_metrics:
+      mcd_score: "< 5.0"  # Slightly relaxed for performance
+      f0_rmse: "< 40 Hz"
+      voicing_decision_error: "< 8%"
+    subjective_metrics:
+      mos_score: "> 3.5"  # Slightly relaxed for performance
+      similarity_score: "> 3.5"

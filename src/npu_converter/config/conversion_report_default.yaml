@@ -1,0 +1,222 @@
+# 转换报告默认配置
+# Story 2.9: 转换报告生成系统
+# BMM v6 Phase 2: 核心功能实现
+
+# 报告格式配置
+report_formats:
+  - json
+  - html
+  - pdf
+
+default_format: html
+
+# 报告内容配置
+include_performance: true
+include_accuracy: true
+include_compatibility: true
+include_resource_usage: true
+include_conversion_steps: true
+
+# 质量阈值配置
+performance_threshold: 0.90
+accuracy_threshold: 0.95
+compatibility_threshold: 0.90
+
+# 输出配置
+output_dir: conversion_reports
+auto_generate: true
+include_recommendations: true
+include_analysis: true
+
+# 批量处理配置
+batch_size: 10
+concurrent_reports: 5
+
+# 报告模板配置
+template_style: detailed
+include_charts: true
+include_trends: false
+
+# 质量评级配置
+quality_grades:
+  excellent:
+    min_score: 0.95
+    grade: A+
+    color: "#27ae60"
+
+  good:
+    min_score: 0.90
+    grade: A
+    color: "#2ecc71"
+
+  average:
+    min_score: 0.80
+    grade: B
+    color: "#f39c12"
+
+  poor:
+    min_score: 0.70
+    grade: C
+    color: "#e67e22"
+
+  fail:
+    min_score: 0.0
+    grade: D
+    color: "#e74c3c"
+
+# 性能基准配置
+performance_benchmarks:
+  inference_time:
+    excellent: "< 0.1s"
+    good: "< 0.5s"
+    average: "< 1.0s"
+    poor: "> 1.0s"
+
+  throughput:
+    excellent: "> 100 samples/sec"
+    good: "> 50 samples/sec"
+    average: "> 10 samples/sec"
+    poor: "< 10 samples/sec"
+
+  memory_usage:
+    excellent: "< 512MB"
+    good: "< 1024MB"
+    average: "< 2048MB"
+    poor: "> 2048MB"
+
+# 精度基准配置
+accuracy_benchmarks:
+  excellent: "> 99%"
+  good: "> 98%"
+  average: "> 95%"
+  poor: "< 95%"
+
+# 兼容性基准配置
+compatibility_benchmarks:
+  npu_support:
+    excellent: "100%"
+    good: "> 95%"
+    average: "> 90%"
+    poor: "< 90%"
+
+  operator_coverage:
+    excellent: "> 95%"
+    good: "> 90%"
+    average: "> 80%"
+    poor: "< 80%"
+
+# 报告模板样式
+templates:
+  simple:
+    name: 简单模板
+    description: 基础信息展示
+    sections:
+      - basic_info
+      - summary
+      - errors
+
+  detailed:
+    name: 详细模板
+    description: 完整分析报告
+    sections:
+      - basic_info
+      - performance
+      - accuracy
+      - compatibility
+      - resource_usage
+      - conversion_steps
+      - recommendations
+      - trends
+
+  production:
+    name: 生产模板
+    description: 生产环境完整报告
+    sections:
+      - header
+      - basic_info
+      - performance
+      - accuracy
+      - compatibility
+      - resource_usage
+      - conversion_steps
+      - quality_assessment
+      - recommendations
+      - trends
+      - diagnostics
+      - footer
+
+# 图表配置
+charts:
+  enabled: true
+  style: "modern"
+  colors:
+    primary: "#3498db"
+    success: "#27ae60"
+    warning: "#f39c12"
+    error: "#e74c3c"
+    neutral: "#95a5a6"
+
+  performance_chart:
+    enabled: true
+    type: "bar"
+    metrics:
+      - inference_time
+      - throughput
+      - memory_usage
+
+  accuracy_chart:
+    enabled: true
+    type: "line"
+    metrics:
+      - accuracy_score
+      - accuracy_loss
+
+  compatibility_chart:
+    enabled: true
+    type: "pie"
+    metrics:
+      - operator_support
+      - hardware_compatibility
+
+# 报告分发配置
+distribution:
+  email:
+    enabled: false
+    recipients: []
+    subject_template: "转换报告 - {model_name}"
+
+  webhook:
+    enabled: false
+    url: ""
+    headers: {}
+
+  file_share:
+    enabled: true
+    compress: true
+    max_size: "100MB"
+
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "conversion_report.log"
+
+# 缓存配置
+cache:
+  enabled: true
+  ttl: 3600  # 1小时
+  max_size: 100
+
+# 通知配置
+notifications:
+  success:
+    enabled: true
+    message: "转换报告生成成功"
+
+  failure:
+    enabled: true
+    message: "转换报告生成失败"
+
+  warning:
+    enabled: true
+    message: "转换报告生成警告"

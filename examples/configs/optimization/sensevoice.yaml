@@ -1,0 +1,118 @@
+# SenseVoice ASR Model Optimization Configuration
+# Optimized for automatic speech recognition models
+
+# Optimization Strategy Configuration
+optimization:
+  strategy: "bayesian"
+  max_iterations: 100
+  convergence_threshold: 0.01
+  time_limit: 600.0
+  early_stopping: true
+  patience: 10
+  random_seed: 42
+  verbose: true
+
+# Optimization Objective - Prioritize low latency for real-time ASR
+objective:
+  primary: "minimize_latency"
+
+# Trade-off Strategy - Balance latency and accuracy
+tradeoff:
+  strategy: "performance_first"
+  custom_weights:
+    accuracy: 0.30    # Important for ASR accuracy
+    latency: 0.40     # Critical for real-time processing
+    throughput: 0.20  # Important for batch processing
+    memory: 0.05      # Less critical
+    compatibility: 0.03
+    success_rate: 0.02
+
+# Model Analysis Settings
+model_analysis:
+  auto_detect: true
+  default_type: "asr"
+  analyze_quantization: true
+
+# Preprocessing Optimization
+preprocessing:
+  enabled: true
+  optimize:
+    normalization: true
+    resize: false      # ASR uses variable-length input
+    channel_format: true
+    data_type: true
+  respect_constraints: true
+  preset: "asr"
+
+# Parameter Space Definition for SenseVoice
+parameter_space:
+  quantization_bits:
+    type: "choice"
+    values: [8, 16]
+    default: 16
+    # Note: 16-bit recommended for ASR to maintain accuracy
+
+  sample_rate:
+    type: "choice"
+    values: [16000, 22050, 44100]
+    default: 16000
+
+  window_size:
+    type: "choice"
+    values: [256, 512, 1024]
+    default: 512
+
+  hop_length:
+    type: "choice"
+    values: [128, 256, 512]
+    default: 256
+
+  n_mels:
+    type: "choice"
+    values: [80, 128, 256]
+    default: 80
+
+  normalize:
+    type: "choice"
+    values: [true, false]
+    default: true
+
+  batch_size:
+    type: "choice"
+    values: [8, 16, 32, 64]
+    default: 32
+
+# Preprocessing Parameters for SenseVoice
+preprocessing_params:
+  normalize: true
+  normalize_mode: "custom"
+  channel_format: "NC"
+  target_format: "NC"
+  mean: [0.0]
+  std: [1.0]
+  data_type: "float32"
+  sample_rate: 16000
+  window_size: 512
+  hop_length: 256
+
+# Validation Settings
+validation:
+  enabled: true
+  split_ratio: 0.2
+  min_accuracy: 0.92    # ASR models should maintain high accuracy
+  max_latency: 100.0    # Real-time processing requirement
+
+# Specific Recommendations for SenseVoice
+recommendations:
+  - "Use 16-bit quantization to maintain speech recognition accuracy"
+  - "Optimize for low latency (<100ms) for real-time applications"
+  - "Use 16kHz sample rate for optimal speed/quality balance"
+  - "Apply pre-emphasis and windowing for better feature extraction"
+  - "Normalize audio to zero mean and unit variance"
+
+# Model-Specific Notes
+notes: |
+  SenseVoice ASR models require careful optimization of audio preprocessing parameters.
+  The model processes variable-length audio sequences, so batch size and latency
+  are critical considerations. 16-bit quantization is recommended to maintain
+  accuracy while achieving reasonable performance.

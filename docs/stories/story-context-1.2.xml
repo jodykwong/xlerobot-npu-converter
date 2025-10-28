@@ -1,0 +1,87 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>2</storyId>
+    <title>Horizon X5 BPU工具链集成</title>
+    <status>Draft</status>
+    <generatedAt>2025-10-25</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>story-1.2.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>AI模型工程师</asA>
+    <iWant>在Docker环境中集成Horizon X5 BPU工具链</iWant>
+    <soThat>能够使用官方的NPU转换工具</soThat>
+    <tasks>Horizon X5 BPU工具链获取和安装;工具链环境配置;工具链功能验证;版本检查功能开发;自动化更新机制</tasks>
+  </story>
+
+  <acceptanceCriteria>1. 自动下载和安装Horizon X5 BPU工具链
+2. 配置工具链环境变量和路径
+3. 验证工具链组件正常工作
+4. 提供工具链版本检查功能
+5. 支持工具链的自动化更新机制</acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc path="docs/architecture.md" title="决策架构文档" section="Integration Points" snippet="工具链集成架构规范，包括BPU工具链接口设计和集成点定义">
+        <doc path="docs/architecture.md" title="决策架构文档" section="Project Structure" snippet="项目结构和组件位置规范，定义bpu_toolchain模块的组织结构">
+        <doc path="docs/architecture.md" title="决策架构文档" section="Implementation Patterns" snippet="命名规范和代码组织模式，确保代码一致性">
+        <doc path="docs/architecture.md" title="决策架构文档" section="Error Handling" snippet="异常处理和Result对象模式，用于工具链错误管理">
+        <doc path="docs/architecture.md" title="决策架构文档" section="API Contracts" snippet="CLI接口规范，定义工具链相关命令结构">
+        <doc path="docs/epics.md" title="Epic分解文档" section="Story 1.2" snippet="完整的验收标准和依赖关系定义">
+        <doc path="docs/PRD.md" title="产品需求文档" section="Functional Requirements" snippet="BPU工具链兼容性和性能要求，包括转换成功率和技术规格">
+        <doc path="docs/stories/story-1.1.md" title="Story 1.1" section="Dev Notes" snippet="Docker环境和依赖管理经验，为基础环境提供参考">
+    </docs>
+    <code>
+      <code path="src/npu_converter/bpu_toolchain/" kind="module" symbol="BPU工具链接口模块" lines="" reason="新开发的工具链集成模块，需要从零创建">
+        <code path="config/horizon-x5.yaml" kind="config" symbol="工具链配置文件" lines="" reason="Horizon X5工具链的专用配置，包含版本信息和参数设置">
+        <code path="scripts/horizon/" kind="scripts" symbol="工具链管理脚本" lines="" reason="安装、验证和更新工具链的自动化脚本">
+        <code path="src/npu_converter/cli.py" kind="interface" symbol="CLI主入口" lines="" reason="需要添加toolchain子命令组到现有CLI框架">
+    </code>
+    <dependencies>
+      <ecosystem name="python" packages="click>=8.0,pyyaml>=6.0,requests>=2.25,packaging>=21.0">
+        <ecosystem name="system" packages="gcc,g++,python3.10,cmake,make,wget,curl">
+          <ecosystem name="horizon" packages="hbdk,hb_mapper,hb_perf,hb_gdb">
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint type="environment">必须在Ubuntu 20.04 Docker环境中运行</constraint>
+    <constraint type="architecture">工具链必须安装在/opt/horizon/目录</constraint>
+    <constraint type="security">下载过程需要验证文件完整性和安全性</constraint>
+    <constraint type="versioning">需要支持多个版本的并存和切换</constraint>
+    <constraint type="naming">遵循snake_case文件命名和PascalCase类命名规范</constraint>
+    <constraint type="interface">工具链接口需要抽象化，便于未来扩展其他硬件平台</constraint>
+    <constraint type="testing">必须包含单元测试、集成测试和兼容性测试</constraint>
+    <constraint type="logging">需要记录所有工具链操作的审计日志</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface name="BPU安装器" kind="class" signature="class ToolchainInstaller: install(), validate(), get_version()" path="src/npu_converter/bpu_toolchain/installer.py">
+      <interface name="版本管理器" kind="class" signature="class VersionManager: check_version(), update_version(), rollback()" path="src/npu_converter/bpu_toolchain/version_manager.py">
+        <interface name="工具链验证器" kind="class" signature="class ToolchainValidator: validate_installation(), test_components()" path="src/npu_converter/bpu_toolchain/validator.py">
+        <interface name="Horizon X5接口" kind="class" signature="class HorizonX5Interface: get_toolchain_info(), execute_tool()" path="src/npu_converter/bpu_toolchain/horizon_x5.py">
+        <interface name="toolchain子命令" kind="cli" signature="npu-converter toolchain [install|validate|version|update]" path="src/npu_converter/cli.py">
+  </interfaces>
+
+  <tests>
+    <standards>使用pytest 7.x测试框架，包含单元测试、集成测试、兼容性测试和安全测试。测试覆盖率要求>90%，包含性能基准测试。所有测试必须支持在Docker环境中运行。</standards>
+    <locations>
+      <location pattern="tests/unit/test_bpu_toolchain.py">单元测试目录</location>
+      <location pattern="tests/integration/test_toolchain_integration.py">集成测试目录</location>
+      <location pattern="tests/fixtures/toolchain_test_data/">测试数据目录</location>
+    </locations>
+    <ideas>
+      <test ac="1">test_toolchain_download_and_install(): 验证自动下载和安装流程</test>
+      <test ac="1">test_installation_security(): 验证下载文件完整性检查和安全验证</test>
+      <test ac="2">test_environment_configuration(): 验证环境变量和路径配置正确性</test>
+      <test ac="3">test_toolchain_components(): 验证BPU编译器、模型转换工具等组件功能</test>
+      <test ac="4">test_version_check(): 验证版本检查功能和兼容性检查</test>
+      <test ac="5">test_auto_update(): 验证自动更新机制和回滚功能</test>
+      <test>test_docker_integration(): 验证在Docker环境中的完整集成</test>
+      <test>test_error_handling(): 验证各种错误场景的处理和恢复</test>
+      <test>test_performance_baseline(): 建立工具链操作的性能基准</test>
+    </ideas>
+  </tests>
+</story-context>

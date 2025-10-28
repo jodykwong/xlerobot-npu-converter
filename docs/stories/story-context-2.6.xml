@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<context id="story-2.6" title="转换参数优化和调优">
+  <!--
+    Story Context for Story 2.6: 转换参数优化和调优
+    Generated: 2025-10-28
+    Version: 1.0
+    Status: Ready for Development
+
+    Strategic Background:
+    Story 2.6是Epic 2的Phase 3核心组件，在Story 2.5完成ONNX模型验证和预处理基础上，
+    实现智能参数优化系统，提升整个转换系统的自动化水平和转换成功率。
+    该系统支持多种优化算法、模型特性分析、权衡策略、历史记录和报告生成，
+    将参数调优从手动过程转变为自动化智能优化。
+  -->
+
+  <!-- === STORY METADATA === -->
+  <metadata>
+    <storyId>story-2.6</storyId>
+    <epicId>epic-2</epicId>
+    <epicPhase>Phase 3: 转换系统增强</epicPhase>
+    <priority>High</priority>
+    <complexity>Medium-High</complexity>
+    <estimatedDays>5</estimatedDays>
+    <status>Ready for Development</status>
+    <createdDate>2025-10-28</createdDate>
+    <lastUpdated>2025-10-28</lastUpdated>
+    <version>1.0</version>
+  </metadata>
+
+  <!-- === STRATEGIC CONTEXT === -->
+  <strategicContext>
+    <background>
+      XLeRobot NPU模型转换工具需要处理多种类型的AI模型（SenseVoice ASR、VITS-Cantonese TTS、Piper VITS TTS），
+      每种模型都有其独特的参数配置需求。手动参数调优耗时耗力，且依赖经验，难以保证最优配置。
+      当前的Story 2.5已完成ONNX模型验证和预处理，为参数优化奠定了基础。
+    </background>
+
+    <problemStatement>
+      参数调优缺乏自动化和智能化：
+      1. 手动调优效率低（通常需要数小时到数天）
+      2. 参数选择依赖经验，缺乏科学依据
+      3. 无法根据模型特性智能推荐参数
+      4. 缺乏历史记录和回滚机制
+      5. 难以在质量和性能之间做权衡
+    </problemStatement>
+
+    <solutionApproach>
+      基于Story 2.5的模型验证结果，实现智能参数优化和调优系统：
+      1. 提供多种自动优化算法（网格搜索、贝叶斯、遗传算法、随机搜索）
+      2. 基于模型特性智能推荐参数配置
+      3. 支持质量-性能权衡策略选择
+      4. 记录优化历史，支持版本控制和回滚
+      5. 生成详细的参数优化建议报告
+    </solutionApproach>
+
+    <strategicAlignment>
+      <primaryModels>SenseVoice ASR, VITS-Cantonese TTS, Piper VITS TTS</primaryModels>
+      <optimizationScope>所有ONNX模型的参数优化</optimizationScope>
+      <justification>
+        参数优化是转换系统的核心能力，直接影响转换成功率和性能。
+        通过自动化优化，可以显著提升用户体验，降低技术门槛，
+        实现PRD中>95%转换成功率和2-5倍性能提升的目标。
+      </justification>
+    </strategicAlignment>
+
+    <criticalSuccessFactors>
+      <factor>多种优化算法的有效实现和正确选择</factor>
+      <factor>模型特性分析的准确性和参数推荐的合理性</factor>
+      <factor>权衡策略的灵活性和实用性</factor>
+      <factor>历史记录和回滚机制的可靠性</factor>
+      <factor>报告生成的完整性和可读性</factor>
+    </criticalSuccessFactors>
+  </strategicContext>
+
+  <!-- === BUSINESS CONTEXT === -->
+  <businessContext>
+    <businessObjective>
+      实现智能参数优化和调优系统，将参数调优从手动过程转变为自动化智能优化，
+      显著提升转换成功率（>95%）、模型精度（>98%）和用户体验（操作时间减少80%+）。
+    </businessObjective>
+
+    <businessValue>
+      <value-proposition>
+        通过智能参数优化系统，实现：
+        1. 参数调优效率提升80%+（从数小时降至10分钟内）
+        2. 转换成功率提升5%+（>95%）
+        3. 降低技术门槛，非专家用户也能获得最优配置
+        4. 建立参数优化知识库，沉淀最佳实践
+        5. 支持A/B测试和持续优化
+      </value-proposition>
+
+      <targetUsers>
+        <user type="AI模型工程师">
+          需要快速获得模型的最优参数配置，提高开发效率
+        </user>
+        <user type="系统运维工程师">
+          需要可靠的参数优化工具，确保生产环境模型性能
+        </user>
+        <user type="产品经理">
+          需要量化的性能提升指标和质量保证
+        </user>
+        <user type="技术决策者">
+          需要技术可行性分析和ROI评估
+        </user>
+      </targetUsers>
+
+      <keyMetrics>
+        <metric name="优化成功率" target=">90%" measurement="成功优化次数/总优化次数"/>
+        <metric name="优化时间" target="&lt;10分钟" measurement="从开始优化到获得最优配置的时间"/>
+        <metric name="参数推荐准确率" target=">80%" measurement="推荐参数与手动最优参数的匹配度"/>
+        <metric name="转换成功率提升" target=">5%" measurement="优化前后转换成功率对比"/>
+        <metric name="代码覆盖率" target=">90%" measurement="测试覆盖代码行数/总代码行数"/>
+        <metric name="用户满意度" target=">8.5/10" measurement="用户评分"/>
+      </keyMetrics>
+
+      <businessRisks>
+        <risk level="High" description="优化算法收敛问题导致无法获得最优解" mitigation="实现多种优化算法备选，设置早停机制"/>
+        <risk level="Medium" description="参数推荐准确率不足影响用户信任" mitigation="基于大量历史数据训练，提供A/B测试验证"/>
+        <risk level="Medium" description="性能优化效果不明显" mitigation="建立清晰性能基准，多维度评估"/>
+        <risk level="Low" description="代码质量问题影响系统稳定性" mitigation="严格代码审查，测试驱动开发"/>
+      </businessRisks>
+    </businessValue>
+
+    <stakeholders>
+      <stakeholder role="产品经理" interest="High" influence="High">
+        关注业务价值实现和市场竞争力提升
+      </stakeholder>
+      <stakeholder role="AI模型工程师" interest="High" influence="High">
+        关注技术实现质量和开发效率提升
+      </stakeholder>
+      <stakeholder role="架构师" interest="Medium" influence="High">
+        关注系统架构一致性和可扩展性
+      </stakeholder>
+      <stakeholder role="QA工程师" interest="Medium" influence="Medium">
+        关注质量保证和测试覆盖
+      </stakeholder>
+      <stakeholder role="用户" interest="High" influence="Medium">
+        关注易用性和优化效果
+      </stakeholder>
+    </stakeholders>
+  </businessContext>
+
+  <!-- === TECHNICAL CONTEXT === -->
+  <technicalContext>
+    <architecture>
+      <description>
+        基于Epic 1的核心基础设施和Epic 2的前序功能，扩展为智能参数优化系统。
+        严格继承Story 1.3的BaseConverter架构，使用Story 1.4的配置管理系统，
+        扩展Story 2.1.2的ONNX模型分析功能，集成Story 2.5的模型验证结果。
+      </description>
+
+      <components>
+        <component name="ParameterOptimizer" purpose="主参数优化器，实现多种优化算法"/>
+        <component name="ModelAnalyzer" purpose="模型特性分析器和参数推荐引擎"/>
+        <component name="OptimizationHistory" purpose="优化历史记录管理和版本控制"/>
+        <component name="TradeOffStrategy" purpose="质量-性能权衡策略管理器"/>
+        <component name="OptimizationReportGenerator" purpose="参数优化建议报告生成器"/>
+      </components>
+
+      <interfaces>
+        <interface name="BaseConverter" provider="Story 1.3" consumer="ParameterOptimizer"/>
+        <interface name="ConfigurationManager" provider="Story 1.4" consumer="All optimization components"/>
+        <interface name="ONNXModelLoader" provider="Story 2.1.2" consumer="ModelAnalyzer"/>
+        <interface name="PreprocessingPipeline" provider="Story 2.1.2" consumer="ParameterOptimizer"/>
+        <interface name="ModelValidator" provider="Story 2.5" consumer="ModelAnalyzer"/>
+      </interfaces>
+
+      <dependencies>
+        <dependency type="Mandatory" component="Story 1.3 Core Framework" version="1.0.0" description="核心转换框架"/>
+        <dependency type="Mandatory" component="Story 1.4 Configuration System" version="1.0.0" description="配置管理"/>
+        <dependency type="Mandatory" component="Story 1.6 CLI" version="1.0.0" description="命令行界面"/>
+        <dependency type="Mandatory" component="Story 2.1.2 ONNX Loader" version="1.0.0" description="模型加载和分析"/>
+        <dependency type="Mandatory" component="Story 2.5 Model Validation" version="1.0.0" description="模型验证结果"/>
+        <dependency type="Optional" component="Horizon X5 BPU Toolchain" version="Latest" description="实际转换执行"/>
+      </dependencies>
+
+      <constraints>
+        <constraint type="Performance" requirement="优化时间&lt;10分钟" impact="High"/>
+        <constraint type="Reliability" requirement="优化成功率>90%" impact="High"/>
+        <constraint type="Quality" requirement="参数推荐准确率>80%" impact="High"/>
+        <constraint type="Compatibility" requirement="与Epic 1和Epic 2架构100%兼容" impact="High"/>
+        <constraint type="Scalability" requirement="支持多模型类型扩展" impact="Medium"/>
+      </constraints>
+    </architecture>
+
+    <technologyStack>
+      <layer name="Runtime" components="Python 3.10, Ubuntu 20.04, Docker"/>
+      <layer name="Algorithm" components="NumPy, SciPy, Scikit-optimize"/>
+      <layer name="Framework" components="XLeRobot Core Framework (Story 1.3)"/>
+      <layer name="Configuration" components="ConfigurationManager (Story 1.4)"/>
+      <layer name="Optimization" components="ParameterOptimizer, ModelAnalyzer"/>
+      <layer name="Analysis" components="ModelAnalyzer (Story 2.1.2)"/>
+      <layer name="Validation" components="ModelValidator (Story 2.5)"/>
+    </technologyStack>
+
+    <implementationDetails>
+      <pattern name="Strategy" usage="多种优化算法的策略模式实现"/>
+      <pattern name="Template Method" usage="优化流程的标准骨架定义"/>
+      <pattern name="Observer" usage="优化进度监控和状态通知"/>
+      <pattern name="Command" usage="CLI命令和参数配置"/>
+      <pattern name="Memento" usage="历史记录和回滚机制"/>
+
+      <keyAlgorithms>
+        <algorithm name="Grid Search" description="穷举式参数空间搜索，适合小规模问题"/>
+        <algorithm name="Bayesian Optimization" description="基于高斯过程的智能优化，适合高成本评估"/>
+        <algorithm name="Genetic Algorithm" description="进化式全局搜索，适合复杂非线性问题"/>
+        <algorithm name="Random Search" description="随机采样，适合快速探索"/>
+        <algorithm name="Model Type Detection" description="基于模型特征的自动类型识别"/>
+        <algorithm name="Parameter Recommendation" description="基于模型特性的参数推荐算法"/>
+      </keyAlgorithms>
+
+      <dataFlow>
+        <flow step="1" component="ModelAnalyzer" description="分析ONNX模型特性和类型"/>
+        <flow step="2" component="ModelAnalyzer" description="基于特性推荐初始参数"/>
+        <flow step="3" component="ParameterOptimizer" description="选择优化策略"/>
+        <flow step="4" component="ParameterOptimizer" description="执行自动参数优化"/>
+        <flow step="5" component="TradeOffStrategy" description="应用质量-性能权衡"/>
+        <flow step="6" component="OptimizationHistory" description="记录优化历史"/>
+        <flow step="7" component="OptimizationReportGenerator" description="生成优化报告"/>
+      </dataFlow>
+    </implementationDetails>
+  </technicalContext>
+
+  <!-- === ACCEPTANCE CRITERIA DETAILS === -->
+  <acceptanceCriteria>
+    <criterion id="AC1" priority="High" type="Functional">
+      <title>实现转换参数的自动优化算法</title>
+      <description>
+        实现多种自动优化算法（网格搜索、贝叶斯优化、遗传算法、随机搜索），
+        自动寻找最优转换参数组合，优化目标包括转换成功率>95%、模型精度>98%、性能提升2-5倍。
+      </description>
+
+      <acceptanceTests>
+        <test id="AC1-T1" name="网格搜索算法测试">
+          Given: ONNX模型和参数空间定义
+          When: 执行网格搜索优化
+          Then: 找到最优参数组合，优化时间记录
+        </test>
+        <test id="AC1-T2" name="贝叶斯优化算法测试">
+          Given: 高成本评估的优化问题
+          When: 执行贝叶斯优化
+          Then: 收敛到最优解，迭代次数少于网格搜索
+        </test>
+        <test id="AC1-T3" name="遗传算法测试">
+          Given: 复杂非线性优化问题
+          When: 执行遗传算法优化
+          Then: 找到全局最优解
+        </test>
+        <test id="AC1-T4" name="多算法对比测试">
+          Given: 同一优化问题
+          When: 分别使用4种算法优化
+          Then: 验证收敛速度和结果质量
+        </test>
+      </acceptanceTests>
+
+      <dependencies>
+        <dependency type="Requires" component="Story 2.1.2" requirement="ONNX模型分析功能"/>
+        <dependency type="Requires" component="Story 2.5" requirement="模型验证功能"/>
+      </dependencies>
+    </criterion>
+
+    <criterion id="AC2" priority="High" type="Functional">
+      <title>支持基于模型特性的参数推荐</title>
+      <description>
+        自动识别模型类型（ASR/TTS等）和特性（大小、层数、算子类型等），
+        基于分析结果智能推荐参数配置（量化位数、校准数据集大小等），
+        推荐准确率>80%。
+      </description>
+
+      <acceptanceTests>
+        <test id="AC2-T1" name="模型类型识别测试">
+          Given: SenseVoice、VITS-Cantonese、Piper VITS三种模型
+          When: 执行模型类型识别
+          Then: 识别准确率100%
+        </test>
+        <test id="AC2-T2" name="模型特性分析测试">
+          Given: ONNX模型文件
+          When: 分析模型特性
+          Then: 提取模型大小、层数、算子等特性
+        </test>
+        <test id="AC2-T3" name="参数推荐准确率测试">
+          Given: 10个不同特性的模型
+          When: 生成参数推荐
+          Then: 推荐准确率>80%
+        </test>
+        <test id="AC2-T4" name="推荐合理性验证">
+          Given: 参数推荐结果
+          When: 评估推荐合理性
+          Then: 评分>8.0/10
+        </test>
+      </acceptanceTests>
+
+      <dependencies>
+        <dependency type="Requires" component="Story 2.1.2" requirement="ONNX模型分析基础"/>
+        <dependency type="Requires" component="ModelAnalyzer" requirement="模型特性分析算法"/>
+      </dependencies>
+    </criterion>
+
+    <criterion id="AC3" priority="Medium" type="Functional">
+      <title>提供转换质量与性能的权衡选项</title>
+      <description>
+        支持4种预定义权衡策略（质量优先、性能优先、平衡、资源节约），
+        允许用户自定义权衡权重，实时显示预估效果。
+      </description>
+
+      <acceptanceTests>
+        <test id="AC3-T1" name="预定义策略测试">
+          Given: 4种预定义权衡策略
+          When: 应用到优化过程
+          Then: 得到不同优化结果
+        </test>
+        <test id="AC3-T2" name="自定义策略测试">
+          Given: 自定义权重配置
+          When: 执行优化
+          Then: 权重计算正确，结果符合预期
+        </test>
+        <test id="AC3-T3" name="实时效果预估测试">
+          Given: 权衡策略选择
+          When: 查看预估效果
+          Then: 显示精度、性能、资源预估
+        </test>
+        <test id="AC3-T4" name="CLI集成测试">
+          Given: CLI命令行
+          When: 指定权衡策略
+          Then: 策略正确应用到优化过程
+        </test>
+      </acceptanceTests>
+
+      <dependencies>
+        <dependency type="Requires" component="Story 1.6" requirement="CLI集成"/>
+        <dependency type="Requires" component="TradeOffStrategy" requirement="权衡策略实现"/>
+      </dependencies>
+    </criterion>
+
+    <criterion id="AC4" priority="Medium" type="Functional">
+      <title>支持参数调优的历史记录和回滚</title>
+      <description>
+        记录所有参数变更历史（时间戳、参数值、优化分数等），
+        支持版本控制管理（版本号递增、标签注释）和回滚功能（回滚到任意历史版本）。
+      </description>
+
+      <acceptanceTests>
+        <test id="AC4-T1" name="历史记录测试">
+          Given: 执行10次优化
+          When: 查看历史记录
+          Then: 记录完整准确
+        </test>
+        <test id="AC4-T2" name="版本控制测试">
+          Given: 多次优化操作
+          When: 检查版本号
+          Then: 版本号递增正确
+        </test>
+        <test id="AC4-T3" name="回滚功能测试">
+          Given: 优化历史记录
+          When: 回滚到历史版本
+          Then: 参数恢复正确
+        </test>
+        <test id="AC4-T4" name="版本比较测试">
+          Given: 两个历史版本
+          When: 比较差异
+          Then: 显示参数和指标差异
+        </test>
+      </acceptanceTests>
+
+      <dependencies>
+        <dependency type="Requires" component="Story 1.4" requirement="配置管理"/>
+        <dependency type="Requires" component="OptimizationHistory" requirement="历史记录管理"/>
+      </dependencies>
+    </criterion>
+
+    <criterion id="AC5" priority="Medium" type="Functional">
+      <title>生成参数优化建议报告</title>
+      <description>
+        生成详细的参数优化报告，包含优化前后对比、关键参数说明、性能提升数据、
+        精度保持情况、优化算法收敛分析、未来优化建议，支持JSON/HTML/PDF格式输出。
+      </description>
+
+      <acceptanceTests>
+        <test id="AC5-T1" name="报告内容完整性测试">
+          Given: 完成一次优化
+          When: 生成报告
+          Then: 包含所有必需内容
+        </test>
+        <test id="AC5-T2" name="多格式输出测试">
+          Given: 优化结果
+          When: 生成JSON/HTML/PDF格式报告
+          Then: 格式正确，内容完整
+        </test>
+        <test id="AC5-T3" name="可视化图表测试">
+          Given: 优化结果数据
+          When: 生成HTML报告
+          Then: 包含收敛曲线、对比图表
+        </test>
+        <test id="AC5-T4" name="CLI查看命令测试">
+          Given: 已保存的优化结果
+          When: 执行CLI查看命令
+          Then: 正确显示报告摘要
+        </test>
+      </acceptanceTests>
+
+      <dependencies>
+        <dependency type="Requires" component="Story 2.2" requirement="报告生成器参考"/>
+        <dependency type="Requires" component="Jinja2" requirement="模板引擎"/>
+        <dependency type="Requires" component="OptimizationReportGenerator" requirement="报告生成实现"/>
+      </dependencies>
+    </criterion>
+  </acceptanceCriteria>
+
+  <!-- === BMM v6 PHASES === -->
+  <bmmPhases>
+    <phase id="Phase 1" name="架构扩展" status="Pending">
+      <description>创建参数优化模块的架构基础，实现优化策略接口，扩展IntelligentOptimizer</description>
+      <deliverables>
+        <deliverable>OptimizationStrategy接口实现</deliverable>
+        <deliverable>扩展的IntelligentOptimizer类</deliverable>
+        <deliverable>ModelAnalyzer基础框架</deliverable>
+        <deliverable>模块目录结构</deliverable>
+      </deliverables>
+      <estimatedDuration>1天</estimatedDuration>
+      <startDate>2025-10-28</startDate>
+      <endDate>2025-10-28</endDate>
+      <owner>Claude Code / Jody</owner>
+      <status>Pending</status>
+    </phase>
+
+    <phase id="Phase 2" name="核心功能实现" status="Pending">
+      <description>实现4种自动优化算法，完善模型分析功能，集成PreprocessingPipeline</description>
+      <deliverables>
+        <deliverable>网格搜索算法实现</deliverable>
+        <deliverable>贝叶斯优化算法实现</deliverable>
+        <deliverable>遗传算法实现</deliverable>
+        <deliverable>随机搜索算法实现</deliverable>
+        <deliverable>完整ModelAnalyzer功能</deliverable>
+      </deliverables>
+      <estimatedDuration>2天</estimatedDuration>
+      <startDate>2025-10-29</startDate>
+      <endDate>2025-10-30</endDate>
+      <owner>Claude Code / Jody</owner>
+      <status>Pending</status>
+    </phase>
+
+    <phase id="Phase 3" name="权衡和历史管理" status="Pending">
+      <description>实现权衡策略系统、历史记录管理和CLI集成</description>
+      <deliverables>
+        <deliverable>TradeOffStrategy枚举实现</deliverable>
+        <deliverable>权衡权重计算逻辑</deliverable>
+        <deliverable>OptimizationHistory类实现</deliverable>
+        <deliverable>版本控制系统实现</deliverable>
+        <deliverable>CLI命令集成</deliverable>
+      </deliverables>
+      <estimatedDuration>1天</estimatedDuration>
+      <startDate>2025-10-30</startDate>
+      <endDate>2025-10-30</endDate>
+      <owner>Claude Code / Jody</owner>
+      <status>Pending</status>
+    </phase>
+
+    <phase id="Phase 4" name="报告和文档" status="Pending">
+      <description>实现报告生成器，创建配置文件，编写测试，完善文档</description>
+      <deliverables>
+        <deliverable>OptimizationReportGenerator实现</deliverable>
+        <deliverable>4个配置文件创建</deliverable>
+        <deliverable>单元测试和集成测试</deliverable>
+        <deliverable>用户指南文档</deliverable>
+        <deliverable>权衡策略指南</deliverable>
+      </deliverables>
+      <estimatedDuration>1天</estimatedDuration>
+      <startDate>2025-10-31</startDate>
+      <endDate>2025-10-31</endDate>
+      <owner>Claude Code / Jody</owner>
+      <status>Pending</status>
+    </phase>
+
+    <phase id="Phase 5" name="测试、优化、BMM v6整理" status="Pending">
+      <description>综合测试，代码优化，BMM v6文档整理，最终验收</description>
+      <deliverables>
+        <deliverable>所有测试通过</deliverable>
+        <deliverable>性能基准达标</deliverable>
+        <deliverable>story-context-2.6.xml创建</deliverable>
+        <deliverable>sprint-status.yaml更新</deliverable>
+        <deliverable>5个AC验收通过</deliverable>
+      </deliverables>
+      <estimatedDuration>1天</estimatedDuration>
+      <startDate>2025-11-01</startDate>
+      <endDate>2025-11-01</endDate>
+      <owner>Claude Code / Jody</owner>
+      <status>Pending</status>
+    </phase>
+  </bmmPhases>
+
+  <!-- === DELIVERABLES TRACKING === -->
+  <deliverables>
+    <deliverable id="D1" type="Code" name="parameter_optimizer.py">
+      <path>src/npu_converter/optimization/parameter_optimizer.py</path>
+      <description>主参数优化器，实现多种优化算法</description>
+      <estimatedLines>800</estimatedLines>
+      <phase>Phase 2</phase>
+      <status>Pending</status>
+    </deliverable>
+
+    <deliverable id="D2" type="Code" name="model_analyzer.py">
+      <path>src/npu_converter/optimization/model_analyzer.py</path>
+      <description>模型分析器和参数推荐引擎</description>
+      <estimatedLines>600</estimatedLines>
+      <phase>Phase 2</phase>
+      <status>Pending</status>
+    </deliverable>
+
+    <deliverable id="D3" type="Code" name="history_manager.py">
+      <path>src/npu_converter/optimization/history_manager.py</path>
+      <description>优化历史记录管理和版本控制</description>
+      <estimatedLines>400</estimatedLines>
+      <phase>Phase 3</phase>
+      <status>Pending</status>
+    </deliverable>
+
+    <deliverable id="D4" type="Code" name="tradeoff_strategies.py">
+      <path>src/npu_converter/optimization/tradeoff_strategies.py</path>
+      <description>权衡策略和权重计算</description>
+      <estimatedLines>300</estimatedLines>
+      <phase>Phase 3</phase>
+      <status>Pending</status>
+    </deliverable>
+
+    <deliverable id="D5" type="Code" name="report_generator.py">
+      <path>src/npu_converter/optimization/report_generator.py</path>
+      <description>参数优化报告生成器</description>
+      <estimatedLines>500</estimatedLines>
+      <phase>Phase 4</phase>
+      <status>Pending</status>
+    </deliverable>
+
+    <deliverable id="D6" type="Config" name="default.yaml">
+      <path>examples/configs/optimization/default.yaml</path>
+      <description>默认优化配置文件</description>
+      <estimatedLines>100</estimatedLines>
+      <phase>Phase 4</phase>
+      <status>Pending</status>
+    </deliverable>
+
+    <deliverable id="D7" type="Config" name="sensevoice.yaml">
+      <path>examples/configs/optimization/sensevoice.yaml</path>
+      <description>SenseVoice ASR优化预设</description>
+      <estimatedLines>80</estimatedLines>
+      <phase>Phase 4</phase>
+      <status>Pending</status>
+    </deliverable>
+
+    <deliverable id="D8" type="Config" name="vits_cantonese.yaml">
+      <path>examples/configs/optimization/vits_cantonese.yaml</path>
+      <description>VITS-Cantonese TTS优化预设</description>
+      <estimatedLines>80</estimatedLines>
+      <phase>Phase 4</phase>
+      <status>Pending</status>
+    </deliverable>
+
+    <deliverable id="D9" type="Config" name="piper_vits.yaml">
+      <path>examples/configs/optimization/piper_vits.yaml</path>
+      <description>Piper VITS TTS优化预设</description>
+      <estimatedLines>80</estimatedLines>
+      <phase>Phase 4</phase>
+      <status>Pending</status>
+    </deliverable>
+
+    <deliverable id="D10" type="Test" name="test_parameter_optimizer.py">
+      <path>tests/unit/optimization/test_parameter_optimizer.py</path>
+      <description>参数优化器单元测试</description>
+      <estimatedLines>300</estimatedLines>
+      <phase>Phase 4</phase>
+      <status>Pending</status>
+    </deliverable>
+
+    <deliverable id="D11" type="Test" name="test_optimization_e2e.py">
+      <path>tests/integration/optimization/test_optimization_e2e.py</path>
+      <description>参数优化端到端测试</description>
+      <estimatedLines>400</estimatedLines>
+      <phase>Phase 4</phase>
+      <status>Pending</status>
+    </deliverable>
+
+    <deliverable id="D12" type="Doc" name="parameter-optimization-guide.md">
+      <path>docs/guides/parameter-optimization-guide.md</path>
+      <description>参数优化用户指南</description>
+      <estimatedLines>2000</estimatedLines>
+      <phase>Phase 4</phase>
+      <status>Pending</status>
+    </deliverable>
+
+    <deliverable id="D13" type="Doc" name="tradeoff-strategies-guide.md">
+      <path>docs/guides/tradeoff-strategies-guide.md</path>
+      <description>权衡策略使用指南</description>
+      <estimatedLines>1500</estimatedLines>
+      <phase>Phase 4</phase>
+      <status>Pending</status>
+    </deliverable>
+  </deliverables>
+
+  <!-- === QUALITY GATES === -->
+  <qualityGates>
+    <gate id="QG1" name="架构审查" phase="Phase 1" criteria="所有接口正确实现，代码通过静态检查"/>
+    <gate id="QG2" name="功能验收" phase="Phase 2" criteria="4种优化算法正常运行，模型分析准确率>80%"/>
+    <gate id="QG3" name="集成验收" phase="Phase 3" criteria="权衡策略正确实现，历史记录准确，CLI集成正常"/>
+    <gate id="QG4" name="文档验收" phase="Phase 4" criteria="报告格式正确，测试覆盖率>90%，用户指南完整"/>
+    <gate id="QG5" name="最终验收" phase="Phase 5" criteria="所有5个AC 100%通过，性能指标达标"/>
+  </qualityGates>
+
+  <!-- === RISK ASSESSMENT === -->
+  <riskAssessment>
+    <risk id="R1" category="Technical" probability="Medium" impact="High" description="优化算法收敛问题">
+      <mitigation>实现多种优化算法备选，设置早停机制和时间限制</mitigation>
+      <owner>Claude Code / Jody</owner>
+      <status>Open</status>
+    </risk>
+
+    <risk id="R2" category="Technical" probability="Medium" impact="Medium" description="参数推荐准确率不足">
+      <mitigation>基于大量历史数据训练，提供A/B测试验证</mitigation>
+      <owner>Claude Code / Jody</owner>
+      <status>Open</status>
+    </risk>
+
+    <risk id="R3" category="Performance" probability="Low" impact="High" description="优化效果不明显">
+      <mitigation>建立清晰性能基准，多维度性能评估</mitigation>
+      <owner>Claude Code / Jody</owner>
+      <status>Open</status>
+    </risk>
+
+    <risk id="R4" category="Integration" probability="Low" impact="Medium" description="与现有系统集成问题">
+      <mitigation>充分测试集成，使用现有接口和模式</mitigation>
+      <owner>Claude Code / Jody</owner>
+      <status>Open</status>
+    </risk>
+
+    <risk id="R5" category="Schedule" probability="Medium" impact="Medium" description="开发进度延迟">
+      <mitigation>明确任务分解，每日进度检查</mitigation>
+      <owner>Claude Code / Jody</owner>
+      <status>Open</status>
+    </risk>
+  </riskAssessment>
+
+  <!-- === APPROVALS === -->
+  <approvals>
+    <approval role="Story Owner" name="Claude Code / Jody" status="Approved" date="2025-10-28"/>
+    <approval role="Epic Owner" name="Claude Code / Jody" status="Approved" date="2025-10-28"/>
+    <approval role="Technical Lead" name="TBD" status="Pending" date=""/>
+    <approval role="Product Manager" name="TBD" status="Pending" date=""/>
+  </approvals>
+
+  <!-- === CHANGE LOG === -->
+  <changeLog>
+    <change version="1.0" date="2025-10-28" author="Claude Code / Jody">
+      初始版本创建，完成所有BMM v6上下文定义
+    </change>
+  </changeLog>
+
+</context>

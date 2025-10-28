@@ -1,0 +1,181 @@
+# 模型精度验证系统 - 默认配置
+# ================================
+#
+# 这是Story 2.7: 模型精度验证系统的默认配置文件
+#
+# 配置说明:
+# - thresholds: 验证阈值
+# - features: 功能开关
+# - report: 报告配置
+# - benchmark: 基准测试配置
+# - model_type_configs: 模型类型特定配置
+
+# 验证阈值
+thresholds:
+  # 精度阈值 (PRD标准: >98%精度)
+  accuracy: 0.98
+  precision: 0.98
+  recall: 0.98
+  f1_score: 0.98
+
+  # 性能阈值
+  max_inference_time: 30.0  # 秒
+  min_throughput: 1.0  # samples/sec
+  max_memory_usage: 2048.0  # MB
+
+  # 兼容性阈值
+  min_npu_compatibility: 0.95
+  min_operator_support: 0.90
+  min_format_compliance: 0.98
+
+  # 量化阈值
+  max_quantization_loss: 0.02  # 2%损失
+
+# 验证功能开关
+features:
+  # 验证维度开关
+  enable_structure_validation: true
+  enable_functionality_validation: true
+  enable_performance_validation: true
+  enable_compatibility_validation: true
+  enable_quantization_validation: true
+
+  # 高级功能
+  enable_realtime_monitoring: true
+  enable_batch_validation: true
+  enable_benchmark_system: true
+  enable_trend_analysis: true
+
+# 报告配置
+report:
+  # 输出格式
+  output_formats:
+    - json
+    - html
+    - pdf
+
+  # 输出目录
+  output_dir: validation_reports
+
+  # 报告选项
+  include_metrics_history: true
+  include_trend_analysis: true
+  include_error_details: true
+  include_recommendations: true
+
+# 基准测试配置
+benchmark:
+  # 默认数据集路径
+  default_dataset_path: datasets/benchmark
+
+  # 参考模型路径
+  reference_model_path: models/reference
+
+  # 基准测试选项
+  auto_compare: true
+  benchmark_iterations: 10
+  warmup_iterations: 3
+
+  # 数据集配置
+  dataset_configs:
+    vits_cantonese_test:
+      path: datasets/benchmark/vits_cantonese
+      data_type: audio
+      format: wav
+      size: 100
+      metadata:
+        sample_rate: 22050
+        languages:
+          - cantonese
+        voices:
+          - male
+          - female
+
+    sensevoice_test:
+      path: datasets/benchmark/sensevoice
+      data_type: audio
+      format: wav
+      size: 100
+      metadata:
+        sample_rate: 16000
+        languages:
+          - zh
+          - en
+          - ja
+          - ko
+        duration_range:
+          - 1
+          - 30
+
+    piper_vits_test:
+      path: datasets/benchmark/piper_vits
+      data_type: audio
+      format: wav
+      size: 100
+      metadata:
+        sample_rate: 22050
+        languages:
+          - multi
+        voices:
+          - male
+          - female
+
+# 全局选项
+max_concurrent_validations: 4  # 最大并发验证数
+cache_results: true  # 是否缓存结果
+cache_ttl: 3600  # 缓存TTL (秒)
+log_level: INFO  # 日志级别
+
+# 模型类型特定配置
+model_type_configs:
+  # VITS-Cantonese TTS模型
+  vits_cantonese:
+    accuracy_threshold: 0.98
+    max_inference_time: 30.0
+    dataset: vits_cantonese_test
+    validation_dimensions:
+      - structure
+      - functionality
+      - performance
+      - compatibility
+      - quantization
+    metadata:
+      model_type: TTS
+      primary_language: cantonese
+      voice_count: 2
+
+  # SenseVoice ASR模型
+  sensevoice:
+    accuracy_threshold: 0.97
+    max_inference_time: 25.0
+    dataset: sensevoice_test
+    validation_dimensions:
+      - structure
+      - functionality
+      - performance
+      - compatibility
+      - quantization
+    metadata:
+      model_type: ASR
+      language_count: 4
+      supported_languages:
+        - zh
+        - en
+        - ja
+        - ko
+
+  # Piper VITS TTS模型
+  piper_vits:
+    accuracy_threshold: 0.98
+    max_inference_time: 30.0
+    dataset: piper_vits_test
+    validation_dimensions:
+      - structure
+      - functionality
+      - performance
+      - compatibility
+      - quantization
+    metadata:
+      model_type: TTS
+      primary_language: multi
+      voice_count: 2

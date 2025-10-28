@@ -1,0 +1,8 @@
+project:
+  name: "invalid"
+  version: "1.0"
+  # Missing required fields
+
+hardware:
+  target_device: "invalid_device"
+  optimization_level: "INVALID_LEVEL"

@@ -1,0 +1,75 @@
+_metadata:
+  name: "sensevoice_performance"
+  description: "High-performance configuration template for SenseVoice ASR models"
+  model_type: "sensevoice"
+  version: "1.0.0"
+  author: "NPU Converter Configuration Team"
+  created_at: "2024-01-01"
+  tags: ["performance", "sensevoice", "asr", "optimized"]
+
+project:
+  name: "sensevoice_asr_perf"
+  version: "1.0.0"
+  model_type: "sensevoice"
+  description: "High-performance SenseVoice Automatic Speech Recognition model"
+
+hardware:
+  target_device: "horizon_x5"
+  optimization_level: "O3"
+  memory_limit: "8GB"
+  compute_units: 10
+  cache_size: "512MB"
+
+conversion_params:
+  input_format: "onnx"
+  output_format: "bpu"
+  precision: "int8"
+  calibration_method: "entropy"
+  batch_size: 8
+  num_workers: 8
+
+model_specific:
+  sensevoice:
+    # Optimized audio processing parameters
+    sample_rate: 16000
+    audio_length: 15  # Shorter audio for lower latency
+    mel_bins: 80
+    frame_length: 25
+    frame_shift: 10
+    n_fft: 512
+    hop_length: 160
+    win_length: 400
+    n_mels: 80
+    f_min: 0.0
+    f_max: 8000.0
+
+    # Model parameters
+    vocab_size: 10000
+    normalize: true
+    preemphasis: 0.97
+
+    # Optimized ASR settings
+    beam_size: 1  # Faster inference
+    length_penalty: 1.0
+    coverage_penalty: 0.0
+    temperature: 1.0
+
+performance:
+  target_latency_ms: 50  # More aggressive latency target
+  max_realtime_factor: 0.05  # Better real-time performance
+  enable_streaming: false
+  enable_caching: true
+  max_batch_size: 16  # Larger batch size for throughput
+
+optimization:
+  enable_quantization: true
+  quantization_precision: "int8"
+  enable_fusion: true
+  enable_pruning: true  # Enable pruning for performance
+  enable_weight_sharing: true  # Enable weight sharing
+  enable_dynamic_shapes: false
+
+validation:
+  strict_validation: false  # Skip some validations for speed
+  warn_on_deprecated: false
+  validate_paths: false

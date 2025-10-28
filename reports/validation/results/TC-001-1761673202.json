@@ -1,0 +1,97 @@
+{
+  "benchmark_id": "TC-001-1761673202",
+  "test_case": {
+    "id": "TC-001",
+    "name": "SenseVoice ASR模型转换性能测试",
+    "description": "测试SenseVoice ASR模型的转换性能",
+    "category": "single_model",
+    "model_type": "asr",
+    "model_name": "SenseVoice",
+    "parameters": {
+      "model_path": "/models/sensevoice",
+      "input_format": "onnx",
+      "output_format": "npu",
+      "batch_size": [
+        1,
+        4,
+        8,
+        16
+      ],
+      "precision": [
+        "fp32",
+        "fp16",
+        "int8"
+      ],
+      "concurrency": 1,
+      "test_duration": 300
+    },
+    "expected_results": {
+      "throughput": {
+        "fp32": "> 12 models/minute",
+        "fp16": "> 15 models/minute",
+        "int8": "> 18 models/minute"
+      },
+      "latency_p95": {
+        "fp32": "< 60 seconds",
+        "fp16": "< 45 seconds",
+        "int8": "< 30 seconds"
+      },
+      "resource_usage": {
+        "cpu": "< 70%",
+        "memory": "< 3GB",
+        "gpu": "< 80%",
+        "npu": "< 80%"
+      },
+      "success_rate": "> 99.9%"
+    },
+    "timeout": 1800,
+    "priority": "high",
+    "tags": [
+      "performance",
+      "asr",
+      "single-model"
+    ],
+    "dependencies": [],
+    "setup_script": null,
+    "cleanup_script": null
+  },
+  "result": {
+    "test_id": "TC-001",
+    "test_name": "SenseVoice ASR模型转换性能测试",
+    "status": "success",
+    "start_time": "2025-10-29T01:40:02.909244",
+    "end_time": "2025-10-29T01:40:04.909552",
+    "duration": 2.000308,
+    "metrics": {
+      "throughput": 12.5,
+      "latency": {
+        "p50": 15.2,
+        "p95": 28.5,
+        "p99": 45.8
+      },
+      "cpu_utilization": 65.5,
+      "memory_usage": 2145.6,
+      "gpu_utilization": 78.2,
+      "npu_utilization": 82.1,
+      "success_rate": 100.0
+    },
+    "error_message": null,
+    "output_data": {
+      "converted_models": 1,
+      "total_models": 1,
+      "errors": []
+    }
+  },
+  "metadata": {
+    "config": {
+      "test_timeout": 300,
+      "max_concurrent": 5,
+      "retry_count": 3,
+      "retry_delay": 5,
+      "cleanup_after_test": true,
+      "save_raw_data": true,
+      "output_dir": "reports/validation"
+    },
+    "executor": "BenchmarkRunner"
+  }
+}

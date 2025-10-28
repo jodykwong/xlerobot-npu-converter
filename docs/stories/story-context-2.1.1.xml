@@ -1,0 +1,101 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>2.1.1</storyId>
+    <title>Horizon X5 PTQ转换流程集成</title>
+    <status>ContextReadyDraft</status>
+    <generatedAt>2025-10-25</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/story-2.1.1.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>AI模型工程师</asA>
+    <iWant>完整的官方PTQ转换流程</iWant>
+    <soThat>实现符合地平线标准的高质量模型转换</soThat>
+    <tasks>PTQ转换流程框架搭建、官方调试工具集成、校准数据配置系统、进度反馈系统、转换报告生成</tasks>
+  </story>
+
+  <acceptanceCriteria>1. 实现完整的6步PTQ转换流程（准备→验证→校准→量化→编译→分析）
+2. 集成hrt_bin_dump和hrt_model_exec调试工具
+3. 支持自定义校准数据集配置
+4. 提供PTQ转换过程的详细进度反馈
+5. 生成符合官方标准的转换报告</acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc path="docs/architecture.md" title="XLeRobot NPU模型转换工具 - 决策架构文档" section="Integration Points" snippet="Horizon X5工具链深度集成: PTQ转换流程: 模型准备 → 模型验证 → 校准数据准备 → 模型量化&编译 → 性能分析 → 精度分析"/>
+      <doc path="docs/architecture.md" title="XLeRobot NPU模型转换工具 - 决策架构文档" section="Data Architecture" snippet="ONNX输入 → 兼容性检查 → 校准数据准备 → PTQ量化 → 编译优化 → 精度验证 → 性能测试 → BPU输出"/>
+      <doc path="docs/technical-decisions.md" title="XLeRobot NPU模型转换工具 - 技术决策记录" section="Horizon X5工具链集成策略" snippet="决策: 完整集成官方PTQ流程 - 理由: 确保最佳转换质量和性能，符合项目目标"/>
+      <doc path="docs/epics.md" title="XLeRobot NPU模型转换工具 - Epic Breakdown" section="Story 2.1.1" snippet="实现完整的6步PTQ转换流程、集成hrt_bin_dump和hrt_model_exec调试工具、支持自定义校准数据集配置"/>
+      <doc path="docs/PRD.md" title="XLeRobot NPU模型转换工具 Product Requirements Document" section="Functional Requirements" snippet="FR004: Docker转换环境、FR005: BPU工具链集成、FR007: 模型精度验证、FR008: 性能基准测试、FR009: 转换报告生成"/>
+    </docs>
+    <code>
+      <code path="src/npu_converter/" kind="package" symbol="PTQ转换器模块" lines="" reason="基于现有converter模块架构创建新的PTQ转换器"/>
+      <code path="src/npu_converter/utils/" kind="package" symbol="调试工具集成" lines="" reason="集成hrt_bin_dump和hrt_model_exec调试工具的包装器"/>
+      <code path="config/models/" kind="directory" symbol="模型配置" lines="" reason="存储PTQ转换的校准数据配置"/>
+      <code path="src/npu_converter/core/converter.py" kind="module" symbol="现有转换框架" lines="" reason="PTQ转换器应与现有converter模块保持一致的接口设计"/>
+    </code>
+    <dependencies>
+      <ecosystem name="python">
+        <package name="numpy" version="1.24.3" reason="数值计算和模型处理"/>
+        <package name="pyyaml" version="6.0" reason="PTQ配置文件解析"/>
+        <package name="click" version="8.1.7" reason="CLI界面，PTQ相关命令扩展"/>
+        <package name="onnx" version="1.14.0" reason="ONNX模型格式支持"/>
+        <package name="onnxruntime" version="1.15.1" reason="ONNX模型推理引擎"/>
+      </ecosystem>
+      <external name="Horizon X5 BPU工具链">
+        <component name="hrt_bin_dump" reason="模型分析和调试工具"/>
+        <component name="hrt_model_exec" reason="模型推理测试工具"/>
+        <component name="PTQ量化工具" reason="Post-Training Quantization转换"/>
+      </external>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint type="架构">遵循src/npu_converter/标准包结构规范，PTQ转换器作为独立模块与现有converter并行</constraint>
+    <constraint type="配置">扩展现有YAML配置框架，支持PTQ转换参数和校准数据配置</constraint>
+    <constraint type="接口">与现有converter模块保持一致的接口设计，确保API兼容性</constraint>
+    <constraint type="工具链">必须完整集成Horizon X5官方PTQ转换流程的6个步骤</constraint>
+    <constraint type="调试">集成官方调试工具hrt_bin_dump和hrt_model_exec</constraint>
+    <constraint type="报告">生成符合官方标准的转换报告格式</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface name="PTQConverter" kind="class" signature="class PTQConverter:" path="src/npu_converter/ptq/converter.py">
+      <method name="prepare_model" signature="def prepare_model(self, model_path: str) -> ModelInfo"/>
+      <method name="validate_model" signature="def validate_model(self, model_info: ModelInfo) -> ValidationResult"/>
+      <method name="prepare_calibration_data" signature="def prepare_calibration_data(self, config: CalibrationConfig) -> CalibrationData"/>
+      <method name="quantize_model" signature="def quantize_model(self, model_info: ModelInfo, calib_data: CalibrationData) -> QuantizedModel"/>
+      <method name="compile_model" signature="def compile_model(self, quantized_model: QuantizedModel) -> CompiledModel"/>
+      <method name="analyze_performance" signature="def analyze_performance(self, compiled_model: CompiledModel) -> PerformanceResult"/>
+      <method name="analyze_accuracy" signature="def analyze_accuracy(self, compiled_model: CompiledModel) -> AccuracyResult"/>
+    </interface>
+    <interface name="DebugTools" kind="module" signature="hrt_bin_dump wrapper" path="src/npu_converter/utils/debug_tools.py">
+      <function name="dump_model_info" signature="def dump_model_info(self, model_path: str) -> ModelAnalysis"/>
+      <function name="execute_model" signature="def execute_model(self, model_path: str, input_data: Any) -> InferenceResult"/>
+    </interface>
+    <interface name="CalibrationConfig" kind="dataclass" signature="dataclass CalibrationConfig:" path="src/npu_converter/models/calibration.py">
+      <field name="data_path" type="str"/>
+      <field name="batch_size" type="int"/>
+      <field name="num_samples" type="int"/>
+      <field name="input_shape" type="Tuple[int, ...]"/>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>使用pytest测试框架，遵循项目现有测试模式。每个验收标准对应独立测试用例，包含单元测试和集成测试。测试覆盖率目标88%+，使用pytest-cov监控覆盖率。</standards>
+    <locations>
+      <directory path="tests/unit/ptq/" pattern="test_ptq_*.py"/>
+      <directory path="tests/integration/ptq/" pattern="test_integration_*.py"/>
+      <directory path="tests/fixtures/" pattern="ptq_test_data/"/>
+    </locations>
+    <ideas>
+      <test ac="1" name="test_complete_ptq_flow">测试完整的6步PTQ转换流程端到端执行</test>
+      <test ac="2" name="test_debug_tools_integration">测试hrt_bin_dump和hrt_model_exec工具集成</test>
+      <test ac="3" name="test_calibration_config">测试自定义校准数据集配置加载和验证</test>
+      <test ac="4" name="test_progress_feedback">测试PTQ转换过程进度反馈功能</test>
+      <test ac="5" name="test_report_generation">测试符合官方标准的转换报告生成</test>
+    </ideas>
+  </tests>
+</story-context>

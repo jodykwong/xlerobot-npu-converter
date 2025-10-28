@@ -1,0 +1,148 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>8</storyId>
+    <title>单元测试和集成测试</title>
+    <status>Ready</status>
+    <generatedAt>2025-10-27T11:18:00Z</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/story-1.8.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>开发团队</asA>
+    <iWant>完整的测试覆盖</iWant>
+    <soThat>确保核心基础设施的稳定性和可靠性</soThat>
+    <tasks>Task 1: 为核心模块建立单元测试覆盖 (AC: 1)
+- Subtask 1.1: 为 CLI 模块创建单元测试
+- Subtask 1.2: 为核心转换器创建单元测试
+- Subtask 1.3: 为配置管理系统创建单元测试
+- Subtask 1.4: 为错误处理系统创建单元测试
+- Subtask 1.5: 为 BPU 工具链接口创建单元测试
+Task 2: 实现集成测试套件 (AC: 2)
+- Subtask 2.1: 创建端到端转换流程测试
+- Subtask 2.2: 实现 Docker 环境集成测试
+- Subtask 2.3: 创建多模型类型集成测试
+- Subtask 2.4: 实现错误场景集成测试
+Task 3: 建立持续集成流水线 (AC: 3)
+- Subtask 3.1: 创建 GitHub Actions 工作流
+- Subtask 3.2: 配置自动化测试执行
+- Subtask 3.3: 实现代码质量检查流水线
+- Subtask 3.4: 设置自动化部署测试
+Task 4: 实现代码覆盖率监控 (AC: 4)
+- Subtask 4.1: 配置 pytest-cov 覆盖率工具
+- Subtask 4.2: 设置覆盖率目标和阈值
+- Subtask 4.3: 实现覆盖率报告生成
+- Subtask 4.4: 集成覆盖率到 CI 流水线
+Task 5: 开发测试报告和性能基准 (AC: 5)
+- Subtask 5.1: 创建测试报告生成器
+- Subtask 5.2: 实现性能基准测试框架
+- Subtask 5.3: 开发测试结果可视化
+- Subtask 5.4: 创建性能趋势分析</tasks>
+  </story>
+
+  <acceptanceCriteria>1. 实现所有核心功能的单元测试
+2. 提供Docker环境的集成测试
+3. 建立持续集成测试流程
+4. 实现代码覆盖率监控
+5. 提供测试报告和性能基准测试</acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc path="docs/architecture.md" title="XLeRobot NPU模型转换工具 - 决策架构文档" section="Decision Summary, Technology Stack Details, Project Structure" snippet="确定pytest 7.x作为项目测试框架，强调丰富插件生态和强大fixture系统。定义企业级代码质量工具集：black（代码格式化）、ruff（代码检查）、mypy（类型检查）、pre-commit（Git钩子）。规划完整的测试项目结构，包含单元测试、集成测试和性能基准测试。" />
+      <doc path="docs/PRD.md" title="XLeRobot NPU模型转换工具 Product Requirements Document (PRD)" section="验证和质量保证, 技术支撑能力" snippet="明确要求模型精度验证功能，确保转换前后精度保持率>98%。规定性能基准测试需求，验证NPU相比CPU的2-5倍性能提升。要求自动生成包含精度、性能、转换参数的详细报告。" />
+      <doc path="docs/epics.md" title="XLeRobot NPU模型转换工具 - Epic Breakdown" section="Epic 1: Story 1.8, Epic 2: 多个质量验证故事" snippet="Story 1.8专门定义完整的测试覆盖需求，包含单元测试、集成测试、CI/CD流程和代码覆盖率监控。Epic 2中包含多个质量保证相关故事，涵盖模型精度验证、性能测试、错误诊断等功能。" />
+      <doc path="docs/stories/story-1.8.md" title="Story 1.8: 单元测试和集成测试" section="完整文档，专门定义测试策略" snippet="详细规划了基于pytest的测试框架，目标覆盖率>90%。定义完整的测试项目结构：tests/unit/、tests/integration/、tests/benchmarks/、tests/fixtures/。包含5个主要任务群：核心模块单元测试、集成测试套件、CI/CD流水线、代码覆盖率监控、测试报告和性能基准。" />
+      <doc path="docs/technical-decisions.md" title="技术决策文档" section="测试框架选择, 代码质量工具集成" snippet="详细分析了pytest与其他测试框架的优劣，最终选择pytest 7.x。确定采用企业级代码质量工具集（black + ruff + mypy + pre-commit），强调高性能检查和Git钩子确保一致性。" />
+      <doc path="docs/project-status-summary.md" title="项目状态总结" section="质量指标, 技术栈" snippet="当前测试代码4,000+行，测试覆盖率95%，代码质量评分95/100。类型提示覆盖率100%，技术债务完全清零，整体健康度92/100（优秀）。详细列出了完整的开发工具栈：ruff, black, mypy, pytest-cov。" />
+    </docs>
+    <code>
+      <file path="src/npu_converter/cli/main.py" kind="cli" symbol="main, convert_command, config_command, info_command" lines="1-50" reason="CLI主入口点，需要测试命令解析和参数验证" />
+      <file path="src/npu_converter/cli/commands/convert.py" kind="cli" symbol="ConvertCommand.execute, ConvertCommand._validate_arguments" lines="1-100" reason="转换命令实现，需要测试转换流程和参数验证" />
+      <file path="src/npu_converter/config/manager.py" kind="config" symbol="ConfigurationManager" lines="1-150" reason="配置管理核心类，需要测试配置加载和验证" />
+      <file path="src/npu_converter/converters/base_conversion_flow.py" kind="converter" symbol="BaseConversionFlow" lines="1-80" reason="基础转换流程抽象类，需要测试接口定义" />
+      <file path="src/npu_converter/core/interfaces/base_converter.py" kind="interface" symbol="BaseConverter" lines="1-60" reason="基础转换器接口，需要测试接口规范" />
+      <file path="src/npu_converter/core/models/conversion_model.py" kind="model" symbol="ConversionModel" lines="1-120" reason="转换数据模型，需要测试数据结构和验证" />
+      <file path="src/npu_converter/utils/logger.py" kind="utility" symbol="StructuredLogger, StructuredFormatter" lines="1-200" reason="结构化日志系统，需要测试日志记录和格式化" />
+      <file path="src/npu_converter/utils/exceptions.py" kind="utility" symbol="ConverterException, ConfigError" lines="1-80" reason="异常定义，需要测试异常抛出和处理" />
+      <file path="src/npu_converter/utils/error_analyzer.py" kind="utility" symbol="ErrorAnalyzer" lines="1-150" reason="错误分析器，需要测试错误分析逻辑" />
+      <file path="src/npu_converter/bpu_toolchain/horizon_x5.py" kind="interface" symbol="HorizonX5Interface.run_hbdk, HorizonX5Interface.run_hb_mapper" lines="1-200" reason="BPU工具链接口，需要测试工具链调用" />
+      <file path="src/npu_converter/ptq/converter.py" kind="converter" symbol="PTQConverter" lines="1-180" reason="PTQ转换器，需要测试量化转换流程" />
+      <file path="tests/unit/test_logger.py" kind="test" symbol="test_structured_logger, test_log_formatting" lines="1-100" reason="现有日志测试，可作为测试模板参考" />
+      <file path="tests/unit/test_exceptions.py" kind="test" symbol="test_exception_hierarchy, test_error_handling" lines="1-80" reason="现有异常测试，可作为测试模板参考" />
+      <file path="tests/integration/test_error_handling_flow.py" kind="test" symbol="test_end_to_end_error_flow" lines="1-120" reason="现有集成测试，可作为集成测试模板" />
+    </code>
+    <dependencies>
+      <python>
+        <package name="numpy" version="1.24.3" />
+        <package name="pyyaml" version="6.0" />
+        <package name="click" version="8.1.7" />
+        <package name="requests" version=">=2.25.0" />
+        <package name="packaging" version=">=21.0" />
+        <package name="onnx" version="1.14.0" />
+        <package name="onnxruntime" version="1.15.1" />
+      </python>
+      <python-dev>
+        <package name="black" version="23.7.0" purpose="代码格式化" />
+        <package name="ruff" version="0.0.285" purpose="代码检查" />
+        <package name="mypy" version="1.5.1" purpose="类型检查" />
+        <package name="pre-commit" version="3.3.3" purpose="Git钩子" />
+        <package name="pytest" version="7.4.0" purpose="测试框架" />
+        <package name="pytest-cov" version="4.1.0" purpose="测试覆盖率" />
+      </python-dev>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+      <rule>使用pytest 7.x作为测试框架，遵循企业级代码质量标准</rule>
+      <rule>代码覆盖率目标：每个核心模块>95%，整体覆盖率>90%</rule>
+      <rule>遵循标准包结构：tests/unit/、tests/integration/、tests/benchmarks/</rule>
+      <rule>集成black、ruff、mypy、pre-commit代码质量工具链</rule>
+      <rule>支持Docker环境测试，确保容器化部署的可靠性</rule>
+      <rule>测试文件命名：test_*.py，测试类：Test*，测试函数：test_*</rule>
+      <rule>使用标记分类：unit（单元测试）、integration（集成测试）、slow（慢速测试）</rule>
+    </constraints>
+  <interfaces>
+      <interface name="ConfigurationManager.load_config" kind="function" signature="load_config(config_path: str) -> Dict" path="src/npu_converter/config/manager.py" />
+      <interface name="StructuredLogger.log" kind="method" signature="log(level: str, message: str, **kwargs) -> None" path="src/npu_converter/utils/logger.py" />
+      <interface name="BaseConverter.convert" kind="method" signature="convert(input_model: str, output_path: str, **kwargs) -> ConversionResult" path="src/npu_converter/core/interfaces/base_converter.py" />
+      <interface name="HorizonX5Interface.run_hbdk" kind="method" signature="run_hbdk(model_path: str, output_dir: str) -> bool" path="src/npu_converter/bpu_toolchain/horizon_x5.py" />
+      <interface name="CLI转换命令" kind="cli" signature="xlerobot convert [OPTIONS] INPUT_MODEL OUTPUT_DIR" path="src/npu_converter/cli/commands/convert.py" />
+    </interfaces>
+  <tests>
+    <standards>使用pytest 7.x测试框架，支持丰富的插件生态和强大fixture系统。遵循AAA模式（Arrange-Act-Assert）编写测试。使用mock进行依赖隔离，确保测试的独立性和可靠性。每个测试用例应有清晰的断言和错误处理验证。测试覆盖率目标>90%，关键模块>95%。</standards>
+    <locations>tests/unit/（单元测试）、tests/integration/（集成测试）、tests/benchmarks/（性能基准测试）、tests/fixtures/（测试数据）。测试文件命名：test_*.py。使用pytest.ini配置文件管理测试设置，包括覆盖率报告和标记分类。</locations>
+    <ideas>
+      <idea ac="1" description="为CLI模块创建单元测试，测试命令解析、参数验证和错误处理">
+        <subtask>test_convert_command_parsing</subtask>
+        <subtask>test_invalid_arguments_handling</subtask>
+        <subtask>test_config_command_validation</subtask>
+      </idea>
+      <idea ac="1" description="为核心转换器创建单元测试，测试转换流程的各个环节">
+        <subtask>test_conversion_flow_success</subtask>
+        <subtask>test_conversion_failure_handling</subtask>
+        <subtask>test_progress_tracking</subtask>
+      </idea>
+      <idea ac="2" description="创建Docker环境集成测试，验证容器化部署的可靠性">
+        <subtask>test_docker_build_success</subtask>
+        <subtask>test_container_environment_setup</subtask>
+        <subtask>test_toolchain_availability</subtask>
+      </idea>
+      <idea ac="3" description="建立CI/CD流水线测试，确保自动化质量检查">
+        <subtask>test_github_actions_workflow</subtask>
+        <subtask>test_code_quality_checks</subtask>
+        <subtask>test_coverage_reporting</subtask>
+      </idea>
+      <idea ac="4" description="实现代码覆盖率监控和报告生成">
+        <subtask>test_coverage_threshold_enforcement</subtask>
+        <subtask>test_html_coverage_report_generation</subtask>
+        <subtask>test_coverage_integration_with_ci</subtask>
+      </idea>
+      <idea ac="5" description="开发性能基准测试和报告">
+        <subtask>test_conversion_performance_benchmark</subtask>
+        <subtask>test_memory_usage_profiling</subtask>
+        <subtask>test_performance_regression_detection</subtask>
+      </idea>
+    </ideas>
+  </tests>
+</story-context>

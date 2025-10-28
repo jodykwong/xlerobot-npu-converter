@@ -1,0 +1,57 @@
+conversion_params:
+  batch_size: 1
+  calibration_method: minmax
+  input_format: onnx
+  num_workers: 4
+  output_format: bpu
+  precision: int8
+hardware:
+  cache_size: 256MB
+  compute_units: 10
+  memory_limit: 8GB
+  optimization_level: O3
+  target_device: horizon_x5
+model_specific:
+  piper_vits:
+    embedding_dim: 192
+    f_max: 8000.0
+    f_min: 0.0
+    filter_channels: 768
+    gate_threshold: 0.5
+    gin_channels: 256
+    hidden_channels: 192
+    hop_size: 256
+    inference_noise_scale: 0.667
+    inter_channels: 192
+    kernel_size: 3
+    length_scale: 1.0
+    max_decoder_steps: 2000
+    max_wav_value: 32768.0
+    mel_channels: 80
+    n_fft: 1024
+    n_heads: 2
+    n_layers: 6
+    n_mels: 80
+    noise_scale: 0.667
+    noise_scale_d: 0.8
+    num_speakers: 1
+    p_dropout: 0.1
+    postnet_embedding_dim: 512
+    sample_rate: 22050
+    speaker_embedding: true
+    speaker_embedding_dim: 192
+    speaker_id: 0
+    temperature: 1.0
+    use_sdp: true
+    use_spectral_norm: false
+    win_size: 1024
+performance:
+  chunk_size: 1024
+  enable_streaming: true
+  max_realtime_factor: 0.3
+  target_latency_ms: 100
+project:
+  description: Piper VITS Test Configuration
+  model_type: piper_vits
+  name: piper-vits-test
+  version: 1.0.0

@@ -1,0 +1,84 @@
+_metadata:
+  name: "piper_vits_default"
+  description: "Default configuration template for Piper VITS TTS models"
+  model_type: "piper_vits"
+  version: "1.0.0"
+  author: "NPU Converter Configuration Team"
+  created_at: "2024-01-01"
+  tags: ["default", "piper_vits", "tts", "production"]
+
+project:
+  name: "piper_vits_tts"
+  version: "1.0.0"
+  model_type: "piper_vits"
+  description: "Piper VITS Text-to-Speech model"
+
+hardware:
+  target_device: "horizon_x5"
+  optimization_level: "O2"
+  memory_limit: "8GB"
+  compute_units: 10
+  cache_size: "256MB"
+
+conversion_params:
+  input_format: "onnx"
+  output_format: "bpu"
+  precision: "int8"
+  calibration_method: "minmax"
+  batch_size: 1
+  num_workers: 4
+
+model_specific:
+  piper_vits:
+    # Audio synthesis parameters
+    sample_rate: 22050
+    n_fft: 1024
+    hop_length: 256
+    win_length: 1024
+    n_mels: 80
+    mel_fmin: 0.0
+    mel_fmax: null
+
+    # Voice characteristics
+    mel_channels: 80
+    speaker_embedding: true
+    num_speakers: 1
+    speaker_id: 0
+
+    # TTS specific settings
+    noise_scale: 0.667
+    noise_scale_w: 0.8
+    length_scale: 1.0
+    inference_noise_scale: 0.667
+
+    # Data settings
+    max_wav_value: 32768.0
+    sampling_rate: 22050
+    filter_length: 1024
+    hop_length: 256
+    win_length: 1024
+    n_mel_channels: 80
+    mel_fmin: 0.0
+    mel_fmax: null
+    add_blank: true
+
+performance:
+  target_latency_ms: 200
+  max_realtime_factor: 0.2
+  enable_streaming: false
+  enable_caching: true
+  max_batch_size: 4
+  synthesis_buffer_size: 2048
+
+optimization:
+  enable_quantization: true
+  quantization_precision: "int8"
+  enable_fusion: true
+  enable_pruning: false
+  enable_weight_sharing: false
+  enable_dynamic_shapes: false
+
+validation:
+  strict_validation: true
+  warn_on_deprecated: true
+  validate_paths: true

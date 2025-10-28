@@ -1,0 +1,145 @@
+# Piper VITS TTS Model Optimization Configuration
+# Optimized for Piper VITS text-to-speech models (alternative TTS)
+
+# Optimization Strategy Configuration
+optimization:
+  strategy: "bayesian"
+  max_iterations: 100
+  convergence_threshold: 0.01
+  time_limit: 600.0
+  early_stopping: true
+  patience: 10
+  random_seed: 42
+  verbose: true
+
+# Optimization Objective - Balance quality and performance
+objective:
+  primary: "balanced"
+
+# Trade-off Strategy - Balanced approach
+tradeoff:
+  strategy: "balanced"
+  custom_weights:
+    accuracy: 0.40    # Important for TTS quality
+    latency: 0.25     # Important for responsiveness
+    throughput: 0.15  # Important for batch processing
+    memory: 0.10      # Important for resource usage
+    compatibility: 0.05
+    success_rate: 0.05
+
+# Model Analysis Settings
+model_analysis:
+  auto_detect: true
+  default_type: "tts"
+  analyze_quantization: true
+
+# Preprocessing Optimization
+preprocessing:
+  enabled: true
+  optimize:
+    normalization: true
+    resize: false      # TTS uses mel-spectrograms
+    channel_format: true
+    data_type: true
+  respect_constraints: true
+  preset: "tts"
+
+# Parameter Space Definition for Piper VITS
+parameter_space:
+  quantization_bits:
+    type: "choice"
+    values: [8, 16]
+    default: 16
+    # Note: 8-bit may be acceptable for Piper VITS
+
+  sample_rate:
+    type: "choice"
+    values: [16000, 22050, 44100]
+    default: 22050
+
+  n_mels:
+    type: "choice"
+    values: [80, 128, 256]
+    default: 80
+
+  hop_length:
+    type: "choice"
+    values: [128, 256, 512]
+    default: 256
+
+  win_length:
+    type: "choice"
+    values: [512, 1024, 2048]
+    default: 1024
+
+  batch_size:
+    type: "choice"
+    values: [8, 16, 32, 64]
+    default: 32
+
+  normalize:
+    type: "choice"
+    values: [true, false]
+    default: true
+
+# Preprocessing Parameters for Piper VITS
+preprocessing_params:
+  normalize: true
+  normalize_mode: "custom"
+  channel_format: "NC"
+  target_format: "NC"
+  mean: [0.0]
+  std: [1.0]
+  data_type: "float32"
+  sample_rate: 22050
+
+# Piper VITS Specific Parameters
+piper_params:
+  # Multi-language support
+  supported_languages:
+    - "cantonese"
+    - "mandarin"
+    - "english"
+    - "japanese"
+    - "korean"
+
+  # Model optimization
+  enable_quantization: true
+  quantization_method: "dynamic"
+
+  # Performance settings
+  use_cache: true
+  cache_size: 100
+
+# Validation Settings
+validation:
+  enabled: true
+  split_ratio: 0.2
+  min_accuracy: 0.92    # TTS quality threshold
+  max_latency: 180.0    # Acceptable latency
+
+# Specific Recommendations for Piper VITS
+recommendations:
+  - "Consider 8-bit quantization for faster inference (acceptable quality)"
+  - "Use 22.05kHz sample rate as default"
+  - "Optimize for multi-language support"
+  - "Enable caching for repeated synthesis"
+  - "Use appropriate batch size for throughput"
+  - "Apply mel-spectrogram normalization"
+  - "Test with various audio quality metrics"
+
+# Model-Specific Notes
+notes: |
+  Piper VITS is an alternative TTS model that prioritizes efficiency and
+  multi-language support. Unlike VITS-Cantonese which focuses on Cantonese,
+  Piper VITS supports multiple languages and voices.
+
+  The model is optimized for faster inference while maintaining acceptable
+  quality. 8-bit quantization can be used for better performance with
+  minimal quality loss.
+
+  Key features:
+  - Multi-language synthesis
+  - Efficient inference
+  - Good quality/performance balance
+  - Support for various languages (Cantonese, Mandarin, English, etc.)

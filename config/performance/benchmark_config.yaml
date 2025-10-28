@@ -1,0 +1,280 @@
+# 性能基准测试系统配置文件
+# Performance Benchmark System Configuration
+
+# 项目信息
+project:
+  name: "XLeRobot NPU模型转换工具"
+  version: "1.0.0"
+  created_date: "2025-10-29"
+
+# 基准测试配置
+benchmark:
+  # 测试超时时间（秒）
+  test_timeout: 3600
+
+  # 最大并发数
+  max_concurrent: 10
+
+  # 重试次数
+  retry_count: 3
+
+  # 重试延迟（秒）
+  retry_delay: 5
+
+  # 测试后清理
+  cleanup_after_test: true
+
+  # 保存原始数据
+  save_raw_data: true
+
+  # 输出目录
+  output_dir: "reports/performance"
+
+# 指标采集配置
+metrics:
+  # 采集间隔（秒）
+  collection_interval: 1
+
+  # 缓冲区大小
+  buffer_size: 1000
+
+  # 启用GPU监控
+  enable_gpu_monitoring: true
+
+  # 启用NPU监控
+  enable_npu_monitoring: true
+
+  # 启用磁盘I/O监控
+  enable_disk_io: true
+
+  # 启用网络I/O监控
+  enable_network_io: true
+
+  # 最大历史数据量
+  max_history_size: 10000
+
+  # 存储类型: memory, sqlite
+  storage_type: "memory"
+
+  # 存储路径
+  storage_path: "data/metrics.db"
+
+# 性能分析配置
+analysis:
+  # 异常检测阈值（标准差倍数）
+  anomaly_threshold: 2.0
+
+  # 趋势分析窗口大小
+  trend_window_size: 10
+
+  # 百分位数
+  percentile_values: [50, 90, 95, 99]
+
+  # 相关性阈值
+  correlation_threshold: 0.7
+
+# 报告生成配置
+reporting:
+  # 输出目录
+  output_dir: "reports/performance"
+
+  # 模板目录
+  template_dir: "templates/reports"
+
+  # 包含图表
+  include_charts: true
+
+  # 包含建议
+  include_recommendations: true
+
+  # 包含趋势
+  include_trends: true
+
+  # 包含异常
+  include_anomalies: true
+
+  # 默认格式
+  format: "html"
+
+# 可视化配置
+visualization:
+  # 输出目录
+  output_dir: "reports/performance/charts"
+
+  # 图表宽度
+  width: 800
+
+  # 图表高度
+  height: 600
+
+  # 主题
+  theme: "plotly"
+
+  # 配色方案
+  color_scheme: "default"
+
+  # 交互式
+  interactive: true
+
+# 告警配置
+alerts:
+  # 告警目录
+  alert_dir: "alerts"
+
+  # 启用邮件
+  enable_email: false
+
+  # 启用webhook
+  enable_webhook: false
+
+  # Webhook URL
+  webhook_url: null
+
+  # 告警阈值
+  alert_threshold: 0.8
+
+  # 告警冷却期（秒）
+  cooldown_period: 300
+
+  # 最大告警数量
+  max_alerts: 100
+
+# 测试用例套件配置
+test_suite:
+  # 测试数据目录
+  test_data_dir: "data/benchmarks"
+
+  # 测试用例文件
+  test_cases_file: "test_cases.yaml"
+
+  # 默认超时
+  default_timeout: 3600
+
+  # 最大重试次数
+  max_retries: 3
+
+  # 并行执行
+  parallel_execution: true
+
+  # 启用验证
+  enable_validation: true
+
+  # 自动清理
+  auto_cleanup: true
+
+# 性能目标
+performance_targets:
+  # 转换吞吐量（模型/分钟）
+  conversion_throughput: 12.0
+
+  # 平均延迟（秒）
+  average_latency: 30.0
+
+  # P95延迟（秒）
+  p95_latency: 60.0
+
+  # CPU使用率（百分比）
+  cpu_utilization: 70.0
+
+  # 内存使用（MB）
+  memory_usage: 3000.0
+
+  # GPU使用率（百分比）
+  gpu_utilization: 80.0
+
+  # NPU使用率（百分比）
+  npu_utilization: 80.0
+
+  # 成功率（百分比）
+  success_rate: 99.9
+
+# 模型配置
+models:
+  SenseVoice:
+    type: "asr"
+    path: "/models/sensevoice"
+    input_format: "onnx"
+    output_format: "npu"
+    batch_sizes: [1, 4, 8, 16]
+    precisions: ["fp32", "fp16", "int8"]
+
+  VITS-Cantonese:
+    type: "tts"
+    path: "/models/vits-cantonese"
+    input_format: "pytorch"
+    output_format: "npu"
+    batch_sizes: [1, 2, 4, 8]
+    precisions: ["fp32", "fp16"]
+
+  Piper-VITS:
+    type: "tts"
+    path: "/models/piper-vits"
+    input_format: "pytorch"
+    output_format: "npu"
+    batch_sizes: [1, 2, 4, 8]
+    precisions: ["fp32", "fp16"]
+
+# 测试场景配置
+test_scenarios:
+  single_model:
+    description: "单模型转换性能测试"
+    iterations: 10
+    duration: 300
+
+  concurrent:
+    description: "多模型并发转换测试"
+    concurrent_models: [2, 5, 10, 20]
+    duration: 600
+
+  stress_test:
+    description: "压力测试"
+    target_throughput: 20
+    ramp_up_time: 600
+    steady_state_time: 3600
+    ramp_down_time: 600
+
+  stability_test:
+    description: "稳定性测试"
+    duration: 86400  # 24小时
+    monitoring_interval: 300
+    model_rotation: true
+
+# CI/CD集成配置
+cicd:
+  # 启用CI/CD集成
+  enabled: true
+
+  # GitHub Actions工作流
+  github_actions:
+    enabled: true
+    workflow_file: ".github/workflows/performance-benchmark.yml"
+    schedule: "0 2 * * *"  # 每天凌晨2点运行
+
+  # 性能回归阈值
+  regression_thresholds:
+    throughput: 0.05  # 5%
+    latency: 0.05  # 5%
+    resource_usage: 0.10  # 10%
+
+# 高级配置
+advanced:
+  # 数据保留期（天）
+  data_retention_days: 30
+
+  # 压缩旧数据
+  compress_old_data: true
+
+  # 清理间隔（天）
+  cleanup_interval_days: 7
+
+  # 启用调试模式
+  debug_mode: false
+
+  # 日志级别
+  log_level: "INFO"
+
+  # 最大日志文件大小（MB）
+  max_log_file_size: 100
+
+  # 保留日志文件数量
+  log_file_count: 5

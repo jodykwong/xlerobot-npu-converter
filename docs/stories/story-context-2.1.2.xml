@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<story-context id="bmad/bmm/workflows/4-implementation/story-context" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>2.1.2</storyId>
+    <title>ONNX模型加载和预处理</title>
+    <status>ContextReadyDraft</status>
+    <generatedAt>2025-10-27</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/story-2.1.2.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>AI模型工程师</asA>
+    <iWant>高效的ONNX模型加载和预处理系统</iWant>
+    <soThat>快速加载各类ONNX模型并进行标准化预处理，确保模型兼容性和转换质量</soThat>
+    <tasks>ONNX模型加载器实现、模型结构解析、元数据提取、预处理管道系统、模型兼容性验证、批量处理和并发支持</tasks>
+  </story>
+
+  <acceptanceCriteria>1. 支持多种ONNX模型格式加载（.onnx文件、ONNX ModelProto对象、URL远程模型）
+2. 实现自动模型结构解析和元数据提取（输入/输出张量、算子类型、模型版本）
+3. 提供灵活的预处理管道配置（标准化、归一化、resize、channel转换等）
+4. 集成模型兼容性检查（算子支持检查、版本兼容性、形状验证）
+5. 支持批量预处理和多模型并发加载，提升处理效率</acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc path="docs/architecture.md" title="XLeRobot NPU模型转换工具 - 决策架构文档" section="ONNX Model Support" snippet="ONNX模型支持: 多格式加载、结构化解析、元数据提取、预处理管道、兼容性验证"/>
+      <doc path="docs/architecture.md" title="XLeRobot NPU模型转换工具 - 决策架构文档" section="Preprocessing Pipeline" snippet="预处理管道架构: 标准化→归一化→resize→channel转换，支持可配置预处理步骤"/>
+      <doc path="docs/technical-decisions.md" title="XLeRobot NPU模型转换工具 - 技术决策记录" section="ONNX加载策略" snippet="决策: 统一ONNX加载接口，支持多输入源，集成预处理管道，理由: 确保模型加载灵活性和预处理标准化"/>
+      <doc path="docs/epics.md" title="XLeRobot NPU模型转换工具 - Epic Breakdown" section="Story 2.1.2" snippet="实现ONNX模型加载器、结构解析、元数据提取、预处理管道、兼容性验证、批量并发处理"/>
+      <doc path="docs/PRD.md" title="XLeRobot NPU模型转换工具 Product Requirements Document" section="Functional Requirements" snippet="FR006: ONNX模型支持、FR010: 模型预处理、FR011: 兼容性检查、FR012: 批量处理"/>
+    </docs>
+    <code>
+      <code path="src/npu_converter/loaders/" kind="package" symbol="模型加载器模块" lines="" reason="实现ONNX模型统一加载接口，支持多种输入源"/>
+      <code path="src/npu_converter/preprocessing/" kind="package" symbol="预处理管道" lines="" reason="实现可配置预处理管道，支持多种预处理策略"/>
+      <code path="src/npu_converter/validation/" kind="package" symbol="兼容性验证" lines="" reason="实现Horizon X5兼容性检查和验证"/>
+      <code path="src/npu_converter/core/interfaces/base_converter.py" kind="module" symbol="BaseConverter接口" lines="" reason="ONNX加载器应集成BaseConverter框架"/>
+      <code path="src/npu_converter/config/" kind="package" symbol="配置管理" lines="" reason="扩展配置系统支持ONNX模型和预处理配置"/>
+      <code path="config/models/onnx/" kind="directory" symbol="ONNX模型配置" lines="" reason="存储ONNX模型特定配置和预处理模板"/>
+    </code>
+    <dependencies>
+      <ecosystem name="python">
+        <package name="numpy" version="1.24.3" reason="数值计算和数组操作，ONNX张量处理"/>
+        <package name="pyyaml" version="6.0" reason="ONNX模型配置文件解析"/>
+        <package name="click" version="8.1.7" reason="CLI界面，ONNX加载相关命令"/>
+        <package name="onnx" version="1.14.0" reason="ONNX模型格式核心支持库"/>
+        <package name="onnxruntime" version="1.15.1" reason="ONNX模型推理和验证"/>
+        <package name="Pillow" version="10.0.0" reason="图像预处理操作"/>
+        <package name="opencv-python" version="4.8.0" reason="高级图像处理和预处理"/>
+      </ecosystem>
+      <external name="Horizon X5 BPU工具链">
+        <component name="hrt_model_info" reason="模型信息查询工具，用于验证ONNX兼容性"/>
+        <component name="hrt_model_check" reason="模型检查工具，验证算子支持"/>
+        <component name="BPU算子支持列表" reason="ONNX算子兼容性验证标准"/>
+      </external>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint type="架构">遵循src/npu_converter/标准包结构规范，加载器作为BaseConverter的插件实现</constraint>
+    <constraint type="配置">扩展现有YAML配置框架，支持ONNX模型配置和预处理管道配置</constraint>
+    <constraint type="接口">严格遵循BaseConverter接口设计，确保与Epic 1基础设施完全对齐</constraint>
+    <constraint type="兼容性">所有ONNX模型必须通过Horizon X5算子支持检查，不支持算子需提前识别</constraint>
+    <constraint type="性能">支持批量并发加载，单模型加载时间&lt;30秒，批量处理支持10+模型并发</constraint>
+    <constraint type="内存">大模型加载需内存优化，单模型内存占用控制在合理范围</constraint>
+    <constraint type="线程安全">并发加载器必须线程安全，支持多线程同时访问</constraint>
+    <constraint type="错误处理">集成Story 1.7 ErrorHandler，实现完整的错误处理和恢复机制</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface name="ONNXModelLoader" kind="class" signature="class ONNXModelLoader(BaseConverter):" path="src/npu_converter/loaders/onnx_loader.py">
+      <method name="load_from_file" signature="def load_from_file(self, model_path: str) -> ONNXModel"/>
+      <method name="load_from_object" signature="def load_from_object(self, model_proto: ModelProto) -> ONNXModel"/>
+      <method name="load_from_url" signature="def load_from_url(self, url: str) -> ONNXModel"/>
+      <method name="batch_load" signature="def batch_load(self, model_sources: List[Union[str, ModelProto]]) -> List[ONNXModel]"/>
+      <method name="validate_model" signature="def validate_model(self, model: ONNXModel) -> ValidationResult"/>
+    </interface>
+    <interface name="ModelMetadataExtractor" kind="class" signature="class ModelMetadataExtractor:" path="src/npu_converter/loaders/metadata_extractor.py">
+      <method name="extract_input_tensors" signature="def extract_input_tensors(self, model: ONNXModel) -> List[TensorInfo]"/>
+      <method name="extract_output_tensors" signature="def extract_output_tensors(self, model: ONNXModel) -> List[TensorInfo]"/>
+      <method name="extract_operators" signature="def extract_operators(self, model: ONNXModel) -> List[OperatorInfo]"/>
+      <method name="extract_version_info" signature="def extract_version_info(self, model: ONNXModel) -> VersionInfo"/>
+      <method name="extract_model_metadata" signature="def extract_model_metadata(self, model: ONNXModel) -> ModelMetadata"/>
+    </interface>
+    <interface name="PreprocessingPipeline" kind="class" signature="class PreprocessingPipeline:" path="src/npu_converter/preprocessing/pipeline.py">
+      <method name="add_step" signature="def add_step(self, step: PreprocessingStep) -> None"/>
+      <method name="configure" signature="def configure(self, config: PreprocessingConfig) -> None"/>
+      <method name="execute" signature="def execute(self, data: np.ndarray) -> np.ndarray"/>
+      <method name="batch_execute" signature="def batch_execute(self, batch_data: List[np.ndarray]) -> List[np.ndarray]"/>
+      <method name="reset" signature="def reset(self) -> None"/>
+    </interface>
+    <interface name="CompatibilityChecker" kind="class" signature="class CompatibilityChecker:" path="src/npu_converter/validation/compatibility.py">
+      <method name="check_operator_support" signature="def check_operator_support(self, model: ONNXModel) -> CompatibilityResult"/>
+      <method name="check_version_compatibility" signature="def check_version_compatibility(self, model: ONNXModel) -> CompatibilityResult"/>
+      <method name="check_shape_compatibility" signature="def check_shape_compatibility(self, model: ONNXModel) -> CompatibilityResult"/>
+      <method name="check_precision_support" signature="def check_precision_support(self, model: ONNXModel) -> CompatibilityResult"/>
+      <method name="full_compatibility_check" signature="def full_compatibility_check(self, model: ONNXModel) -> FullCompatibilityResult"/>
+    </interface>
+    <interface name="ONNXModel" kind="dataclass" signature="dataclass ONNXModel:" path="src/npu_converter/models/onnx_model.py">
+      <field name="model_proto" type="ModelProto"/>
+      <field name="model_path" type="Optional[str]"/>
+      <field name="metadata" type="ModelMetadata"/>
+      <field name="input_tensors" type="List[TensorInfo]"/>
+      <field name="output_tensors" type="List[TensorInfo]"/>
+      <field name="operators" type="List[OperatorInfo]"/>
+      <field name="version" type="VersionInfo"/>
+    </interface>
+    <interface name="PreprocessingConfig" kind="dataclass" signature="dataclass PreprocessingConfig:" path="src/npu_converter/preprocessing/config.py">
+      <field name="normalize" type="bool"/>
+      <field name="normalize_mode" type="str"/>
+      <field name="resize" type="Optional[Tuple[int, int]]"/>
+      <field name="channel_format" type="str"/>
+      <field name="data_type" type="str"/>
+      <field name="custom_steps" type="List[PreprocessingStep]"/>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>使用pytest测试框架，遵循项目现有测试模式。每个验收标准对应独立测试用例，包含单元测试和集成测试。测试覆盖率目标85%+，使用pytest-cov监控覆盖率。并发加载需使用多线程测试验证线程安全。</standards>
+    <locations>
+      <directory path="tests/unit/loaders/" pattern="test_onnx_loader.py"/>
+      <directory path="tests/unit/preprocessing/" pattern="test_preprocessing_*.py"/>
+      <directory path="tests/unit/validation/" pattern="test_compatibility_*.py"/>
+      <directory path="tests/integration/" pattern="test_onnx_loading.py"/>
+      <directory path="tests/fixtures/" pattern="models/onnx/"/>
+      <directory path="tests/fixtures/" pattern="preprocessing_configs/"/>
+    </locations>
+    <ideas>
+      <test ac="1" name="test_onnx_loading_formats">测试多种ONNX模型格式加载（文件、对象、URL）</test>
+      <test ac="2" name="test_metadata_extraction">测试模型结构解析和元数据提取功能</test>
+      <test ac="3" name="test_preprocessing_pipeline">测试可配置预处理管道执行</test>
+      <test ac="4" name="test_compatibility_checking">测试模型兼容性验证功能</test>
+      <test ac="5" name="test_batch_concurrent_loading">测试批量预处理和多模型并发加载</test>
+      <test name="test_large_model_loading">测试大模型加载内存优化</test>
+      <test name="test_thread_safety">测试并发加载线程安全性</test>
+      <test name="test_error_handling">测试错误处理和恢复机制</test>
+    </ideas>
+  </tests>
+
+  <dependencies>
+    <dependency type="故事">
+      <story id="1.3" reason="核心转换框架BaseConverter接口"/>
+      <story id="1.4" reason="配置管理系统ConfigurationManager"/>
+      <story id="1.5" reason="基础转换流程ProgressTracker进度跟踪"/>
+      <story id="1.6" reason="命令行界面BaseCLI接口"/>
+      <story id="1.7" reason="错误处理和日志系统ErrorHandler"/>
+      <story id="1.8" reason="单元测试和集成测试基础设施"/>
+      <story id="2.1.1" reason="PTQ转换器架构对齐"/>
+    </dependency>
+    <dependency type="Epic">
+      <epic id="1" reason="完整基础设施支持和架构对齐"/>
+    </dependency>
+  </dependencies>
+
+  <risks>
+    <risk name="大模型内存占用" severity="high" probability="medium">
+      <description>ONNX模型可能占用大量内存，特别是大型Transformer模型</description>
+      <mitigation>实现流式加载和内存映射，优化数据结构</mitigation>
+    </risk>
+    <risk name="算子兼容性" severity="high" probability="medium">
+      <description>ONNX模型可能包含Horizon X5不支持的算子</description>
+      <mitigation>提前识别不支持算子，提供转换建议和替代方案</mitigation>
+    </risk>
+    <risk name="并发访问竞争" severity="medium" probability="low">
+      <description>多线程并发加载可能存在资源竞争</description>
+      <mitigation>实现线程安全机制，使用锁和信号量</mitigation>
+    </risk>
+    <risk name="远程模型下载安全" severity="medium" probability="low">
+      <description>URL远程模型下载存在安全风险</description>
+      <mitigation>HTTPS验证、文件类型检查、病毒扫描</mitigation>
+    </risk>
+    <risk name="ONNX版本兼容性" severity="low" probability="medium">
+      <description>不同ONNX版本之间可能存在兼容性问题</description>
+      <mitigation>支持多个ONNX opset版本，提供版本转换</mitigation>
+    </risk>
+  </risks>
+
+  <quality-gates>
+    <gate name="代码质量" criteria="代码覆盖率85%+，通过ruff和mypy检查"/>
+    <gate name="性能基准" criteria="单模型加载&lt;30秒，批量处理支持10+模型并发"/>
+    <gate name="兼容性验证" criteria>100%通过Horizon X5算子支持检查</gate>
+    <gate name="线程安全" criteria>并发加载测试100%通过，无竞态条件</gate>
+    <gate name="错误处理" criteria>错误场景覆盖100%，错误恢复机制正常</gate>
+    <gate name="内存优化" criteria>大模型加载内存占用在合理范围，无内存泄漏</gate>
+  </quality-gates>
+
+  <decisions>
+    <decision id="DEC-2025-10-27-001" decision="使用ONNX 1.14.0作为模型加载核心库" reason="最新稳定版本，支持opset 8-17，覆盖主流模型格式"/>
+    <decision id="DEC-2025-10-27-002" decision="实现统一ONNXModel数据模型" reason="标准化模型表示，简化后续处理流程"/>
+    <decision id="DEC-2025-10-27-003" decision="预处理管道采用插件化设计" reason="支持灵活配置和扩展，满足不同模型需求"/>
+    <decision id="DEC-2025-10-27-004" decision="批量处理使用线程池" reason="IO密集型任务适合线程池，提升处理效率"/>
+    <decision id="DEC-2025-10-27-005" decision="兼容性检查集成Horizon X5标准" reason="确保转换质量和工具链兼容性"/>
+  </decisions>
+</story-context>

@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<context id="story-3.1" title="性能优化与扩展">
+  <!--
+    Story Context for Story 3.1: 性能优化与扩展
+    Generated: 2025-10-28
+    Version: 1.0
+    Status: Draft - BMM v6 Phase 1 Started
+
+    Strategic Background:
+    This story marks the beginning of Epic 3 (Performance Optimization and Scaling).
+    With Epic 1 (100% complete) and Epic 2 (100% complete) providing complete infrastructure
+    and model conversion capabilities, this story focuses on optimizing performance for
+    production environments with high concurrency, scalability, and efficiency requirements.
+  -->
+
+  <!-- === STORY METADATA === -->
+  <metadata>
+    <storyId>story-3.1</storyId>
+    <epicId>epic-3</epicId>
+    <epicPhase>Phase 1: 性能优化与扩展启动</epicPhase>
+    <priority>High</priority>
+    <complexity>High</complexity>
+    <estimatedDays>12</estimatedDays>
+    <status>Draft</status>
+    <createdDate>2025-10-28</createdDate>
+    <lastUpdated>2025-10-28</lastUpdated>
+    <version>1.0</version>
+  </metadata>
+
+  <!-- === STRATEGIC CONTEXT === -->
+  <strategicContext>
+    <background>
+      XLeRobot项目已完成Epic 1（基础设施）和Epic 2（模型转换）的开发，
+      建立了完整的NPU模型转换能力。为了满足企业级生产环境的需求，
+      需要对系统进行全面的性能优化和扩展能力提升，确保高并发、高效率、高稳定性。
+    </background>
+
+    <problemStatement>
+      当前系统虽然功能完整，但需要在生产环境中验证和优化性能。
+      面临的主要挑战包括：转换延迟需要优化、并发处理能力需要增强、
+      资源利用率需要提升、长时间运行的稳定性需要保证。
+    </problemStatement>
+
+    <solutionApproach>
+      基于Epic 1和Epic 2的完整基础设施，实现性能分析框架、优化核心转换流程、
+      构建可扩展的并发架构、优化资源使用、提供性能调优系统。
+      确保转换时间<5分钟，支持10+模型并发转换，内存使用降低30%+。
+    </solutionApproach>
+
+    <strategicAlignment>
+      <primaryFocus>性能优化与扩展</primaryFocus>
+      <secondaryFocus>生产就绪、企业级稳定性</secondaryFocus>
+      <justification>
+        Epic 3是项目从开发阶段向生产阶段过渡的关键环节。
+        性能优化直接影响用户体验和系统价值实现，是企业级应用的必要条件。
+      </justification>
+    </strategicAlignment>
+
+    <criticalSuccessFactors>
+      <factor>性能瓶颈的准确识别和有效解决</factor>
+      <factor>高并发场景下的系统稳定性和数据一致性</factor>
+      <factor>资源利用率的显著提升（CPU、内存、NPU）</factor>
+      <factor>长期运行的稳定性和可靠性保证</factor>
+      <factor>与Epic 1和Epic 2的完美集成</factor>
+    </criticalSuccessFactors>
+  </strategicContext>
+
+  <!-- === BUSINESS CONTEXT === -->
+  <businessContext>
+    <businessObjective>
+      优化XLeRobot NPU模型转换工具的整体性能，实现大规模、高并发、高效率的模型转换，
+      满足企业级应用需求，提升用户体验和系统价值。
+    </businessObjective>
+
+    <businessValue>
+      <value-proposition>
+        通过性能优化，实现2-5倍的转换效率提升，支持批量并发转换，
+        降低资源消耗30%+，确保生产级稳定性，为企业级用户提供卓越的转换体验。
+      </value-proposition>
+
+      <targetUsers>
+        <user type="AI模型工程师">
+          需要对大规模模型进行高效转换，关注转换时间和资源消耗
+        </user>
+        <user type="企业系统架构师">
+          需要确保系统在高并发场景下的稳定性和可扩展性
+        </user>
+        <user type="DevOps工程师">
+          需要监控和优化系统性能，确保生产环境稳定运行
+        </user>
+        <user type="产品经理">
+          需要可衡量的性能指标和用户体验提升数据
+        </user>
+      </targetUsers>
+
+      <keyMetrics>
+        <metric name="转换延迟" target="&lt;5分钟" measurement="单个模型转换时间"/>
+        <metric name="并发吞吐量" target="&gt;10模型/分钟" measurement="单位时间转换模型数"/>
+        <metric name="资源效率" target="内存使用降低30%+" measurement="优化前后资源使用对比"/>
+        <metric name="系统稳定性" target="72小时无故障" measurement="连续运行时间"/>
+        <metric name="代码覆盖率" target="&gt;90%" measurement="测试覆盖代码行数/总代码行数"/>
+      </keyMetrics>
+
+      <businessRisks>
+        <risk level="High" description="并发安全问题可能导致数据竞争和系统崩溃" mitigation="采用成熟设计模式，充分压力测试"/>
+        <risk level="Medium" description="性能优化可能影响代码可维护性" mitigation="建立性能基线，平衡优化与可维护性"/>
+        <risk level="Medium" description="性能测试难以准确模拟生产环境" mitigation="建立多层次测试体系，结合实际场景"/>
+        <risk level="Low" description="Horizon X5工具链可能限制优化空间" mitigation="深入了解工具链限制，合理设计策略"/>
+      </businessRisks>
+    </businessValue>
+
+    <stakeholders>
+      <stakeholder role="产品经理" interest="High" influence="High">
+        关注性能指标达标和用户体验提升
+      </stakeholder>
+      <stakeholder role="AI模型工程师" interest="High" influence="Medium">
+        关注转换效率和使用便捷性
+      </stakeholder>
+      <stakeholder role="系统架构师" interest="High" influence="High">
+        关注系统扩展性和稳定性
+      </stakeholder>
+      <stakeholder role="DevOps工程师" interest="Medium" influence="Medium">
+        关注监控、运维和故障诊断
+      </stakeholder>
+      <stakeholder role="QA工程师" interest="Medium" influence="Medium">
+        关注性能测试和质量保证
+      </stakeholder>
+    </stakeholders>
+  </businessContext>
+
+  <!-- === TECHNICAL CONTEXT === -->
+  <technicalContext>
+    <architecture>
+      <description>
+        基于Epic 1（100%完成）和Epic 2（100%完成）的完整基础设施，
+        扩展性能监控、优化转换流程、增强并发处理、优化资源管理。
+        严格继承Story 1.3的核心框架架构，集成所有Epic 2的功能组件。
+      </description>
+
+      <components>
+        <component name="PerformanceMonitor" inheritance="BaseComponent" purpose="性能监控和分析框架"/>
+        <component name="PerformanceOptimizer" purpose="性能优化引擎"/>
+        <component name="ConcurrentConverter" purpose="并发转换管理器"/>
+        <component name="ResourceManager" purpose="资源管理和优化"/>
+        <component name="CacheManager" purpose="缓存和增量处理"/>
+      </components>
+
+      <interfaces>
+        <interface name="BaseConverter" provider="Story 1.3" consumer="ConcurrentConverter"/>
+        <interface name="ConfigurationManager" provider="Story 1.4" consumer="PerformanceOptimizer"/>
+        <interface name="BaseConversionFlow" provider="Story 1.5" consumer="PerformanceOptimizer"/>
+        <interface name="PerformanceBenchmark" provider="Story 2.8" consumer="PerformanceMonitor"/>
+        <interface name="ParameterOptimizer" provider="Story 2.6" consumer="PerformanceOptimizer"/>
+        <interface name="ReportGenerator" provider="Story 2.9" consumer="PerformanceMonitor"/>
+      </interfaces>
+
+      <dependencies>
+        <dependency type="Mandatory" component="Epic 1 Infrastructure" version="1.0.0" description="完整基础设施 (Story 1.3-1.8)"/>
+        <dependency type="Mandatory" component="Epic 2 Model Conversion" version="1.0.0" description="完整模型转换功能 (Story 2.1.1-2.10)"/>
+        <dependency type="Mandatory" component="Horizon X5 BPU Toolchain" version="Latest" description="转换执行环境"/>
+        <dependency type="Mandatory" component="Story 2.6 Parameter Optimization" version="1.0.0" description="参数优化算法"/>
+        <dependency type="Mandatory" component="Story 2.8 Performance Benchmark" version="1.0.0" description="性能测试基础设施"/>
+        <dependency type="Mandatory" component="Story 2.9 Report Generation" version="1.0.0" description="报告生成系统"/>
+      </dependencies>
+
+      <constraints>
+        <constraint type="Performance" requirement="转换时间&lt;5分钟" impact="High"/>
+        <constraint type="Scalability" requirement="支持10+模型并发" impact="High"/>
+        <constraint type="Efficiency" requirement="内存使用降低30%+" impact="Medium"/>
+        <constraint type="Stability" requirement="72小时连续运行" impact="High"/>
+        <constraint type="Compatibility" requirement="与Epic 1和Epic 2 100%兼容" impact="High"/>
+      </constraints>
+    </architecture>
+
+    <technologyStack>
+      <layer name="Runtime" components="Python 3.10, Ubuntu 20.04, Docker"/>
+      <layer name="Toolchain" components="Horizon X5 BPU Toolchain, ONNX Runtime"/>
+      <layer name="Core Framework" components="XLeRobot Core Framework (Story 1.3)"/>
+      <layer name="Configuration" components="ConfigurationManager (Story 1.4)"/>
+      <layer name="Conversion Flows" components="BaseConversionFlow (Story 1.5)"/>
+      <layer name="Model Conversion" components="Epic 2 Complete Flows (Story 2.1.1-2.10)"/>
+      <layer name="Performance" components="Performance Monitor &amp; Optimizer (Story 3.1)"/>
+    </technologyStack>
+
+    <implementationDetails>
+      <pattern name="Monitor" usage="PerformanceMonitor实时监控性能指标"/>
+      <pattern name="Strategy" usage="PerformanceOptimizer采用不同优化策略"/>
+      <pattern name="Proxy" usage="ConcurrentConverter代理和管理并发转换"/>
+      <pattern name="Flyweight" usage="CacheManager共享和复用计算结果"/>
+      <pattern name="Observer" usage="实时性能通知和告警"/>
+
+      <keyAlgorithms>
+        <algorithm name="PerformanceBottleneckDetection" description="性能瓶颈自动识别算法"/>
+        <algorithm name="SmartTaskScheduling" description="智能任务调度算法"/>
+        <algorithm name="DynamicResourceAllocation" description="动态资源分配算法"/>
+        <algorithm name="IncrementalConversion" description="增量转换和缓存策略"/>
+      </keyAlgorithms>
+
+      <dataFlow>
+        <flow step="1" component="PerformanceMonitor" description="初始化性能监控系统"/>
+        <flow step="2" component="ResourceManager" description="分配和监控资源使用"/>
+        <flow step="3" component="ConcurrentConverter" description="管理并发转换任务"/>
+        <flow step="4" component="PerformanceOptimizer" description="执行性能优化策略"/>
+        <flow step="5" component="BaseConversionFlow" description="执行转换流程"/>
+        <flow step="6" component="CacheManager" description="缓存和增量处理"/>
+        <flow step="7" component="PerformanceMonitor" description="记录和分析性能数据"/>
+      </dataFlow>
+    </implementationDetails>
+  </technicalContext>
+
+  <!-- === ACCEPTANCE CRITERIA DETAILS === -->
+  <acceptanceCriteria>
+    <criterion id="AC1" priority="High" type="Performance">
+      <title>实现转换流程的性能分析框架</title>
+      <description>
+        建立性能指标收集体系（延迟、吞吐量、资源使用），支持实时性能监控和历史数据分析，
+        提供性能瓶颈识别和诊断能力，集成Story 2.8性能基准测试系统。
+      </description>
+
+      <acceptanceTests>
+        <test id="AC1-T1" name="性能指标收集测试">
+          Given: 运行中的转换流程
+          When: 监控系统收集性能数据
+          Then: 准确记录延迟、吞吐量、CPU、内存、NPU使用率
+        </test>
+        <test id="AC1-T2" name="瓶颈识别测试">
+          Given: 存在性能瓶颈的转换场景
+          When: 自动分析性能数据
+          Then: 准确识别瓶颈位置和原因
+        </test>
+        <test id="AC1-T3" name="基准测试集成测试">
+          Given: Story 2.8性能基准测试系统
+          When: 集成性能监控
+          Then: 无缝对接，实时性能对比
+        </test>
+      </acceptanceTests>
+
+      <dependencies>
+        <dependency type="Requires" component="PerformanceMonitor" requirement="性能监控核心框架"/>
+        <dependency type="Requires" component="Story 2.8" requirement="性能基准测试系统"/>
+      </dependencies>
+    </criterion>
+
+    <criterion id="AC2" priority="High" type="Performance">
+      <title>优化核心转换流程的执行效率</title>
+      <description>
+        优化Story 1.5的基础转换流程，减少不必要的计算和数据拷贝，
+        实现智能任务调度和资源管理，支持增量转换和缓存机制。
+      </description>
+
+      <acceptanceTests>
+        <test id="AC2-T1" name="转换效率优化测试">
+          Given: 相同模型转换
+          When: 执行优化前后的转换
+          Then: 优化后转换时间减少20%+
+        </test>
+        <test id="AC2-T2" name="缓存机制测试">
+          Given: 已转换过的模型
+          When: 再次执行相同转换
+          Then: 利用缓存，转换时间减少80%+
+        </test>
+        <test id="AC2-T3" name="智能调度测试">
+          Given: 多个转换任务
+          When: 系统自动调度
+          Then: 资源利用率提升30%+，总时间减少
+        </test>
+      </acceptanceTests>
+
+      <dependencies>
+        <dependency type="Requires" component="PerformanceOptimizer" requirement="性能优化引擎"/>
+        <dependency type="Requires" component="BaseConversionFlow" requirement="Story 1.5基础流程"/>
+      </dependencies>
+    </criterion>
+
+    <criterion id="AC3" priority="High" type="Scalability">
+      <title>实现可扩展的并发转换架构</title>
+      <description>
+        基于Epic 1的异步框架扩展并发能力，支持多模型并发转换（Batch Processing），
+        实现负载均衡和任务分发机制，提供并发控制和资源隔离。
+      </description>
+
+      <acceptanceTests>
+        <test id="AC3-T1" name="并发转换测试">
+          Given: 10个模型同时转换
+          When: 执行并发转换
+          Then: 所有模型成功转换，无数据竞争
+        </test>
+        <test id="AC3-T2" name="负载均衡测试">
+          Given: 不同复杂度的转换任务
+          When: 自动分配任务
+          Then: 资源合理分配，完成时间最短
+        </test>
+        <test id="AC3-T3" name="资源隔离测试">
+          Given: 并发转换过程
+          When: 监控系统资源
+          Then: 任务间资源隔离，无相互干扰
+        </test>
+      </acceptanceTests>
+
+      <dependencies>
+        <dependency type="Requires" component="ConcurrentConverter" requirement="并发转换管理器"/>
+        <dependency type="Requires" component="ResourceManager" requirement="资源管理机制"/>
+      </dependencies>
+    </criterion>
+
+    <criterion id="AC4" priority="Medium" type="Efficiency">
+      <title>优化内存和存储资源使用</title>
+      <description>
+        实现智能内存管理和回收机制，支持大模型的分块处理，
+        优化临时文件和缓存管理，减少内存峰值占用30%+。
+      </description>
+
+      <acceptanceTests>
+        <test id="AC4-T1" name="内存优化测试">
+          Given: 大规模模型转换
+          When: 执行内存优化
+          Then: 内存峰值降低30%+
+        </test>
+        <test id="AC4-T2" name="分块处理测试">
+          Given: 超大模型（&gt;1GB）
+          When: 执行分块处理
+          Then: 无内存溢出，正常完成转换
+        </test>
+        <test id="AC4-T3" name="缓存管理测试">
+          Given: 频繁的转换操作
+          When: 智能缓存管理
+          Then: 缓存命中率&gt;80%，磁盘空间合理使用
+        </test>
+      </acceptanceTests>
+
+      <dependencies>
+        <dependency type="Requires" component="ResourceManager" requirement="内存和存储优化"/>
+        <dependency type="Requires" component="CacheManager" requirement="智能缓存管理"/>
+      </dependencies>
+    </criterion>
+
+    <criterion id="AC5" priority="Medium" type="Maintainability">
+      <title>实现性能优化配置和调优系统</title>
+      <description>
+        集成Story 2.6参数优化系统，提供性能优化的预设配置，
+        支持动态性能调优，实现性能优化的自动化推荐。
+      </description>
+
+      <acceptanceTests>
+        <test id="AC5-T1" name="优化配置测试">
+          Given: 系统预设的性能优化配置
+          When: 应用配置
+          Then: 性能提升符合配置预期
+        </test>
+        <test id="AC5-T2" name="动态调优测试">
+          Given: 运行中的转换系统
+          When: 动态调整性能参数
+          Then: 实时生效，无需重启
+        </test>
+        <test id="AC5-T3" name="自动推荐测试">
+          Given: 历史性能数据
+          When: 系统分析
+          Then: 提供个性化优化建议
+        </test>
+      </acceptanceTests>
+
+      <dependencies>
+        <dependency type="Requires" component="ParameterOptimizer" requirement="Story 2.6参数优化系统"/>
+        <dependency type="Requires" component="ConfigurationManager" requirement="配置管理支持"/>
+      </dependencies>
+    </criterion>
+  </acceptanceCriteria>
+
+  <!-- === REQUIREMENTS TRACEABILITY === -->
+  <requirementsTraceability>
+    <reqMap source="PRD-PR001" target="Story 3.1-AC1" type="Implements">
+      "性能监控 - 实时监控和历史数据分析"
+    </reqMap>
+    <reqMap source="PRD-PR002" target="Story 3.1-AC2" type="Implements">
+      "转换效率优化 - 减少转换时间"
+    </reqMap>
+    <reqMap source="PRD-PR003" target="Story 3.1-AC3" type="Implements">
+      "并发处理 - 支持批量模型转换"
+    </reqMap>
+    <reqMap source="PRD-PR004" target="Story 3.1-AC4" type="Implements">
+      "资源优化 - 降低资源消耗"
+    </reqMap>
+    <reqMap source="PRD-PR005" target="Story 3.1-AC5" type="Implements">
+      "性能调优 - 自动化优化推荐"
+    </reqMap>
+  </requirementsTraceability>
+
+  <!-- === QUALITY ATTRIBUTES === -->
+  <qualityAttributes>
+    <attribute name="Performance">
+      <description>转换延迟&lt;5分钟，吞吐量&gt;10模型/分钟，资源效率提升30%+</description>
+      <scenarios>
+        <scenario>单个中等规模模型转换</scenario>
+        <scenario>10个模型批量并发转换</scenario>
+        <scenario>72小时连续运行压力测试</scenario>
+      </scenarios>
+    </attribute>
+
+    <attribute name="Scalability">
+      <description>支持水平扩展，弹性资源分配，高并发处理能力</description>
+      <scenarios>
+        <scenario>20+模型并发转换</scenario>
+        <scenario>动态资源扩缩容</scenario>
+        <scenario>分布式转换节点</scenario>
+      </scenarios>
+    </attribute>
+
+    <attribute name="Reliability">
+      <description>72小时无故障运行，错误自动恢复，数据一致性保证</description>
+      <scenarios>
+        <scenario>长时间连续运行</scenario>
+        <scenario>异常情况自动恢复</scenario>
+        <scenario>并发操作数据一致性</scenario>
+      </scenarios>
+    </attribute>
+
+    <attribute name="Maintainability">
+      <description>模块化设计，性能指标可视化，优化策略可配置</description>
+      <scenarios>
+        <scenario>新增性能优化策略</scenario>
+        <scenario>性能问题诊断和修复</scenario>
+        <scenario>性能参数调优</scenario>
+      </scenarios>
+    </attribute>
+
+    <attribute name="Observability">
+      <description>完整的性能指标监控，实时告警，历史数据分析</description>
+      <scenarios>
+        <scenario>性能问题实时发现</scenario>
+        <scenario>性能趋势分析</scenario>
+        <scenario>容量规划支持</scenario>
+      </scenarios>
+    </attribute>
+  </qualityAttributes>
+
+  <!-- === RISKS AND MITIGATION === -->
+  <riskAssessment>
+    <risk id="RISK-1" category="Concurrency" probability="Medium" impact="High">
+      <title>并发安全问题</title>
+      <description>
+        多线程并发可能引发数据竞争、死锁、线程安全问题，
+        影响系统稳定性和数据一致性。
+      </description>
+      <mitigation>
+        <strategy>采用成熟设计模式，充分并发测试</strategy>
+        <actions>
+          <action>使用生产者和消费者模式管理任务队列</action>
+          <action>采用读写锁机制控制并发访问</action>
+          <action>实现资源池和连接复用</action>
+          <action>进行大规模并发压力测试</action>
+        </actions>
+        <contingency>
+          如果并发问题复杂度过高，先实现串行优化，再逐步引入并发。
+        </contingency>
+      </mitigation>
+    </risk>
+
+    <risk id="RISK-2" category="Testing" probability="Medium" impact="Medium">
+      <title>性能测试复杂度</title>
+      <description>
+        性能测试难以准确模拟生产环境的复杂场景，
+        可能导致优化方向错误或效果不明显。
+      </description>
+      <mitigation>
+        <strategy>建立多层次测试体系，结合实际场景测试</strategy>
+        <actions>
+          <action>设计接近生产环境的测试场景</action>
+          <action>建立性能基准和对比测试</action>
+          <action>进行长期稳定性测试</action>
+          <action>收集真实用户使用数据验证</action>
+        </actions>
+        <contingency>
+          如果测试环境限制较多，先在小规模场景验证，再逐步扩大测试范围。
+        </contingency>
+      </mitigation>
+    </risk>
+
+    <risk id="RISK-3" category="Maintainability" probability="Low" impact="Medium">
+      <title>优化与可维护性平衡</title>
+      <description>
+        过度优化可能导致代码复杂度过高，难以维护和调试，
+        影响长期开发效率。
+      </description>
+      <mitigation>
+        <strategy>建立性能基线，平衡优化与可维护性</strategy>
+        <actions>
+          <action>只对关键性能路径进行深度优化</action>
+          <action>保持代码可读性和模块化设计</action>
+          <action>建立性能优化的代码审查标准</action>
+          <action>提供性能优化的使用指南</action>
+        </actions>
+        <contingency>
+          如果优化导致代码质量下降，回滚到可维护版本，寻求其他优化方案。
+        </contingency>
+      </mitigation>
+    </risk>
+
+    <risk id="RISK-4" category="Compatibility" probability="Low" impact="High">
+      <title>Horizon X5工具链限制</title>
+      <description>
+        BPU工具链可能对性能优化有限制，
+        影响优化效果和实现方案。
+      </description>
+      <mitigation>
+        <strategy>深入了解工具链限制，合理设计优化策略</strategy>
+        <actions>
+          <action>详细研究BPU工具链的性能特征</action>
+          <action>设计工具链无关的优化策略</action>
+          <action>准备多套备选优化方案</action>
+          <action>与工具链技术支持团队保持沟通</action>
+        </actions>
+        <contingency>
+          如果工具链完全不兼容，专注于软件层面的优化，或探索其他NPU平台。
+        </contingency>
+      </mitigation>
+    </risk>
+  </riskAssessment>
+
+  <!-- === ASSUMPTIONS AND DEPENDENCIES === -->
+  <assumptions>
+    <assumption>Epic 1和Epic 2的基础设施稳定且100%完成</assumption>
+    <assumption>Horizon X5 BPU工具链稳定且性能可优化</assumption>
+    <assumption>系统具备足够的硬件资源支持性能测试</assumption>
+    <assumption>开发团队具备性能优化相关经验和技能</assumption>
+    <assumption>可以访问生产环境进行实际性能测试</assumption>
+  </assumptions>
+
+  <dependencies>
+    <dependency type="External" name="Horizon X5 BPU Toolchain" version="Latest" criticality="High" description="模型转换执行环境"/>
+    <dependency type="Internal" name="Epic 1 Infrastructure" version="1.0.0" criticality="High" description="完整基础设施 (Story 1.3-1.8)"/>
+    <dependency type="Internal" name="Epic 2 Model Conversion" version="1.0.0" criticality="High" description="完整模型转换功能 (Story 2.1.1-2.10)"/>
+    <dependency type="Internal" name="Story 2.6" version="1.0.0" criticality="High" description="参数优化系统"/>
+    <dependency type="Internal" name="Story 2.8" version="1.0.0" criticality="High" description="性能基准测试"/>
+    <dependency type="Internal" name="Story 2.9" version="1.0.0" criticality="Medium" description="报告生成系统"/>
+  </dependencies>
+
+  <!-- === TESTING STRATEGY === -->
+  <testingStrategy>
+    <testTypes>
+      <testType name="Unit Testing" coverage="&gt;90%" framework="pytest">
+        测试性能监控、优化器、并发控制器等各个组件
+      </testType>
+      <testType name="Integration Testing" coverage="100%" framework="pytest">
+        测试性能组件与Epic 1和Epic 2的集成
+      </testType>
+      <testType name="Performance Testing" coverage="N/A" framework="custom">
+        测试转换性能、并发吞吐量、资源效率
+      </testType>
+      <testType name="Stress Testing" coverage="N/A" framework="custom">
+        测试高并发、大规模、长时间运行场景
+      </testType>
+      <testType name="Stability Testing" coverage="N/A" framework="custom">
+        测试72小时连续运行稳定性
+      </testType>
+    </testTypes>
+
+    <testEnvironments>
+      <env name="Development" purpose="开发阶段单元测试和性能验证"/>
+      <env name="CI/CD" purpose="持续集成自动化性能测试"/>
+      <env name="Staging" purpose="生产环境前性能压力测试"/>
+      <env name="Production" purpose="最终性能验证和监控"/>
+    </testEnvironments>
+
+    <testData>
+      <data name="Standard ONNX Models" source="多规模、多类型的ONNX模型"/>
+      <data name="Concurrent Conversion Tasks" source="批量转换任务数据集"/>
+      <data name="Performance Benchmarks" source="Story 2.8基准测试数据"/>
+      <data name="Resource Usage Metrics" source="硬件资源监控数据"/>
+    </testData>
+  </testingStrategy>
+
+  <!-- === DEPLOYMENT AND RELEASE === -->
+  <deployment>
+    <releasePhases>
+      <phase name="Alpha" criteria="核心性能组件完成，单元测试通过">
+        内部性能测试和基础功能验证
+      </phase>
+      <phase name="Beta" criteria="并发测试通过，性能指标达标">
+        扩展性能测试和优化调整
+      </phase>
+      <phase name="Production" criteria="所有性能测试通过，长期稳定性验证">
+        生产环境部署和性能监控
+      </phase>
+    </releasePhases>
+
+    <rolloutStrategy>
+      <strategy name="Gradual Rollout with Monitoring">
+        <step>灰度发布：5%流量，性能实时监控</step>
+        <step>扩大范围：25%流量，长期稳定性验证</step>
+        <step>扩大范围：50%流量，高并发压力测试</step>
+        <step>全量发布：100%流量，全面性能监控</step>
+      </strategy>
+    </rolloutStrategy>
+
+    <monitoring>
+      <metric name="转换延迟" threshold="&lt;5分钟"/>
+      <metric name="并发吞吐量" threshold="&gt;10模型/分钟"/>
+      <metric name="内存使用率" threshold="优化前降低30%"/>
+      <metric name="CPU使用率" threshold="&lt;80%"/>
+      <metric name="错误率" threshold="&lt;1%"/>
+      <metric name="系统可用性" threshold="&gt;99.9%"/>
+      <metric name="长期稳定性" threshold="72小时无故障"/>
+    </monitoring>
+  </deployment>
+
+  <!-- === DOCUMENTATION REQUIREMENTS === -->
+  <documentation>
+    <docs required="true" format="Markdown">
+      <doc type="User Guide" path="docs/guides/performance-optimization-guide.md">
+        性能优化使用指南和最佳实践
+      </doc>
+      <doc type="Architecture" path="docs/architecture/performance-optimization-architecture.md">
+        性能优化架构设计文档
+      </doc>
+      <doc type="API Reference" path="docs/api/performance-api.md">
+        性能监控和优化API参考
+      </doc>
+      <doc type="Testing" path="docs/testing/performance-testing-strategy.md">
+        性能测试策略和用例
+      </doc>
+      <doc type="Operations" path="docs/operations/performance-monitoring-guide.md">
+        性能监控和运维指南
+      </doc>
+    </docs>
+  </documentation>
+
+  <!-- === ESTIMATION AND PLANNING === -->
+  <estimation>
+    <effort estimate="12 person-days" confidence="Medium">
+      基于Epic 1和Epic 2的完成经验，考虑性能优化的复杂性
+    </effort>
+
+    <resourceRequirements>
+      <resource type="Senior Developer" count="1" skills="Python, Performance Optimization, Concurrency"/>
+      <resource type="Performance Engineer" count="0.5" skills="Performance Testing, Benchmarking"/>
+      <resource type="QA Engineer" count="0.5" skills="Performance Testing, Load Testing"/>
+      <resource type="Documentation Writer" count="0.3" skills="Technical Writing, Performance Analysis"/>
+    </resourceRequirements>
+
+    <schedule>
+      <milestone name="Phase 1 Complete" date="+3 days" description="架构扩展完成"/>
+      <milestone name="Phase 2 Complete" date="+7 days" description="核心功能实现完成"/>
+      <milestone name="Phase 3 Complete" date="+10 days" description="验证和测试完成"/>
+      <milestone name="Story Complete" date="+12 days" description="所有交付物完成"/>
+    </schedule>
+  </estimation>
+
+  <!-- === APPROVAL AND SIGN-OFF === -->
+  <approvals>
+    <approval role="Product Manager" status="Pending" date="" comments=""/>
+    <approval role="Technical Lead" status="Pending" date="" comments=""/>
+    <approval role="Performance Engineer" status="Pending" date="" comments=""/>
+    <approval role="QA Lead" status="Pending" date="" comments=""/>
+  </approvals>
+
+  <!-- === CHANGE HISTORY === -->
+  <changeHistory>
+    <change version="1.0" date="2025-10-28" author="System" type="Create">
+      初始创建，Epic 3性能优化与扩展启动
+    </change>
+  </changeHistory>
+
+</context>

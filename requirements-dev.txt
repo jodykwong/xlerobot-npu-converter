@@ -1,0 +1,25 @@
+-r requirements.txt
+
+# Development tools
+black==23.7.0
+ruff==0.0.285
+mypy==1.5.1
+pre-commit==3.3.3
+
+# Testing framework
+pytest==7.4.0
+pytest-cov==4.1.0
+pytest-benchmark==4.0.0
+pytest-mock==3.11.1
+pytest-xdist==3.3.1
+coverage==7.3.2
+
+# Visualization and analysis
+matplotlib==3.7.2
+seaborn==0.12.2
+pandas==2.0.3
+psutil==5.9.5
+
+# Reporting and monitoring
+pytest-json-report==1.5.0
+watchmedo==2.3.1

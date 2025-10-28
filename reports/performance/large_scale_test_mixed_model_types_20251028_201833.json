@@ -1,0 +1,27 @@
+{
+  "test_name": "LargeScaleModelTest",
+  "timestamp": "2025-10-28T20:18:33.389663",
+  "metrics": {
+    "conversion_time": [],
+    "throughput": [],
+    "cpu_usage": [
+      8.0,
+      16.3,
+      7.4
+    ],
+    "memory_usage": [
+      8.4,
+      8.4,
+      8.4
+    ],
+    "npu_usage": []
+  },
+  "summary": {
+    "total_tests": 0,
+    "avg_conversion_time": 0,
+    "max_conversion_time": 0,
+    "avg_cpu_usage": 10.566666666666668,
+    "avg_memory_usage": 8.4,
+    "avg_throughput": 0
+  }
+}

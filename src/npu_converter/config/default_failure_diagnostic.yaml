@@ -1,0 +1,304 @@
+# XLeRobot NPU模型转换工具 - 转换失败诊断默认配置文件
+# ============================================================
+#
+# 该配置文件定义了转换失败诊断系统的默认设置
+# 包括诊断设置、报告设置、知识库设置等
+#
+# 版本: 1.0.0
+# 创建日期: 2025-10-28
+# 作者: XLeRobot 开发团队
+
+# ============================================================================
+# 诊断设置
+# ============================================================================
+# 是否包含堆栈跟踪信息
+include_stack_trace: true
+
+# 最大建议数量
+max_suggestions: 5
+
+# 最大修复步骤数量
+max_fix_steps: 10
+
+# 最大预防措施数量
+max_prevention_measures: 5
+
+# ============================================================================
+# 报告设置
+# ============================================================================
+# 报告格式 (json, html, pdf)
+report_format: json
+
+# 报告输出目录
+report_output_dir: reports/failure_diagnostics
+
+# 是否自动保存报告
+auto_save_reports: true
+
+# 报告模板名称
+report_template: default
+
+# ============================================================================
+# 知识库设置
+# ============================================================================
+# 是否启用知识库更新
+knowledge_base_update: false
+
+# 知识库文件路径 (可选)
+knowledge_base_path: null
+
+# 自定义知识库 (可选)
+custom_knowledge_base: {}
+
+# ============================================================================
+# 严重程度阈值
+# ============================================================================
+# 严重程度评估阈值 (0.0-1.0)
+severity_thresholds:
+  critical: 0.8   # 80%以上影响
+  high: 0.6       # 60%以上影响
+  medium: 0.4     # 40%以上影响
+  low: 0.2        # 20%以上影响
+
+# ============================================================================
+# 错误分类规则
+# ============================================================================
+# 错误关键词分类规则
+error_classification_rules:
+  model_load_error:
+    - "模型文件不存在"
+    - "模型文件损坏"
+    - "ONNX格式不支持"
+    - "模型版本不兼容"
+    - "缺少依赖库"
+
+  quantization_error:
+    - "校准数据不足"
+    - "量化参数设置错误"
+    - "不支持的算子"
+    - "数值范围超出限制"
+    - "内存不足"
+
+  optimization_error:
+    - "优化策略不匹配"
+    - "模型结构不支持"
+    - "硬件限制"
+    - "参数冲突"
+    - "性能退化过大"
+
+  export_error:
+    - "导出路径不存在"
+    - "权限不足"
+    - "磁盘空间不足"
+    - "导出格式不支持"
+    - "模型过大"
+
+  environment_error:
+    - "依赖库版本不匹配"
+    - "环境变量未设置"
+    - "硬件驱动问题"
+    - "权限配置错误"
+    - "系统资源不足"
+
+  configuration_error:
+    - "参数值无效"
+    - "配置格式错误"
+    - "必填参数缺失"
+    - "参数冲突"
+    - "配置不完整"
+
+# ============================================================================
+# 智能建议设置
+# ============================================================================
+# 是否启用智能建议
+enable_smart_suggestions: true
+
+# 建议置信度阈值 (0.0-1.0)
+suggestion_confidence_threshold: 0.7
+
+# 是否启用上下文感知建议
+context_aware_suggestions: true
+
+# ============================================================================
+# 预防措施设置
+# ============================================================================
+# 是否启用失败预测
+enable_failure_prediction: true
+
+# 预测模型路径 (可选)
+prediction_model_path: null
+
+# 历史数据阈值
+historical_data_threshold: 10
+
+# ============================================================================
+# 集成设置
+# ============================================================================
+# 是否集成报告生成器
+integrate_with_report_generator: true
+
+# 是否集成错误处理器
+integrate_with_error_handler: true
+
+# 是否集成监控
+integrate_with_monitoring: true
+
+# ============================================================================
+# 高级设置
+# ============================================================================
+# 是否启用自动修复 (实验性)
+enable_auto_fix: false
+
+# 是否启用学习模式
+enable_learning_mode: false
+
+# 学习数据保存路径
+learning_data_path: data/failure_learning
+
+# 诊断缓存设置
+enable_cache: true
+cache_ttl: 3600  # 缓存时间 (秒)
+
+# 性能设置
+max_concurrent_diagnosis: 5
+diagnosis_timeout: 30  # 诊断超时 (秒)
+
+# 日志设置
+log_diagnostic_history: true
+log_level: INFO
+
+# ============================================================================
+# 报告模板配置
+# ============================================================================
+# 报告模板配置
+report_templates:
+  default:
+    include_header: true
+    include_footer: true
+    include_timestamp: true
+    include_model_info: true
+    include_error_details: true
+    include_suggestions: true
+    include_prevention_measures: true
+
+  minimal:
+    include_header: false
+    include_footer: false
+    include_timestamp: true
+    include_model_info: true
+    include_error_details: true
+    include_suggestions: true
+    include_prevention_measures: false
+
+  comprehensive:
+    include_header: true
+    include_footer: true
+    include_timestamp: true
+    include_model_info: true
+    include_error_details: true
+    include_suggestions: true
+    include_prevention_measures: true
+    include_stack_trace: true
+    include_context: true
+    include_historical_data: true
+
+# ============================================================================
+# 通知设置
+# ============================================================================
+# 是否启用失败通知
+enable_failure_notification: false
+
+# 通知渠道 (email, webhook, slack等)
+notification_channels: []
+
+# 通知阈值
+notification_threshold: HIGH  # CRITICAL, HIGH, MEDIUM, LOW
+
+# ============================================================================
+# 质量保证设置
+# ============================================================================
+# 质量检查设置
+quality_checks:
+  # 是否验证诊断结果
+  validate_diagnosis: true
+
+  # 是否验证建议有效性
+  validate_suggestions: true
+
+  # 是否验证修复步骤
+  validate_fix_steps: true
+
+  # 质量评分阈值
+  quality_score_threshold: 0.8
+
+# ============================================================================
+# 调试设置
+# ============================================================================
+# 是否启用调试模式
+debug_mode: false
+
+# 是否保存调试信息
+save_debug_info: false
+
+# 调试信息输出路径
+debug_output_dir: debug/failure_diagnostics
+
+# ============================================================================
+# 预设配置
+# ============================================================================
+# 预设配置名称和对应的参数
+presets:
+  basic:
+    include_stack_trace: false
+    max_suggestions: 3
+    max_fix_steps: 5
+    report_format: json
+    auto_save_reports: false
+    enable_smart_suggestions: false
+
+  detailed:
+    include_stack_trace: true
+    max_suggestions: 10
+    report_format: html
+    auto_save_reports: true
+    enable_smart_suggestions: true
+    context_aware_suggestions: true
+
+  production:
+    include_stack_trace: true
+    max_suggestions: 7
+    report_format: pdf
+    auto_save_reports: true
+    enable_failure_prediction: true
+    integrate_with_monitoring: true
+
+  quick:
+    include_stack_trace: false
+    max_suggestions: 2
+    max_fix_steps: 3
+    report_format: json
+    auto_save_reports: false
+    enable_smart_suggestions: false
+
+  development:
+    include_stack_trace: true
+    max_suggestions: 10
+    report_format: html
+    auto_save_reports: true
+    enable_smart_suggestions: true
+    debug_mode: true
+    save_debug_info: true
+
+# ============================================================================
+# 说明
+# ============================================================================
+# 1. 所有配置项都可以通过配置文件或程序代码进行自定义
+# 2. 预设配置可以通过 preset_name 参数快速加载
+# 3. 严重程度阈值用于自动评估失败的严重程度
+# 4. 错误分类规则用于自动识别失败类型
+# 5. 智能建议系统基于历史数据和模式匹配提供建议
+# 6. 失败预测功能需要足够的训练数据才能工作
+# 7. 集成设置用于与其他系统组件协同工作
+#
+# 更多配置选项和详细说明请参考官方文档
+# ============================================================================

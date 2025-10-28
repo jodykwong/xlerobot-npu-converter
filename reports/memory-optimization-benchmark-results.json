@@ -1,0 +1,219 @@
+{
+  "metadata": {
+    "test_name": "Story 3.2 Memory Optimization Benchmark",
+    "test_date": "2025-10-28 21:40:48",
+    "total_tests": 16
+  },
+  "summary": {
+    "best_performance": {
+      "小数据集": {
+        "preset": "standard",
+        "time": 0.10383057594299316,
+        "throughput": 9631.074381683457
+      },
+      "中等数据集": {
+        "preset": "low_memory",
+        "time": 0.9785823822021484,
+        "throughput": 10218.86371742821
+      },
+      "大数据集": {
+        "preset": "low_memory",
+        "time": 14.95691466331482,
+        "throughput": 6685.870866487751
+      },
+      "超大数据集": {
+        "preset": "low_memory",
+        "time": 15.052133083343506,
+        "throughput": 0.26574306630509054
+      }
+    },
+    "best_efficiency": {
+      "小数据集": {
+        "preset": "low_memory",
+        "efficiency": 0.8
+      },
+      "中等数据集": {
+        "preset": "low_memory",
+        "efficiency": 0.8
+      },
+      "大数据集": {
+        "preset": "low_memory",
+        "efficiency": 0.8000000000000002
+      },
+      "超大数据集": {
+        "preset": "low_memory",
+        "efficiency": 0.8
+      }
+    },
+    "average_metrics": {
+      "execution_time": 7.915553957223892,
+      "memory_efficiency": 0.8,
+      "throughput": 5356.777407915456
+    },
+    "recommendations": [
+      "标准模式在大多数场景下表现良好，建议作为默认选择"
+    ]
+  },
+  "results": [
+    {
+      "scenario": "小数据集_low_memory",
+      "preset": "low_memory",
+      "data_size": 8056,
+      "execution_time": 0.15111613273620605,
+      "peak_memory": 93299,
+      "average_memory": 57659392,
+      "memory_efficiency": 0.8,
+      "throughput": 6617.42715283508
+    },
+    {
+      "scenario": "小数据集_standard",
+      "preset": "standard",
+      "data_size": 8056,
+      "execution_time": 0.10383057594299316,
+      "peak_memory": 91763,
+      "average_memory": 57663488,
+      "memory_efficiency": 0.7999999999999999,
+      "throughput": 9631.074381683457
+    },
+    {
+      "scenario": "小数据集_high_performance",
+      "preset": "high_performance",
+      "data_size": 8056,
+      "execution_time": 0.2038118839263916,
+      "peak_memory": 91627,
+      "average_memory": 57667584,
+      "memory_efficiency": 0.7999999999999999,
+      "throughput": 4906.485238913539
+    },
+    {
+      "scenario": "小数据集_batch_processing",
+      "preset": "batch_processing",
+      "data_size": 8056,
+      "execution_time": 0.5039875507354736,
+      "peak_memory": 93027,
+      "average_memory": 57667584,
+      "memory_efficiency": 0.8,
+      "throughput": 1984.175995102837
+    },
+    {
+      "scenario": "中等数据集_low_memory",
+      "preset": "low_memory",
+      "data_size": 85176,
+      "execution_time": 0.9785823822021484,
+      "peak_memory": 557538,
+      "average_memory": 61407232,
+      "memory_efficiency": 0.8,
+      "throughput": 10218.86371742821
+    },
+    {
+      "scenario": "中等数据集_standard",
+      "preset": "standard",
+      "data_size": 85176,
+      "execution_time": 1.0180778503417969,
+      "peak_memory": 589559,
+      "average_memory": 61415424,
+      "memory_efficiency": 0.8,
+      "throughput": 9822.431552403114
+    },
+    {
+      "scenario": "中等数据集_high_performance",
+      "preset": "high_performance",
+      "data_size": 85176,
+      "execution_time": 1.1171565055847168,
+      "peak_memory": 556650,
+      "average_memory": 61423616,
+      "memory_efficiency": 0.8,
+      "throughput": 8951.297289152899
+    },
+    {
+      "scenario": "中等数据集_batch_processing",
+      "preset": "batch_processing",
+      "data_size": 85176,
+      "execution_time": 1.415863275527954,
+      "peak_memory": 557049,
+      "average_memory": 61427712,
+      "memory_efficiency": 0.7999999999999999,
+      "throughput": 7062.828857024454
+    },
+    {
+      "scenario": "大数据集_low_memory",
+      "preset": "low_memory",
+      "data_size": 800984,
+      "execution_time": 14.95691466331482,
+      "peak_memory": 8579330,
+      "average_memory": 85192704,
+      "memory_efficiency": 0.8000000000000002,
+      "throughput": 6685.870866487751
+    },
+    {
+      "scenario": "大数据集_standard",
+      "preset": "standard",
+      "data_size": 800984,
+      "execution_time": 15.027303695678711,
+      "peak_memory": 8579267,
+      "average_memory": 85192704,
+      "memory_efficiency": 0.8,
+      "throughput": 6654.5537393215955
+    },
+    {
+      "scenario": "大数据集_high_performance",
+      "preset": "high_performance",
+      "data_size": 800984,
+      "execution_time": 15.01574420928955,
+      "peak_memory": 8579283,
+      "average_memory": 85192704,
+      "memory_efficiency": 0.7999999999999999,
+      "throughput": 6659.676577211178
+    },
+    {
+      "scenario": "大数据集_batch_processing",
+      "preset": "batch_processing",
+      "data_size": 800984,
+      "execution_time": 15.354613780975342,
+      "peak_memory": 8580643,
+      "average_memory": 85192704,
+      "memory_efficiency": 0.8,
+      "throughput": 6512.700444728991
+    },
+    {
+      "scenario": "超大数据集_low_memory",
+      "preset": "low_memory",
+      "data_size": 184,
+      "execution_time": 15.052133083343506,
+      "peak_memory": 28856489,
+      "average_memory": 165748736,
+      "memory_efficiency": 0.8,
+      "throughput": 0.26574306630509054
+    },
+    {
+      "scenario": "超大数据集_standard",
+      "preset": "standard",
+      "data_size": 184,
+      "execution_time": 15.098402261734009,
+      "peak_memory": 28855793,
+      "average_memory": 165748736,
+      "memory_efficiency": 0.8,
+      "throughput": 0.26492869448430045
+    },
+    {
+      "scenario": "超大数据集_high_performance",
+      "preset": "high_performance",
+      "data_size": 184,
+      "execution_time": 15.187660932540894,
+      "peak_memory": 28855873,
+      "average_memory": 165748736,
+      "memory_efficiency": 0.8,
+      "throughput": 0.2633716948098077
+    },
+    {
+      "scenario": "超大数据集_batch_processing",
+      "preset": "batch_processing",
+      "data_size": 184,
+      "execution_time": 15.463664531707764,
+      "peak_memory": 28857249,
+      "average_memory": 165748736,
+      "memory_efficiency": 0.8,
+      "throughput": 0.25867089859574516
+    }
+  ]
+}

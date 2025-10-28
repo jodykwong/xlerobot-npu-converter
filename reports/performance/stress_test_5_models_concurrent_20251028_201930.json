@@ -1,0 +1,27 @@
+{
+  "test_name": "ConcurrentStressTest",
+  "timestamp": "2025-10-28T20:19:30.514432",
+  "metrics": {
+    "conversion_time": [],
+    "throughput": [],
+    "cpu_usage": [
+      15.1,
+      7.4,
+      15.2
+    ],
+    "memory_usage": [
+      8.5,
+      8.5,
+      8.5
+    ],
+    "npu_usage": []
+  },
+  "summary": {
+    "total_tests": 0,
+    "avg_conversion_time": 0,
+    "max_conversion_time": 0,
+    "avg_cpu_usage": 12.566666666666668,
+    "avg_memory_usage": 8.5,
+    "avg_throughput": 0
+  }
+}

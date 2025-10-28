@@ -1,0 +1,11 @@
+# Production dependencies for XLeRobot NPU Converter
+# Core dependencies
+numpy==1.24.3
+pyyaml==6.0
+click==8.1.7
+requests>=2.25.0
+packaging>=21.0
+
+# ONNX model processing
+onnx==1.14.0
+onnxruntime==1.15.1

@@ -1,0 +1,80 @@
+# Horizon X5 BPU工具链配置文件
+
+# 工具链安装配置
+toolchain:
+  install_path: "/opt/horizon"
+  download_url: "https://horizon-x5.example.com/toolchain.tar.gz"  # TODO: 替换为实际下载地址
+  checksum_sha256: "placeholder_sha256"  # TODO: 替换为实际校验和
+  version_info_url: "https://horizon-x5.example.com/version.json"  # TODO: 替换为实际版本检查地址
+
+# 工具链组件
+components:
+  hbdk:
+    name: "BPU编译器"
+    executable: "hbdk"
+    version_option: "--version"
+    help_option: "--help"
+  hb_mapper:
+    name: "模型转换工具"
+    executable: "hb_mapper"
+    version_option: "--version"
+    help_option: "--help"
+  hb_perf:
+    name: "性能分析工具"
+    executable: "hb_perf"
+    version_option: "--version"
+    help_option: "--help"
+  hb_gdb:
+    name: "调试工具"
+    executable: "hb_gdb"
+    version_option: "--version"
+    help_option: "--help"
+
+# 环境配置
+environment:
+  variables:
+    HORIZON_TOOLCHAIN_ROOT: "/opt/horizon"
+    PATH: "${HORIZON_TOOLCHAIN_ROOT}/bin:${PATH}"
+    LD_LIBRARY_PATH: "${HORIZON_TOOLCHAIN_ROOT}/lib:${LD_LIBRARY_PATH}"
+
+  # 权限设置
+  permissions:
+    install_dir_mode: "0755"
+    executable_mode: "0755"
+    lib_mode: "0644"
+
+# 版本管理
+versioning:
+  current_version: "1.0.0"
+  backup_enabled: true
+  backup_directory: "/opt/horizon/backups"
+  max_backups: 5
+
+# 兼容性要求
+compatibility:
+  ubuntu_version: "20.04"
+  python_version: "3.10"
+  min_storage_gb: 2
+  architecture: "x86_64"
+
+# 安全配置
+security:
+  verify_checksum: true
+  verify_signature: false  # TODO: 实现签名验证
+  allowed_domains:
+    - "horizon-x5.example.com"
+    - "horizon.com"
+
+# 日志配置
+logging:
+  level: "INFO"
+  log_file: "/var/log/horizon-toolchain.log"
+  max_log_size_mb: 100
+  backup_count: 3
+
+# 更新配置
+updates:
+  auto_check: true
+  check_interval_hours: 24
+  notification_required: true
+  rollback_on_failure: true

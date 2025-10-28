@@ -1,0 +1,75 @@
+_metadata:
+  name: "sensevoice_default"
+  description: "Default configuration template for SenseVoice ASR models"
+  model_type: "sensevoice"
+  version: "1.0.0"
+  author: "NPU Converter Configuration Team"
+  created_at: "2024-01-01"
+  tags: ["default", "sensevoice", "asr", "production"]
+
+project:
+  name: "sensevoice_asr"
+  version: "1.0.0"
+  model_type: "sensevoice"
+  description: "SenseVoice Automatic Speech Recognition model"
+
+hardware:
+  target_device: "horizon_x5"
+  optimization_level: "O2"
+  memory_limit: "8GB"
+  compute_units: 10
+  cache_size: "256MB"
+
+conversion_params:
+  input_format: "onnx"
+  output_format: "bpu"
+  precision: "int8"
+  calibration_method: "minmax"
+  batch_size: 1
+  num_workers: 4
+
+model_specific:
+  sensevoice:
+    # Audio processing parameters
+    sample_rate: 16000
+    audio_length: 30
+    mel_bins: 80
+    frame_length: 25
+    frame_shift: 10
+    n_fft: 512
+    hop_length: 160
+    win_length: 400
+    n_mels: 80
+    f_min: 0.0
+    f_max: 8000.0
+
+    # Model parameters
+    vocab_size: 10000
+    normalize: true
+    preemphasis: 0.97
+
+    # ASR specific settings
+    beam_size: 5
+    length_penalty: 1.0
+    coverage_penalty: 0.0
+    temperature: 1.0
+
+performance:
+  target_latency_ms: 100
+  max_realtime_factor: 0.1
+  enable_streaming: false
+  enable_caching: true
+  max_batch_size: 8
+
+optimization:
+  enable_quantization: true
+  quantization_precision: "int8"
+  enable_fusion: true
+  enable_pruning: false
+  enable_weight_sharing: false
+  enable_dynamic_shapes: false
+
+validation:
+  strict_validation: true
+  warn_on_deprecated: true
+  validate_paths: true

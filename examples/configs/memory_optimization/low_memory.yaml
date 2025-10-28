@@ -1,0 +1,55 @@
+# 低内存模式配置
+# 适用于内存受限环境
+# 版本: 1.0
+# 日期: 2025-10-28
+
+# === 基础配置 ===
+optimization_level: aggressive
+memory_mode: low_memory
+
+# === 内存监控配置 ===
+monitoring_enabled: true
+monitoring_interval: 0.05
+peak_memory_threshold: 0.70
+
+# === 内存分配优化配置 ===
+memory_pool_enabled: true
+memory_pool_size: 52428800  # 50MB (字节)
+object_reuse_enabled: true
+object_reuse_threshold: 100
+
+# === 算子级优化配置 ===
+operator_optimization_enabled: true
+intermediate_result_reuse: true
+memory_compression_enabled: true
+compute_memory_tradeoff: 0.9
+
+# === 批处理配置 ===
+batch_processing_enabled: false
+batch_size: 2
+dynamic_batch_adjustment: true
+batch_memory_limit: 1073741824  # 1GB (字节)
+
+# === GC优化配置 ===
+gc_optimization_enabled: true
+gc_threshold_adjustment: true
+reference_counting_optimization: true
+cycle_detection_enabled: true
+gc_aggressiveness: 1.0
+
+# === 大模型分片配置 ===
+model_sharding_enabled: true
+shard_size_threshold: 104857600  # 100MB (字节)
+max_shards: 8
+
+# === 泄漏检测配置 ===
+leak_detection_enabled: true
+leak_detection_interval: 0.5
+leak_threshold: 5242880  # 5MB (字节)
+out_of_bounds_detection: true
+
+# === 报告配置 ===
+reporting_enabled: false
+report_format:
+  - json
+auto_report_generation: false

@@ -1,0 +1,102 @@
+# SenseVoice ASR Fast Configuration
+# Optimized for speed - suitable for real-time applications
+# Story 2.3: SenseVoice ASR Complete Conversion Implementation
+# Generated: 2025-10-28
+
+model:
+  type: sensevoice
+  version: "1.0.0"
+  languages:
+    - zh  # Chinese only for maximum speed
+  voice_activity_detection: true
+  noise_reduction: false  # Disabled for speed
+
+conversion:
+  level: basic  # Minimal optimization for speed
+  input_format: onnx
+  output_format: bpu
+  target_hardware: horizon_x5
+  processing_mode: streaming  # Real-time processing
+  optimization:
+    multi_language_optimization: false  # Single language only
+    audio_format_support: true
+    streaming_optimization: true  # Enable streaming optimizations
+    batch_optimization: false
+    noise_reduction: false
+    audio_enhancement: false
+
+audio_parameters:
+  sample_rate: 16000
+  bit_depth: 16
+  channels: 1
+  format: wav
+  frame_length: 25  # Shorter frames
+  hop_length: 10
+  n_mels: 64  # Reduced features for speed
+  fmax: 8000
+  normalize: true
+  pre_emphasis: 0.97
+
+asr_parameters:
+  confidence_threshold: 0.6  # Lower threshold for faster recognition
+  language_detection: false  # Skip detection to save time
+  endpoint_detection: true
+  max_segment_duration: 10  # Shorter segments
+  min_segment_duration: 0.3
+  silence_duration: 0.3
+  vad_threshold: 0.4  # Lower VAD threshold
+  vad_min_duration: 50  # Shorter VAD duration
+
+processing:
+  batch_size: 64  # Larger batch for throughput
+  num_workers: 8  # More workers for parallel processing
+  buffer_size: 512  # Smaller buffer for lower latency
+  chunk_size: 256  # Smaller chunks for streaming
+  overlap: 0.3  # Less overlap
+  streaming:
+    buffer_size: 512
+    chunk_size: 256
+    overlap_ms: 5
+    real_time_factor: 0.5  # Faster than real-time
+    max_delay_ms: 50  # Strict latency requirement
+
+quality:
+  accuracy_target: 0.90  # Reduced accuracy for speed
+  speed_target_ms: 100  # Aggressive speed target
+  precision_threshold: 0.95
+  success_rate_threshold: 0.90
+  validation_level: basic
+
+output:
+  formats:
+    - json  # Minimal output format
+  include_metrics: false
+  include_optimization_details: false
+  include_audio_analysis: false
+
+validation:
+  strict_mode: false
+  enable_validation: true
+  validation_dimensions:
+    - structure
+    - performance
+  precision_threshold: 0.95
+  success_rate_threshold: 0.90
+  validation_level: basic
+
+# Fast Configuration Notes
+# Trade-offs for speed:
+# - Reduced accuracy (90% vs 95%)
+# - Single language support only
+# - No noise reduction or audio enhancement
+# - Reduced feature dimensions (64 vs 80 mel bins)
+# - Lower confidence threshold (0.6 vs 0.7)
+# - Faster validation (basic vs comprehensive)
+
+# PRD Requirements Tracking
+prd_requirements:
+  conversion_success_rate: ">90%"  # Relaxed for speed
+  performance_improvement: "3-7x"  # Higher target
+  accuracy_target: ">90%"  # Lower target
+  latency_target: "<100ms"  # Aggressive target
+  streaming_support: true

@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  npu-converter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: application
+    image: xlerobot-npu-converter:latest
+    container_name: xlerobot-npu-converter-dev
+    working_dir: /app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    volumes:
+      # Mount source code for development
+      - ./src:/app/src:rw
+      - ./config:/app/config:rw
+      - ./docs:/app/docs:rw
+      # Mount tests directory
+      - ./tests:/app/tests:rw
+      # Preserve pip cache
+      - pip-cache:/root/.cache/pip
+    user: "1000:1000"  # Run as non-root user
+    stdin_open: true
+    tty: true
+    # Default command keeps container running
+    command: tail -f /dev/null
+
+  # Optional: Service for running tests in isolation
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: application
+    image: xlerobot-npu-converter:latest
+    container_name: xlerobot-test-runner
+    working_dir: /app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    volumes:
+      - ./src:/app/src:ro
+      - ./config:/app/config:ro
+      - ./tests:/app/tests:ro
+    user: "1000:1000"
+    profiles:
+      - testing
+    command: python -m pytest tests/ -v
+
+volumes:
+  pip-cache:
+    driver: local
+
+networks:
+  default:
+    name: xlerobot-network

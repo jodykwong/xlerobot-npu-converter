@@ -1,0 +1,82 @@
+_metadata:
+  name: "development"
+  description: "Development and debugging configuration template for all model types"
+  model_type: "generic"
+  version: "1.0.0"
+  author: "NPU Converter Configuration Team"
+  created_at: "2024-01-01"
+  tags: ["development", "debug", "generic", "testing"]
+
+project:
+  name: "development_model"
+  version: "1.0.0"
+  model_type: "sensevoice"  # Can be overridden
+  description: "Development and testing configuration"
+
+hardware:
+  target_device: "horizon_x5"
+  optimization_level: "O0"  # No optimization for debugging
+  memory_limit: "8GB"
+  compute_units: 10
+  cache_size: "256MB"
+
+conversion_params:
+  input_format: "onnx"
+  output_format: "bpu"
+  precision: "float16"  # Higher precision for debugging
+  calibration_method: "minmax"
+  batch_size: 1
+  num_workers: 1
+
+model_specific:
+  sensevoice:
+    # Standard audio processing parameters
+    sample_rate: 16000
+    audio_length: 10  # Shorter for quick testing
+    mel_bins: 80
+    frame_length: 25
+    frame_shift: 10
+    n_fft: 512
+    hop_length: 160
+    win_length: 400
+    n_mels: 80
+    f_min: 0.0
+    f_max: 8000.0
+
+    # Model parameters
+    vocab_size: 5000  # Smaller vocab for testing
+    normalize: true
+    preemphasis: 0.97
+
+    # Development settings
+    beam_size: 3
+    length_penalty: 1.0
+    coverage_penalty: 0.0
+    temperature: 1.0
+
+performance:
+  target_latency_ms: 1000  # Relaxed for debugging
+  max_realtime_factor: 1.0  # No real-time constraint
+  enable_streaming: false
+  enable_caching: false  # Disable caching for debugging
+  max_batch_size: 1
+
+optimization:
+  enable_quantization: false  # Disable quantization for debugging
+  quantization_precision: "float16"
+  enable_fusion: false  # Disable fusion for debugging
+  enable_pruning: false
+  enable_weight_sharing: false
+  enable_dynamic_shapes: false
+
+validation:
+  strict_validation: true
+  warn_on_deprecated: true
+  validate_paths: true
+
+debug:
+  enable_profiling: true
+  enable_logging: true
+  log_level: "DEBUG"
+  save_intermediate_results: true
+  enable_gradient_checkpointing: false

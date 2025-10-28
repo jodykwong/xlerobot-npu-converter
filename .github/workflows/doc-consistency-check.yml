@@ -1,0 +1,271 @@
+name: 文档一致性检查
+
+on:
+  # 在推送到主分支时触发
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'README.md'
+      - 'docs/bmm-workflow-status.md'
+      - 'docs/sprint-status.yaml'
+      - 'docs/**/*.md'
+
+  # 在创建Pull Request时触发
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'README.md'
+      - 'docs/bmm-workflow-status.md'
+      - 'docs/sprint-status.yaml'
+      - 'docs/**/*.md'
+
+  # 每周一早上8点定时检查
+  schedule:
+    - cron: '0 8 * * 1'
+
+  # 手动触发
+  workflow_dispatch:
+
+jobs:
+  doc-consistency-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # 获取完整历史，用于比较
+
+    - name: 设置Python环境
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: 安装依赖
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyyaml
+
+    - name: 运行文档一致性检查
+      run: |
+        python scripts/sync_docs.py --check-only
+
+    - name: 生成文档同步报告
+      run: |
+        python scripts/sync_docs.py --report
+      continue-on-error: true
+
+    - name: 上传文档同步报告
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: doc-sync-report
+        path: docs/doc_sync_report.md
+
+    - name: 检查文档更新日期
+      run: |
+        # 检查README最后更新日期是否合理
+        README_LAST_UPDATE=$(grep -oP '\*最后更新:\s*\K\d{4}-\d{2}-\d{2}' README.md)
+        README_FILE_DATE=$(date -d "$(stat -c %y README.md)" +%Y-%m-%d)
+        README_FILE_EPOCH=$(stat -c %Y README.md)
+        README_MARK_EPOCH=$(date -d "$README_LAST_UPDATE" +%s 2>/dev/null || echo 0)
+
+        if [ $README_FILE_EPOCH -gt $README_MARK_EPOCH ]; then
+          # 文件修改了但更新时间戳没更新
+          echo "❌ README.md更新时间戳可能过时 (文件: $README_FILE_DATE, 标记: $README_LAST_UPDATE)"
+          echo "::warning file=README.md::README.md文件已更新但未修正更新时间戳"
+        else
+          echo "✅ README更新时间戳合理"
+        fi
+
+    - name: 检查关键文档存在性
+      run: |
+        required_docs=(
+          "README.md"
+          "docs/PRD.md"
+          "docs/architecture.md"
+          "docs/bmm-workflow-status.md"
+          "docs/sprint-status.yaml"
+          "docs/production-deployment-guide.md"
+        )
+
+        missing_docs=()
+        for doc in "${required_docs[@]}"; do
+          if [ ! -f "$doc" ]; then
+            missing_docs+=("$doc")
+            echo "❌ 缺少必要文档: $doc"
+          fi
+        done
+
+        if [ ${#missing_docs[@]} -gt 0 ]; then
+          echo "::error::发现${#missing_docs[@]}个缺少的必要文档"
+          exit 1
+        else
+          echo "✅ 所有必要文档都存在"
+        fi
+
+    - name: 验证文档链接
+      run: |
+        # 检查文档间的相对链接是否有效
+        echo "🔍 检查README中的链接..."
+        # 提取README中的链接
+        grep -oP '\[.*?\]\((.*?)\)' README.md | while read -r link_match; do
+          # 解析链接文本和URL
+          link_text=$(echo "$link_match" | sed 's/\[//g' | sed 's/\].*//')
+          link_url=$(echo "$link_match" | sed 's/.*\](\(.*\))/\1/')
+
+          # 跳过外部链接和锚点
+          if [[ "$link_url" =~ ^https?:// ]] || [[ "$link_url" =~ ^# ]]; then
+            continue
+          fi
+
+          # 检查链接指向的文件是否存在
+          if [ ! -f "$link_url" ] && [ ! -d "$link_url" ]; then
+            echo "❌ 断链: $link_text -> $link_url"
+          fi
+        done
+      continue-on-error: true
+
+    - name: 检查文档大小
+      run: |
+        # 检查文档是否过大（超过1MB）
+        find docs/ -name "*.md" -type f -exec sh -c 'if [ $(stat -c%s "$1") -gt 1048576 ]; then echo "❌ 文档过大: $1 ($(du -h "$1" | cut -f1))"; fi' _ {} \;
+      continue-on-error: true
+
+    - name: 检查文档编码
+      run: |
+        # 检查文档是否为UTF-8编码
+        find docs/ -name "*.md" -type f -exec sh -c 'if ! file -bi "$1" | grep -q "utf-8"; then echo "❌ 编码问题: $1"; fi' _ {} \;
+      continue-on-error: true
+
+    - name: 文档质量评分
+      run: |
+        score=0
+        max_score=100
+
+        # 检查1: README是否完整 (20分)
+        if grep -q "## 📋 项目状态" README.md; then
+          score=$((score + 10))
+          echo "✅ README包含项目状态 (+10)"
+        fi
+        if grep -q "## 🚀 快速开始" README.md; then
+          score=$((score + 10))
+          echo "✅ README包含快速开始 (+10)"
+        fi
+
+        # 检查2: 文档结构 (20分)
+        if [ -d "docs/stories" ]; then
+          score=$((score + 10))
+          echo "✅ 存在故事文档目录 (+10)"
+        fi
+        if [ -d "docs/reports" ]; then
+          score=$((score + 10))
+          echo "✅ 存在报告文档目录 (+10)"
+        fi
+
+        # 检查3: 文档更新频率 (20分)
+        recent_docs=$(find docs/ -name "*.md" -type f -newermt "2025-10-01" | wc -l)
+        total_docs=$(find docs/ -name "*.md" -type f | wc -l)
+        if [ $total_docs -gt 0 ]; then
+          ratio=$((recent_docs * 100 / total_docs))
+          if [ $ratio -gt 70 ]; then
+            score=$((score + 20))
+            echo "✅ 文档更新频率良好 ${ratio}% (+20)"
+          else
+            echo "⚠️ 文档更新频率一般 ${ratio}%"
+          fi
+        fi
+
+        # 检查4: 代码示例 (20分)
+        if grep -q "```bash" README.md; then
+          score=$((score + 10))
+          echo "✅ README包含bash示例 (+10)"
+        fi
+        if grep -q "```python" README.md; then
+          score=$((score + 10))
+          echo "✅ README包含Python示例 (+10)"
+        fi
+
+        # 检查5: 文档完整性 (20分)
+        if [ -f "docs/production-deployment-guide.md" ]; then
+          score=$((score + 20))
+          echo "✅ 存在生产部署指南 (+20)"
+        fi
+
+        echo ""
+        echo "📊 文档质量评分: ${score}/${max_score}"
+
+        if [ $score -lt 70 ]; then
+          echo "::warning::文档质量评分较低，建议改进"
+        elif [ $score -lt 85 ]; then
+          echo "ℹ️ 文档质量良好，但有改进空间"
+        else
+          echo "✅ 文档质量优秀"
+        fi
+
+    - name: 生成文档审查建议
+      if: always()
+      run: |
+        cat > docs/doc-review-recommendations.md << 'EOF'
+        # 文档审查建议
+
+        自动生成时间: $(date)
+
+        ## 本次检查结果
+
+        根据GitHub Actions自动检查，以下是文档改进建议：
+
+        ### 需要关注的文档
+
+        1. **README.md**
+           - 确保项目状态与BMM工作流状态一致
+           - 检查更新时间戳是否准确
+           - 验证所有链接有效
+
+        2. **关键文档**
+           - 确保所有必要文档存在
+           - 验证文档编码为UTF-8
+           - 检查文档大小是否合理
+
+        ### 改进建议
+
+        1. **定期审查**
+           - 每次代码变更时检查相关文档
+           - 每周运行文档质量检查
+           - 每月进行文档完整性审查
+
+        2. **自动化改进**
+           - 设置pre-commit hook检查文档
+           - 使用脚本自动同步文档状态
+           - 生成文档变更日志
+
+        3. **文档规范**
+           - 建立文档模板
+           - 统一文档格式
+           - 保持文档更新节奏
+
+        ## 操作清单
+
+        - [ ] 检查并更新过时文档
+        - [ ] 修复发现的断链
+        - [ ] 补充缺失的必要文档
+        - [ ] 优化过大文档
+        - [ ] 统一文档编码
+
+        ---
+        *此报告由GitHub Actions自动生成*
+        EOF
+
+    - name: 上传文档审查建议
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: doc-review-recommendations
+        path: docs/doc-review-recommendations.md
+
+    - name: 失败通知
+      if: failure()
+      run: |
+        echo "❌ 文档一致性检查失败"
+        echo "请检查上述错误并修复"
+        echo "详细报告请查看artifact中的文件"

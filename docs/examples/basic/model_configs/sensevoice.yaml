@@ -1,0 +1,176 @@
+# XLeRobot SenseVoice ASR模型配置
+# 多语言语音识别模型配置模板
+
+project:
+  name: "sensevoice_asr_model"
+  version: "1.0.0"
+  model_type: "sensevoice"
+  description: "多语言语音识别模型配置"
+  author: "XLeRobot Team"
+  created_date: "2025-10-26"
+
+hardware:
+  # 目标设备配置
+  target_device: "horizon_x5"        # 地平线X5 NPU
+  optimization_level: "O2"           # 优化级别: O0, O1, O2, O3
+  memory_limit: "8GB"                # 内存限制
+  compute_units: 10                  # 计算单元数量
+  cache_size: "256MB"                # 缓存大小
+  thermal_management: true           # 热管理
+  power_optimization: true           # 功耗优化
+
+conversion_params:
+  # 模型转换参数
+  input_format: "onnx"               # 输入格式
+  output_format: "bpu"               # 输出格式 (BPU格式)
+  precision: "int8"                  # 量化精度: int8, fp16
+  calibration_method: "minmax"       # 校准方法: minmax, kl, entropy
+  calibration_dataset_size: 1000     # 校准数据集大小
+  batch_size: 1                      # 批处理大小
+  num_workers: 4                     # 工作线程数
+  enable_profiling: false            # 是否启用性能分析
+
+model_specific:
+  sensevoice:
+    # 基础音频参数
+    sample_rate: 16000               # 采样率 (Hz)
+    audio_length: 30                 # 音频长度 (秒)
+    vocab_size: 10000                # 词汇表大小
+
+    # 音频处理参数
+    n_fft: 400                       # FFT窗口大小
+    hop_length: 160                  # 跳跃长度
+    win_length: 400                  # 窗口长度
+    n_mels: 80                       # Mel频谱通道数
+    mel_fmin: 0.0                    # Mel频率最小值
+    mel_fmax: 8000.0                 # Mel频率最大值
+    preemphasis: 0.97                # 预加重系数
+    window_type: "hann"              # 窗口类型: hann, hamming, blackman
+
+    # ASR模型参数
+    encoder_layers: 12               # 编码器层数
+    encoder_heads: 12                # 编码器注意力头数
+    encoder_dim: 768                 # 编码器维度
+    decoder_layers: 6                # 解码器层数
+    decoder_heads: 8                 # 解码器注意力头数
+    decoder_dim: 512                 # 解码器维度
+
+    # 语言检测配置
+    language_detection: true         # 是否启用语言检测
+    supported_languages: ["zh", "en", "yue", "ja"] # 支持的语言列表
+    default_language: "zh"           # 默认语言
+    language_confidence_threshold: 0.8 # 语言识别置信度阈值
+    language_embed_dim: 64           # 语言嵌入维度
+
+    # 语音活动检测 (VAD)
+    vad_enabled: true                # 是否启用VAD
+    vad_threshold: 0.5               # VAD阈值
+    vad_frame_length: 25             # VAD帧长度 (ms)
+    vad_hop_length: 10               # VAD跳跃长度 (ms)
+
+    # 语音分割配置
+    segmentation: true               # 是否启用语音分割
+    max_segment_length: 30           # 最大分段长度 (秒)
+    min_segment_length: 1            # 最小分段长度 (秒)
+    segment_overlap: 0.5             # 分段重叠 (秒)
+
+    # 解码参数
+    beam_size: 5                     # 束搜索大小
+    length_penalty: 1.0              # 长度惩罚
+    coverage_penalty: 1.0            # 覆盖惩罚
+    repetition_penalty: 1.0          # 重复惩罚
+    temperature: 1.0                 # 温度参数
+    top_k: 50                        # Top-K采样
+    top_p: 0.9                       # Top-P采样
+
+    # 置信度评分
+    confidence_threshold: 0.8        # 置信度阈值
+    confidence_calculation: "ctc"    # 置信度计算方法: ctc, attention, ensemble
+
+    # 后处理配置
+    punctuation_restoration: true    # 是否恢复标点符号
+    capitalization: false            # 是否大写化
+    number_normalization: true       # 是否数字标准化
+    time_stamping: true              # 是否添加时间戳
+    word_timestamps: false           # 是否添加词级时间戳
+
+    # 多说话人配置
+    speaker_diarization: false       # 是否启用说话人分离
+    max_speakers: 10                 # 最大说话人数量
+    speaker_embed_dim: 256           # 说话人嵌入维度
+
+    # 数据增强配置 (训练时使用)
+    use_spec_augment: true           # 是否使用频谱增强
+    spec_augment_freq_mask: 2        # 频谱增强频率掩码数
+    spec_augment_time_mask: 2        # 频谱增强时间掩码数
+    spec_augment_max_freq: 20        # 频谱增强最大频率
+    spec_augment_max_time: 50        # 频谱增强最大时间
+
+    # 语音增强配置
+    use_denoising: true              # 是否启用降噪
+    noise_reduction_level: 0.5       # 降噪级别
+    use_dereverberation: false       # 是否启用去混响
+
+    # 优化配置
+    use_caching: true                # 是否使用缓存
+    cache_size: 1000                 # 缓存大小
+    use_quantization_aware_training: false # 是否使用量化感知训练
+
+performance:
+  # 性能目标配置
+  target_latency_ms: 150            # 目标延迟 (毫秒)
+  max_realtime_factor: 0.8          # 最大实时因子
+  enable_streaming: true            # 是否启用流式处理
+  chunk_size: 1600                  # 流式处理块大小 (采样点)
+  memory_optimization: true         # 内存优化
+
+validation:
+  # 验证配置
+  enable_model_validation: true     # 启用模型验证
+  validate_transcription: true      # 验证转录结果
+  quality_thresholds:
+    wer_score: 0.1                  # 词错误率阈值
+    cer_score: 0.05                 # 字符错误率阈值
+    language_accuracy: 0.95         # 语言识别准确率
+
+language_configs:
+  # 各语言特定配置
+  zh:
+    charset: "chinese"              # 字符集
+    use_bpe: true                   # 是否使用BPE
+    bpe_size: 1000                  # BPE大小
+    tone_sensitive: true            # 是否声调敏感
+
+  en:
+    charset: "english"              # 字符集
+    use_bpe: true                   # 是否使用BPE
+    bpe_size: 1000                  # BPE大小
+
+  yue:
+    charset: "cantonese"            # 字符集
+    use_jyutping: true              # 是否使用粤拼
+    tone_sensitive: true            # 是否声调敏感
+    num_tones: 6                    # 声调数量
+
+  ja:
+    charset: "japanese"             # 字符集
+    use_kanji: true                 # 是否使用汉字
+    use_hiragana: true              # 是否使用平假名
+    use_katakana: true              # 是否使用片假名
+
+debug:
+  # 调试配置
+  enabled: false                    # 调试开关
+  log_level: "INFO"                 # 日志级别: DEBUG, INFO, WARNING, ERROR
+  save_intermediate: false          # 保存中间结果
+  profile_performance: false        # 性能分析
+  save_attention_weights: false     # 保存注意力权重
+  save_language_probs: false        # 保存语言概率
+
+# 配置说明:
+# 1. 此配置支持多语言语音识别 (中文、英文、粤语、日语)
+# 2. 包含完整的语言检测和说话人分离功能
+# 3. 支持流式处理和实时语音识别
+# 4. 包含先进的语音增强和降噪功能
+# 5. 支持多种解码策略 (束搜索、Top-K、Top-P)
+# 6. 包含完整的多语言后处理配置

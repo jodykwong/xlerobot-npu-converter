@@ -1,0 +1,103 @@
+# SenseVoice ASR Default Configuration
+# Story 2.3: SenseVoice ASR Complete Conversion Implementation
+# Generated: 2025-10-28
+
+model:
+  type: sensevoice
+  version: "1.0.0"
+  languages:
+    - zh  # Chinese (Mandarin)
+    - en  # English
+  voice_activity_detection: true
+  noise_reduction: true
+
+conversion:
+  level: production  # Options: basic, standard, enhanced, production
+  input_format: onnx
+  output_format: bpu
+  target_hardware: horizon_x5
+  processing_mode: batch  # Options: streaming, batch, interactive
+  optimization:
+    multi_language_optimization: true
+    audio_format_support: true
+    streaming_optimization: false
+    batch_optimization: true
+    noise_reduction: true
+    audio_enhancement: true
+
+audio_parameters:
+  sample_rate: 16000
+  bit_depth: 16
+  channels: 1  # mono
+  format: wav  # Options: wav, mp3, flac
+  frame_length: 25  # ms
+  hop_length: 10  # ms
+  n_mels: 80
+  fmax: 8000
+  normalize: true
+  pre_emphasis: 0.97
+
+asr_parameters:
+  confidence_threshold: 0.7
+  language_detection: true
+  endpoint_detection: true
+  max_segment_duration: 30  # seconds
+  min_segment_duration: 0.5  # seconds
+  silence_duration: 0.5  # seconds
+  vad_threshold: 0.5
+  vad_min_duration: 100  # ms
+
+processing:
+  batch_size: 32
+  num_workers: 4
+  buffer_size: 1024
+  chunk_size: 512
+  overlap: 0.5
+  streaming:
+    buffer_size: 1024
+    chunk_size: 512
+    overlap_ms: 10
+    real_time_factor: 1.0
+    max_delay_ms: 100
+  interactive:
+    response_time_ms: 200
+    confidence_threshold: 0.7
+    enable_correction: true
+
+quality:
+  accuracy_target: 0.95
+  speed_target_ms: 200
+  precision_threshold: 0.98
+  success_rate_threshold: 0.95
+  validation_level: comprehensive
+
+output:
+  formats:
+    - json
+    - html
+    - pdf
+  include_metrics: true
+  include_optimization_details: true
+  include_audio_analysis: true
+
+validation:
+  strict_mode: true
+  enable_validation: true
+  validation_dimensions:
+    - structure
+    - accuracy
+    - performance
+    - compatibility
+    - quality
+  precision_threshold: 0.98
+  success_rate_threshold: 0.95
+  validation_level: comprehensive
+
+# PRD Requirements Tracking
+prd_requirements:
+  conversion_success_rate: ">95%"
+  performance_improvement: "2-5x"
+  accuracy_target: ">95%"
+  latency_target: "<200ms"
+  multi_language_support: true
+  streaming_support: true

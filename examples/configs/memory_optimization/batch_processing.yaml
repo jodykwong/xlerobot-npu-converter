@@ -1,0 +1,56 @@
+# 批处理模式配置
+# 适用于批量转换场景
+# 版本: 1.0
+# 日期: 2025-10-28
+
+# === 基础配置 ===
+optimization_level: balanced
+memory_mode: batch_processing
+
+# === 内存监控配置 ===
+monitoring_enabled: true
+monitoring_interval: 0.5
+peak_memory_threshold: 0.75
+
+# === 内存分配优化配置 ===
+memory_pool_enabled: true
+memory_pool_size: 209715200  # 200MB (字节)
+object_reuse_enabled: true
+object_reuse_threshold: 150
+
+# === 算子级优化配置 ===
+operator_optimization_enabled: true
+intermediate_result_reuse: true
+memory_compression_enabled: false
+compute_memory_tradeoff: 0.5
+
+# === 批处理配置 ===
+batch_processing_enabled: true
+batch_size: 16
+dynamic_batch_adjustment: true
+batch_memory_limit: 4294967296  # 4GB (字节)
+
+# === GC优化配置 ===
+gc_optimization_enabled: true
+gc_threshold_adjustment: true
+reference_counting_optimization: true
+cycle_detection_enabled: true
+gc_aggressiveness: 0.9
+
+# === 大模型分片配置 ===
+model_sharding_enabled: true
+shard_size_threshold: 524288000  # 500MB (字节)
+max_shards: 8
+
+# === 泄漏检测配置 ===
+leak_detection_enabled: true
+leak_detection_interval: 3.0
+leak_threshold: 15728640  # 15MB (字节)
+out_of_bounds_detection: true
+
+# === 报告配置 ===
+reporting_enabled: true
+report_format:
+  - json
+  - html
+auto_report_generation: true

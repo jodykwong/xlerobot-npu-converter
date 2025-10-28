@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<context id="story-2.3" title="SenseVoice ASR完整转换实现">
+  <!--
+    Story Context for Story 2.3: SenseVoice ASR完整转换实现
+    Generated: 2025-10-28
+    Version: 1.0
+    Status: Draft
+
+    Strategic Background:
+    This story implements the complete conversion capability for SenseVoice ASR model,
+    which is the PRIMARY ASR model specified in PRD. Following the strategic alignment
+    from Story 2.2, this story ensures the primary ASR model receives complete
+    functionality implementation, maintaining proper product strategy prioritization.
+  -->
+
+  <!-- === STORY METADATA === -->
+  <metadata>
+    <storyId>story-2.3</storyId>
+    <epicId>epic-2</epicId>
+    <epicPhase>Phase 1: 主要模型完整功能实现</epicPhase>
+    <priority>High</priority>
+    <complexity>Medium-High</complexity>
+    <estimatedDays>10</estimatedDays>
+    <status>Draft</status>
+    <createdDate>2025-10-28</createdDate>
+    <lastUpdated>2025-10-28</lastUpdated>
+    <version>1.0</version>
+  </metadata>
+
+  <!-- === STRATEGIC CONTEXT === -->
+  <strategicContext>
+    <background>
+      XLeRobot项目需要将AI模型转换为NPU可执行格式，以充分利用RDK X5硬件的10 TOPS算力。
+      ASR（自动语音识别）模型是智能语音系统的核心组件，VITS-Cantonese TTS已完成（Story 2.2）。
+      SenseVoice作为主要ASR模型，需要完整的NPU转换实现。
+    </background>
+
+    <problemStatement>
+      SenseVoice作为主要ASR模型，当前只有基础转换流程（Story 1.5），缺乏生产级别的完整功能。
+      多语言语音识别需要专门的优化和验证，确保转换后模型在NPU上高效、准确运行。
+      转换成功率需要达到>95%，支持实时和批处理模式。
+    </problemStatement>
+
+    <solutionApproach>
+      基于Story 1.5的基础转换流程，扩展为完整的生产级ASR转换系统，
+      包含多语言专用优化、完整参数配置、精确验证和专用报告。
+      确保转换成功率>95%，性能提升2-5倍，支持多种音频格式。
+    </solutionApproach>
+
+    <strategicAlignment>
+      <primaryModel>SenseVoice ASR</primaryModel>
+      <alternativeModels>VITS-Cantonese TTS, Piper VITS TTS</alternativeModels>
+      <justification>
+        PRD明确指定SenseVoice为主要ASR模型。这是语音识别功能的核心，
+        与Story 2.2的VITS-Cantonese TTS形成完整的语音交互能力。
+        主要模型优先获得完整功能实现，这是产品成功的关键。
+      </justification>
+    </strategicAlignment>
+
+    <criticalSuccessFactors>
+      <factor>多语言语音识别的精确处理和建模</factor>
+      <factor>多种音频格式的支持和预处理优化</factor>
+      <factor>实时流式识别和批处理模式的实现</factor>
+      <factor>与Epic 1基础设施和Story 2.2的完美集成</factor>
+    </criticalSuccessFactors>
+  </strategicContext>
+
+  <!-- === BUSINESS CONTEXT === -->
+  <businessContext>
+    <businessObjective>
+      实现SenseVoice ASR模型的完整NPU转换流程，支持多语言语音识别在RDK X5硬件上的高效部署。
+    </businessObjective>
+
+    <businessValue>
+      <value-proposition>
+        为XLeRobot智能语音系统提供高性能的多语言语音识别能力，
+        实现2-5倍的推理性能提升，降低计算成本，提升用户体验。
+        与VITS-Cantonese TTS（Story 2.2）形成完整的语音交互闭环。
+      </value-proposition>
+
+      <targetUsers>
+        <user type="AI模型工程师">
+          需要将SenseVoice ASR模型部署到NPU硬件上，实现高效语音识别
+        </user>
+        <user type="语音系统开发者">
+          寻求可靠的ASR模型转换工具，支持多语言识别
+        </user>
+        <user type="产品经理">
+          需要可衡量的性能提升和转换成功率指标
+        </user>
+        <user type="智能助手开发者">
+          需要端到端的语音交互解决方案（ASR + TTS）
+        </user>
+      </targetUsers>
+
+      <keyMetrics>
+        <metric name="转换成功率" target="&gt;95%" measurement="成功转换模型数/总转换尝试数"/>
+        <metric name="性能提升倍数" target="2-5x" measurement="NPU推理速度/CPU推理速度"/>
+        <metric name="识别准确率" target="&gt;95%" measurement="正确识别词数/总词数"/>
+        <metric name="延迟" target="&lt;200ms" measurement="单次识别耗时"/>
+        <metric name="代码覆盖率" target="&gt;90%" measurement="测试覆盖代码行数/总代码行数"/>
+      </keyMetrics>
+
+      <businessRisks>
+        <risk level="High" description="多语言语音识别的复杂性可能导致准确率下降" mitigation="采用成熟算法，进行充分测试"/>
+        <risk level="High" description="实时流式识别的性能要求严格" mitigation="优化算法，预分配资源"/>
+        <risk level="Medium" description="多种音频格式支持的兼容性挑战" mitigation="标准化处理流程，充分测试"/>
+        <risk level="Low" description="代码质量问题影响系统稳定性" mitigation="严格代码审查，测试驱动开发"/>
+      </businessRisks>
+
+      <competitiveAdvantage>
+        <advantage>多语言支持的ASR转换能力</advantage>
+        <advantage>实时和批处理模式双支持</advantage>
+        <advantage>完整的NPU优化和验证体系</advantage>
+        <advantage>与TTS模型形成完整语音交互方案</advantage>
+      </competitiveAdvantage>
+    </businessValue>
+  </businessContext>
+
+  <!-- === TECHNICAL CONTEXT === -->
+  <technicalContext>
+    <technicalObjective>
+      基于Epic 1的完整基础设施，实现SenseVoice ASR模型的端到端NPU转换能力，
+      包含多语言优化、完整验证和专用报告系统。
+    </technicalObjective>
+
+    <architecture>
+      <layer name="Complete Flow">
+        <component>SenseVoiceCompleteFlow</component>
+        <description>基于BaseConversionFlow的完整转换流程实现</description>
+      </layer>
+
+      <layer name="Optimization">
+        <component>SenseVoiceOptimizer</component>
+        <description>ASR模型专用优化器，处理多语言和音频特性</description>
+      </layer>
+
+      <layer name="Validation">
+        <component>SenseVoiceValidator</component>
+        <description>5维度验证系统：结构、精度、性能、兼容性、质量</description>
+      </layer>
+
+      <layer name="Configuration">
+        <component>SenseVoiceConfigStrategy</component>
+        <description>多语言配置策略，支持语言、采样率、声道等参数</description>
+      </layer>
+
+      <layer name="Reporting">
+        <component>SenseVoiceReportGenerator</component>
+        <description>ASR专用报告生成器，支持JSON/HTML/PDF格式</description>
+      </layer>
+    </architecture>
+
+    <dependencies>
+      <dependency type="prerequisite">
+        <component>Epic 1 (完整基础设施)</component>
+        <status>✅ Complete</status>
+        <description>核心框架、配置系统、CLI、错误处理、测试体系</description>
+      </dependency>
+
+      <dependency type="prerequisite">
+        <component>Story 2.1.1 (PTQ架构重构)</component>
+        <status>✅ Complete</status>
+        <description>技术债务清零，架构完整性保证</description>
+      </dependency>
+
+      <dependency type="prerequisite">
+        <component>Story 2.1.2 (ONNX模型加载器)</component>
+        <status>✅ Complete</status>
+        <description>模型加载和预处理基础能力</description>
+      </dependency>
+
+      <dependency type="reference">
+        <component>Story 2.2 (VITS-Cantonese)</component>
+        <status>✅ Complete</status>
+        <description>主要TTS模型实现，参考架构和BMM v6流程</description>
+      </dependency>
+    </dependencies>
+
+    <integrationPoints>
+      <integration point="Story 1.3">
+        <component>BaseConversionFlow</component>
+        <interface>complete_conversion()</interface>
+        <description>扩展基础转换流程</description>
+      </integration>
+
+      <integration point="Story 1.4">
+        <component>ConfigManager</component>
+        <interface>load_config(), validate_config()</interface>
+        <description>集成配置管理系统</description>
+      </integration>
+
+      <integration point="Story 1.6">
+        <component>CLI Interface</component>
+        <interface>convert command</interface>
+        <description>扩展CLI命令支持</description>
+      </integration>
+
+      <integration point="Story 1.7">
+        <component>Logging System</component>
+        <interface>log_error(), log_progress()</interface>
+        <description>集成日志和错误处理</description>
+      </integration>
+
+      <integration point="Story 2.2">
+        <component>Report Generator</component>
+        <interface>generate_report()</interface>
+        <description>参考报告生成架构</description>
+      </integration>
+    </integrationPoints>
+
+    <dataModels>
+      <model name="SenseVoiceConversionModel">
+        <description>ASR转换数据模型，扩展基础模型</description>
+        <properties>
+          <property name="language" type="str">支持的语言类型</property>
+          <property name="audio_format" type="str">音频格式（WAV、MP3、FLAC等）</property>
+          <property name="sample_rate" type="int">采样率</property>
+          <property name="channels" type="int">声道数</property>
+          <property name="streaming_mode" type="bool">是否支持流式识别</property>
+        </properties>
+      </model>
+
+      <model name="SenseVoiceResultModel">
+        <description>ASR转换结果模型</description>
+        <properties>
+          <property name="recognition_accuracy" type="float">识别准确率</property>
+          <property name="latency_ms" type="int">延迟（毫秒）</property>
+          <property name="supported_languages" type="list">支持的语言列表</property>
+        </properties>
+      </model>
+    </dataModels>
+
+    <qualityMetrics>
+      <metric name="代码质量" target="&gt;90/100" measurement="代码审查评分"/>
+      <metric name="测试覆盖率" target="&gt;90%" measurement="测试覆盖行数/总行数"/>
+      <metric name="文档完整性" target="100%" measurement="API文档覆盖率"/>
+      <metric name="性能基准" target="2-5x提升" measurement="NPU vs CPU性能对比"/>
+    </qualityMetrics>
+  </technicalContext>
+
+  <!-- === IMPLEMENTATION CONTEXT === -->
+  <implementationContext>
+
+    <bmmV6Phases>
+      <phase id="1" name="架构扩展" status="NotStarted">
+        <objective>创建完整的转换流程架构</objective>
+        <deliverables>
+          <deliverable>sensevoice_complete_flow.py - 主转换流程</deliverable>
+          <deliverable>sensevoice_optimizer.py - 专用优化器</deliverable>
+          <deliverable>sensevoice_validator.py - 验证器</deliverable>
+          <deliverable>sensevoice_report_generator.py - 报告生成器</deliverable>
+        </deliverables>
+        <estimatedDays>3</estimatedDays>
+      </phase>
+
+      <phase id="2" name="核心功能实现" status="NotStarted">
+        <objective>实现核心转换功能和配置系统</objective>
+        <deliverables>
+          <deliverable>sensevoice_config.py - 配置策略</deliverable>
+          <deliverable>default.yaml - 默认配置</deliverable>
+          <deliverable>参数验证系统</deliverable>
+          <deliverable>Epic 1基础设施集成</deliverable>
+        </deliverables>
+        <estimatedDays>4</estimatedDays>
+      </phase>
+
+      <phase id="3" name="验证和测试" status="NotStarted">
+        <objective>全面测试和质量保证</objective>
+        <deliverables>
+          <deliverable>完整测试套件编写</deliverable>
+          <deliverable>单元测试执行</deliverable>
+          <deliverable>集成测试执行</deliverable>
+          <deliverable>端到端测试执行</deliverable>
+        </deliverables>
+        <estimatedDays>2</estimatedDays>
+      </phase>
+
+      <phase id="4" name="报告和文档" status="NotStarted">
+        <objective>文档完善和交付准备</objective>
+        <deliverables>
+          <deliverable>BMM v6完成报告</deliverable>
+          <deliverable>用户指南编写</deliverable>
+          <deliverable>部署清单创建</deliverable>
+          <deliverable>文档索引更新</deliverable>
+        </deliverables>
+        <estimatedDays>1</estimatedDays>
+      </phase>
+    </bmmV6Phases>
+
+    <keyDeliverables>
+      <deliverable type="code">
+        <file>src/npu_converter/complete_flows/sensevoice_complete_flow.py</file>
+        <description>SenseVoice完整转换流程实现</description>
+        <estimatedLines>600-800行</estimatedLines>
+      </deliverable>
+
+      <deliverable type="code">
+        <file>src/npu_converter/complete_flows/optimizers/sensevoice_optimizer.py</file>
+        <description>ASR模型专用优化器</description>
+        <estimatedLines>400-500行</estimatedLines>
+      </deliverable>
+
+      <deliverable type="code">
+        <file>src/npu_converter/complete_flows/validators/sensevoice_validator.py</file>
+        <description>ASR模型验证器</description>
+        <estimatedLines>600-700行</estimatedLines>
+      </deliverable>
+
+      <deliverable type="code">
+        <file>src/npu_converter/complete_flows/reports/sensevoice_report_generator.py</file>
+        <description>ASR专用报告生成器</description>
+        <estimatedLines>500-600行</estimatedLines>
+      </deliverable>
+
+      <deliverable type="code">
+        <file>src/npu_converter/config/sensevoice_config.py</file>
+        <description>SenseVoice配置策略</description>
+        <estimatedLines>200-300行</estimatedLines>
+      </deliverable>
+
+      <deliverable type="test">
+        <file>tests/complete_flows/test_sensevoice_complete_flow.py</file>
+        <description>完整测试套件</description>
+        <estimatedLines>250-350行</estimatedLines>
+      </deliverable>
+
+      <deliverable type="config">
+        <file>examples/configs/sensevoice/default.yaml</file>
+        <description>默认配置</description>
+        <estimatedLines>50-80行</estimatedLines>
+      </deliverable>
+
+      <deliverable type="config">
+        <file>examples/configs/sensevoice/fast.yaml</file>
+        <description>快速模式配置</description>
+        <estimatedLines>50-80行</estimatedLines>
+      </deliverable>
+
+      <deliverable type="config">
+        <file>examples/configs/sensevoice/accurate.yaml</file>
+        <description>精确模式配置</description>
+        <estimatedLines>50-80行</estimatedLines>
+      </deliverable>
+
+      <deliverable type="doc">
+        <file>docs/guides/sensevoice-asr-conversion-guide.md</file>
+        <description>用户指南</description>
+        <estimatedLines>400-500行</estimatedLines>
+      </deliverable>
+    </keyDeliverables>
+
+    <implementationStrategy>
+      <strategy name="参考架构">
+        参考Story 2.2的VITS-Cantonese实现架构，
+        适配ASR模型的特点和需求。
+      </strategy>
+
+      <strategy name="渐进式开发">
+        按照BMM v6的Phase 1-4逐步实施，
+        每个phase完成后进行review和validation。
+      </strategy>
+
+      <strategy name="测试驱动">
+        先编写测试用例，再实现功能，
+        确保代码质量和测试覆盖率。
+      </strategy>
+
+      <strategy name="集成优先">
+        确保与Epic 1基础设施和Story 2.2的完美集成，
+        保持架构一致性。
+      </strategy>
+    </implementationStrategy>
+
+  </implementationContext>
+
+  <!-- === VALIDATION CONTEXT === -->
+  <validationContext>
+
+    <acceptanceCriteria>
+      <criteria id="AC1" name="SenseVoice模型完整转换能力" status="Draft">
+        <description>
+          实现SenseVoice模型的完整NPU转换流程，基于Story 1.5的基础转换流程扩展，
+          支持多语言模型转换，确保转换成功率达到>95%。
+        </description>
+        <validationMethod>端到端测试，多种语言模型转换验证</validationMethod>
+        <priority>High</priority>
+      </criteria>
+
+      <criteria id="AC2" name="ASR模型专用优化" status="Draft">
+        <description>
+          针对语音识别特性的预处理优化，支持多种音频格式输入，
+          实现音频降噪和增强功能，支持实时流式识别和批处理模式。
+        </description>
+        <validationMethod>性能测试，音频质量评估</validationMethod>
+        <priority>High</priority>
+      </criteria>
+
+      <criteria id="AC3" name="完整参数配置系统" status="Draft">
+        <description>
+          集成Story 1.4的配置策略，支持语言、采样率、声道等参数配置，
+          提供多种预设配置方案，支持用户自定义参数调优。
+        </description>
+        <validationMethod>配置验证测试，用户场景测试</validationMethod>
+        <priority>Medium</priority>
+      </criteria>
+
+      <criteria id="AC4" name="转换结果验证系统" status="Draft">
+        <description>
+          实现5种验证维度（结构、精度、性能、兼容性、质量），
+          生成详细的转换报告，支持转换前后对比分析。
+        </description>
+        <validationMethod>验证系统测试，报告生成测试</validationMethod>
+        <priority>Medium</priority>
+      </criteria>
+
+      <criteria id="AC5" name="错误处理和诊断" status="Draft">
+        <description>
+          集成Story 1.7的错误处理系统，提供ASR模型特有的错误诊断，
+          智能错误分析和解决建议，支持调试模式。
+        </description>
+        <validationMethod>错误场景测试，诊断功能测试</validationMethod>
+        <priority>Low</priority>
+      </criteria>
+    </acceptanceCriteria>
+
+    <testingStrategy>
+      <testType name="单元测试">
+        <scope>每个组件的独立功能测试</scope>
+        <coverageTarget>&gt;90%</coverageTarget>
+      </testType>
+
+      <testType name="集成测试">
+        <scope>组件间的集成和交互测试</scope>
+        <coverageTarget>100%关键路径</coverageTarget>
+      </testType>
+
+      <testType name="端到端测试">
+        <scope>完整转换流程测试</scope>
+        <coverageTarget>真实场景测试</coverageTarget>
+      </testType>
+
+      <testType name="性能测试">
+        <scope>转换性能和推理性能测试</scope>
+        <coverageTarget>基准对比测试</coverageTarget>
+      </testType>
+
+      <testType name="压力测试">
+        <scope>大批量模型转换测试</scope>
+        <coverageTarget>稳定性验证</coverageTarget>
+      </testType>
+    </testingStrategy>
+
+    <qualityGates>
+      <gate name="代码审查">
+        <criteria>所有代码通过peer review</criteria>
+        <threshold>100%</threshold>
+      </gate>
+
+      <gate name="测试覆盖率">
+        <criteria>测试覆盖率达到目标</criteria>
+        <threshold>&gt;90%</threshold>
+      </gate>
+
+      <gate name="性能基准">
+        <criteria>转换成功率达到目标</criteria>
+        <threshold>&gt;95%</threshold>
+      </gate>
+
+      <gate name="文档完整性">
+        <criteria>API文档和用户指南完整</criteria>
+        <threshold>100%</threshold>
+      </gate>
+    </qualityGates>
+
+  </validationContext>
+
+  <!-- === REFERENCE CONTEXT === -->
+  <referenceContext>
+
+    <relatedStories>
+      <story ref="Story 1.3" relationship="基础">
+        核心转换框架，BaseConversionFlow接口
+      </story>
+
+      <story ref="Story 1.4" relationship="依赖">
+        配置管理系统，配置策略和验证
+      </story>
+
+      <story ref="Story 1.5" relationship="基础">
+        基础转换流程，SensVoiceConversionFlow
+      </story>
+
+      <story ref="Story 1.6" relationship="依赖">
+        CLI命令接口，扩展convert命令
+      </story>
+
+      <story ref="Story 1.7" relationship="依赖">
+        错误处理和日志系统
+      </story>
+
+      <story ref="Story 2.1.1" relationship="基础">
+        PTQ架构重构，零技术债务
+      </story>
+
+      <story ref="Story 2.1.2" relationship="依赖">
+        ONNX模型加载器，模型预处理
+      </story>
+
+      <story ref="Story 2.2" relationship="参考">
+        VITS-Cantonese实现，参考架构和BMM v6流程
+      </story>
+
+      <story ref="Story 2.4" relationship="后续">
+        Piper VITS TTS，使用相同架构
+      </story>
+    </relatedStories>
+
+    <externalReferences>
+      <reference name="PRD">
+        <path>/home/sunrise/xlerobot/docs/PRD.md</path>
+        <description>产品需求文档，定义SenseVoice为主要ASR模型</description>
+      </reference>
+
+      <reference name="Epic 2设计">
+        <path>/home/sunrise/xlerobot/docs/epics.md</path>
+        <description>Epic分解和模型优先级定义</description>
+      </reference>
+
+      <reference name="技术决策文档">
+        <path>/home/sunrise/xlerobot/docs/technical-decisions.md</path>
+        <description>架构决策和技术选择记录</description>
+      </reference>
+
+      <reference name="BMM v6流程">
+        <path>/home/sunrise/xlerobot/docs/bmm-v6-deliverables-index.md</path>
+        <description>BMM v6流程标准和交付物定义</description>
+      </reference>
+
+      <reference name="Story 2.2文档">
+        <path>/home/sunrise/xlerobot/docs/stories/story-2.2.md</path>
+        <description>参考主要TTS模型的完整实现</description>
+      </reference>
+    </externalReferences>
+
+    <knowledgeBase>
+      <knowledgeItem name="SenseVoice模型特点">
+        <description>
+          SenseVoice是支持多语言的高精度语音识别模型，
+          具有流式识别、批处理、噪声抑制等特性。
+        </description>
+      </knowledgeItem>
+
+      <knowledgeItem name="ASR模型转换挑战">
+        <description>
+          ASR模型转换的主要挑战包括：
+          音频预处理优化、多语言支持、实时性能保证、精度验证。
+        </description>
+      </knowledgeItem>
+
+      <knowledgeItem name="NPU优化策略">
+        <description>
+          针对ASR模型的NPU优化需要考虑：
+          算子融合、内存优化、并行计算、延迟控制。
+        </description>
+      </knowledgeItem>
+    </knowledgeBase>
+
+  </referenceContext>
+
+  <!-- === APPENDIX === -->
+  <appendix>
+
+    <changeLog>
+      <change version="1.0" date="2025-10-28" author="Claude Code">
+        <description>初始版本创建，基于Story 2.2架构适配SenseVoice ASR</description>
+      </change>
+    </changeLog>
+
+    <glossary>
+      <term name="ASR">Automatic Speech Recognition - 自动语音识别</term>
+      <term name="TTS">Text-to-Speech - 文本转语音</term>
+      <term name="BMM v6">Business Model Canvas v6 - 标准化故事实施流程</term>
+      <term name="NPU">Neural Processing Unit - 神经网络处理单元</term>
+      <term name="PTQ">Post-Training Quantization - 训练后量化</term>
+      <term name="Epic">大型特性集合，包含多个相关故事</term>
+      <term name="Story">最小可交付功能单元</term>
+    </glossary>
+
+    <notes>
+      <note>
+        本文档遵循BMM v6流程标准，确保故事实施的系统性和可追踪性。
+        所有deliverable都需要经过严格的质量门禁和审查。
+      </note>
+
+      <note>
+        与Story 2.2的VITS-Cantonese实现保持架构一致性，
+        确保整个语音交互系统（ASR + TTS）的协调统一。
+      </note>
+
+      <note>
+        参考Epic 1的成熟实践，特别是配置管理、错误处理和测试体系，
+        确保代码质量和系统稳定性。
+      </note>
+    </notes>
+
+  </appendix>
+
+</context>

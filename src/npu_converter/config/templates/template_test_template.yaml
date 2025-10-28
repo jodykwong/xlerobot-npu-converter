@@ -1,0 +1,14 @@
+_metadata:
+  author: Configuration Manager
+  created_at: ''
+  description: Template for test_template
+  name: test_template
+  tags: []
+  version: 1.0.0
+hardware:
+  optimization_level: O2
+  target_device: horizon_x5
+project:
+  model_type: sensevoice
+  name: test
+  version: 1.0.0

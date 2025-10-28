@@ -1,0 +1,750 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  BMM v6 Context Document - Story 2.7: 模型精度验证系统
+  Epic: Epic 2 - 模型转换与验证系统
+  创建日期: 2025-10-28
+  维护者: Claude Code / BMM Method
+  版本: 1.0.0
+  状态: Ready for Development
+
+  这是BMM v6 (Business Model Canvas v6) 标准上下文文档
+  用于记录Story的战略、业务和技术上下文
+-->
+
+<story_context id="story-context-2.7" name="Story 2.7: 模型精度验证系统">
+  <metadata>
+    <story_id>story-2.7</story_id>
+    <epic_id>epic-2</epic_id>
+    <phase>Phase 1 (BMM v6 4-Phase流程)</phase>
+    <creation_date>2025-10-28</creation_date>
+    <target_completion>2025-10-28</target_completion>
+    <priority>P1</priority>
+    <story_type>Feature</story_type>
+    <status>Ready for Development</status>
+    <bmm_v6_status>Phase 1准备就绪</bmm_v6_status>
+  </metadata>
+
+  <!-- ========================================
+       1. 战略上下文 (Strategic Context)
+       ======================================== -->
+  <strategic_context>
+    <business_objective>
+      实现完整的模型精度验证系统，确保所有转换后的模型满足PRD质量标准（>98%精度）
+    </business_objective>
+
+    <strategic_position>
+      <position_in_epic>Epic 2第7个故事，核心质量保证组件</position_in_epic>
+      <value_proposition>
+        为所有转换模型提供精度验证，增强用户信心，预防精度问题
+      </value_proposition>
+      <differentiation>
+        基于Epic 2转换经验的统一验证框架，支持多维度精度分析
+      </differentiation>
+    </strategic_position>
+
+    <alignment>
+      <product_strategy>
+        确保NPU转换工具产品质量，符合PRD质量标准
+      </product_strategy>
+      <epic_strategy>
+        完成Epic 2模型转换功能的最后环节，提供质量保证
+      </epic_strategy>
+      <project_strategy>
+        实现完整端到端模型转换+验证能力
+      </project_strategy>
+    </alignment>
+
+    <key_results>
+      <kr1>所有转换模型精度验证覆盖率 100%</kr1>
+      <kr2>验证准确性 >99%（超越PRD >98%标准）</kr3>
+      <kr3>5个Acceptance Criteria 100%完成</kr3>
+      <kr4>BMM v6 Phase 1-4 100%完成</kr4>
+    </key_results>
+  </strategic_context>
+
+  <!-- ========================================
+       2. 业务上下文 (Business Context)
+       ======================================== -->
+  <business_context>
+    <problem_statement>
+      模型转换后如何确保精度不损失？如何验证转换模型的正确性？
+    </problem_statement>
+
+    <target_users>
+      <primary_users>
+        <user_type>AI模型工程师</user_type>
+        <user_needs>
+          验证模型转换质量，确保精度符合标准
+        </user_needs>
+      </primary_users>
+      <secondary_users>
+        <user_type>QA工程师</user_type>
+        <user_needs>
+          模型质量保证和合规验证
+        </user_needs>
+        <user_type>产品经理</user_type>
+        <user_needs>
+          产品交付质量保证
+        </user_needs>
+      </secondary_users>
+    </target_users>
+
+    <use_cases>
+      <use_case id="UC1">
+        <name>转换后模型精度验证</name>
+        <description>验证VITS-Cantonese、SenseVoice等转换模型的精度</description>
+        <actors>AI模型工程师</actors>
+        <precondition>模型已完成转换</precondition>
+        <main_flow>
+          1. 导入转换后的模型
+          2. 运行精度验证
+          3. 查看验证报告
+        </main_flow>
+        <success_criteria>获得详细精度分析报告</success_criteria>
+      </use_case>
+
+      <use_case id="UC2">
+        <name>批量模型精度监控</name>
+        <description>监控多个模型的精度状态</description>
+        <actors>QA工程师</actors>
+        <precondition>有多个转换模型</precondition>
+        <main_flow>
+          1. 配置批量验证任务
+          2. 运行批量验证
+          3. 生成汇总报告
+        </main_flow>
+        <success_criteria>获得所有模型精度概览</success_criteria>
+      </use_case>
+
+      <use_case id="UC3">
+        <name>精度阈值告警</name>
+        <description>精度低于阈值时自动告警</description>
+        <actors>系统</actors>
+        <precondition>设置精度阈值</precondition>
+        <main_flow>
+          1. 检测到精度低于阈值
+          2. 生成告警
+          3. 提供修复建议
+        </main_flow>
+        <success_criteria>及时发现精度问题</success_criteria>
+      </use_case>
+    </use_cases>
+
+    <business_value>
+      <value_drivers>
+        <driver>质量保证</driver>
+        <description>确保所有转换模型满足PRD质量标准</description>
+      </value_drivers>
+      <value_drivers>
+        <driver>风险预防</driver>
+        <description>避免精度问题在生产环境中暴露</description>
+      </value_drivers>
+      <value_drivers>
+        <driver>合规验证</driver>
+        <description>满足产品交付质量要求</description>
+      </value_drivers>
+      <value_drivers>
+        <driver>用户信心</driver>
+        <description>增强用户对转换工具的信任</description>
+      </value_drivers>
+    </business_value>
+
+    <success_metrics>
+      <metric>
+        <name>精度验证覆盖率</name>
+        <target>100%</target>
+        <measurement>所有转换模型都进行精度验证</measurement>
+      </metric>
+      <metric>
+        <name>验证准确性</name>
+        <target>>99%</target>
+        <measurement>验证结果与实际精度对比</measurement>
+      </metric>
+      <metric>
+        <name>问题发现率</name>
+        <target>>95%</target>
+        <measurement>精度问题检出率</measurement>
+      </metric>
+    </success_metrics>
+  </business_context>
+
+  <!-- ========================================
+       3. 技术上下文 (Technical Context)
+       ======================================== -->
+  <technical_context>
+    <technical_challenge>
+      如何实现统一的多维度精度验证框架？如何集成到现有转换流程？
+    </technical_challenge>
+
+    <architecture>
+      <current_state>
+        <description>
+          Epic 1提供核心框架，Story 2.2-2.6实现模型转换
+        </description>
+        <components>
+          <component id="C1">
+            <name>Epic 1核心框架</name>
+            <description>62类，236函数的基础架构</description>
+            <status>已完成</status>
+          </component>
+          <component id="C2">
+            <name>Story 2.2-2.6转换流程</name>
+            <description>VITS-Cantonese、SenseVoice、Piper VITS等转换实现</description>
+            <status>已完成</status>
+          </component>
+          <component id="C3">
+            <name>Story 2.7验证系统</name>
+            <description>待实现的精度验证框架</description>
+            <status>待开发</status>
+          </component>
+        </components>
+      </current_state>
+
+      <target_state>
+        <description>
+          完整的模型转换+验证端到端能力
+        </description>
+        <data_flow>
+          1. 模型加载 → 转换 → 验证 → 报告
+        </data_flow>
+        <integration_points>
+          <integration>与Epic 1核心框架集成</integration>
+          <integration>与Story 2.2-2.6转换流程集成</integration>
+          <integration>与Story 1.7错误处理集成</integration>
+          <integration>与Story 1.8测试框架集成</integration>
+        </integration_points>
+      </target_state>
+    </architecture>
+
+    <technical_decisions>
+      <decision id="TD1">
+        <question>验证框架设计</question>
+        <context>需要统一多个模型的验证逻辑</context>
+        <decision>基于Epic 1验证器架构，创建专用精度验证器</decision>
+        <rationale>复用成熟架构，降低复杂度</rationale>
+        <implications>便于维护和扩展</implications>
+      </decision>
+
+      <decision id="TD2">
+        <question>验证维度</question>
+        <context>需要全面验证模型质量</context>
+        <decision>实现5维度验证：结构、功能、性能、兼容性、量化</decision>
+        <rationale>全面覆盖模型质量各个方面</rationale>
+        <implications>提供完整质量保证</implications>
+      </decision>
+
+      <decision id="TD3">
+        <question>报告格式</question>
+        <context>需要多格式报告输出</context>
+        <decision>支持JSON、HTML、PDF格式</decision>
+        <rationale>满足不同用户需求</rationale>
+        <implications>增强用户体验</implications>
+      </decision>
+    </technical_decisions>
+
+    <dependencies>
+      <dependency id="D1">
+        <name>Epic 1核心框架</name>
+        <type>Technical</type>
+        <status>已完成</status>
+        <impact>提供基础架构支持</impact>
+      </dependency>
+
+      <dependency id="D2">
+        <name>Story 2.2-2.6转换流程</name>
+        <type>Functional</type>
+        <status>已完成</status>
+        <impact>提供验证对象</impact>
+      </dependency>
+
+      <dependency id="D3">
+        <name>基准测试数据集</name>
+        <type>Data</type>
+        <status>需要准备</status>
+        <impact>提供验证基准</impact>
+      </dependency>
+
+      <dependency id="D4">
+        <name>原模型文件</name>
+        <type>Data</type>
+        <status>需要准备</status>
+        <impact>提供对比基准</impact>
+      </dependency>
+    </dependencies>
+
+    <non_functional_requirements>
+      <nfr id="NFR1">
+        <name>性能</name>
+        <requirement>验证速度 <30秒/模型</requirement>
+        <acceptance_criteria>单个模型验证时间不超过30秒</acceptance_criteria>
+      </nfr>
+
+      <nfr id="NFR2">
+        <name>可扩展性</name>
+        <requirement>支持批量验证和并发处理</requirement>
+        <acceptance_criteria>支持>10个模型并发验证</acceptance_criteria>
+      </nfr>
+
+      <nfr id="NFR3">
+        <name>可用性</name>
+        <requirement>验证准确性 >99%</requirement>
+        <acceptance_criteria>误报率 <1%</acceptance_criteria>
+      </nfr>
+
+      <nfr id="NFR4">
+        <name>可维护性</name>
+        <requirement>代码质量评分 >95/100</requirement>
+        <acceptance_criteria>测试覆盖率 >90%，无技术债务</acceptance_criteria>
+      </nfr>
+    </non_functional_requirements>
+  </technical_context>
+
+  <!-- ========================================
+       4. 实施上下文 (Implementation Context)
+       ======================================== -->
+  <implementation_context>
+    <bmm_v6_phases>
+      <phase id="P1" name="架构扩展" status="准备就绪">
+        <objectives>
+          <objective>创建精度验证框架</objective>
+          <objective>实现5维度验证逻辑</objective>
+          <objective>集成Epic 1架构</objective>
+        </objectives>
+        <deliverables>
+          <deliverable>精度验证器实现</deliverable>
+          <deliverable>基准测试系统</deliverable>
+          <deliverable>配置管理系统</deliverable>
+        </deliverables>
+        <success_criteria>
+          <criteria>核心验证框架完成</criteria>
+          <criteria>5个验证维度实现</criteria>
+        </success_criteria>
+      </phase>
+
+      <phase id="P2" name="核心功能实现" status="待开始">
+        <objectives>
+          <objective>实现自动基准测试</objective>
+          <objective>集成转换流程</objective>
+          <objective>实时监控功能</objective>
+        </objectives>
+        <deliverables>
+          <deliverable>自动基准测试系统</deliverable>
+          <deliverable>实时监控模块</deliverable>
+          <deliverable>批量验证功能</deliverable>
+        </deliverables>
+        <success_criteria>
+          <criteria>自动验证流程完成</criteria>
+          <criteria>监控功能就绪</criteria>
+        </success_criteria>
+      </phase>
+
+      <phase id="P3" name="验证和测试" status="待开始">
+        <objectives>
+          <objective>单元测试覆盖</objective>
+          <objective>集成测试验证</objective>
+          <objective>性能测试确认</objective>
+        </objectives>
+        <deliverables>
+          <deliverable>测试套件</deliverable>
+          <deliverable>测试报告</deliverable>
+          <deliverable>性能基准</deliverable>
+        </deliverables>
+        <success_criteria>
+          <criteria>测试覆盖率 >90%</criteria>
+          <criteria>所有功能测试通过</criteria>
+        </success_criteria>
+      </phase>
+
+      <phase id="P4" name="报告和文档" status="待开始">
+        <objectives>
+          <objective>生成多格式报告</objective>
+          <objective>完善用户文档</objective>
+          <objective>完成BMM v6交付</objective>
+        </objectives>
+        <deliverables>
+          <deliverable>完成报告</deliverable>
+          <deliverable>测试报告</deliverable>
+          <deliverable>用户指南</deliverable>
+        </deliverables>
+        <success_criteria>
+          <criteria>文档完整性 >95%</criteria>
+          <criteria>BMM v6交付物完成</criteria>
+        </success_criteria>
+      </phase>
+    </bmm_v6_phases>
+
+    <implementation_plan>
+      <iteration>
+        <number>Iteration 1</number>
+        <duration>4小时</duration>
+        <goals>
+          <goal>创建验证框架核心代码</goal>
+          <goal>实现5维度验证逻辑</goal>
+          <goal>集成Epic 1架构</goal>
+        </goals>
+        <deliverables>
+          <deliverable>model_validator.py (主验证器)</deliverable>
+          <deliverable>accuracy_validator.py (精度验证器)</deliverable>
+          <deliverable>compatibility_validator.py (兼容性验证器)</deliverable>
+        </deliverables>
+      </iteration>
+
+      <iteration>
+        <number>Iteration 2</number>
+        <duration>3小时</duration>
+        <goals>
+          <goal>实现基准测试系统</goal>
+          <goal>集成转换流程</goal>
+          <goal>实时监控功能</goal>
+        </goals>
+        <deliverables>
+          <deliverable>benchmark_system.py (基准测试)</deliverable>
+          <deliverable>realtime_monitor.py (实时监控)</deliverable>
+          <deliverable>batch_validator.py (批量验证)</deliverable>
+        </deliverables>
+      </iteration>
+
+      <iteration>
+        <number>Iteration 3</number>
+        <duration>2小时</duration>
+        <goals>
+          <goal>测试套件开发</goal>
+          <goal>性能测试验证</goal>
+          <goal>集成测试完成</goal>
+        </goals>
+        <deliverables>
+          <deliverable>test_model_validator.py (单元测试)</deliverable>
+          <deliverable>test_integration.py (集成测试)</deliverable>
+          <deliverable>性能测试报告</deliverable>
+        </deliverables>
+      </iteration>
+
+      <iteration>
+        <number>Iteration 4</number>
+        <duration>2小时</duration>
+        <goals>
+          <goal>报告生成系统</goal>
+          <goal>用户文档完善</goal>
+          <goal>BMM v6交付完成</goal>
+        </goals>
+        <deliverables>
+          <deliverable>report_generator.py (报告生成)</deliverable>
+          <deliverable>用户指南</deliverable>
+          <deliverable>完成报告</deliverable>
+        </deliverables>
+      </iteration>
+    </implementation_plan>
+
+    <resource_requirements>
+      <人力>
+        <role>AI模型工程师</role>
+        <allocation>100%（全职）</allocation>
+      </人力>
+      <技术>
+        <skill>Python开发</skill>
+        <skill>机器学习</skill>
+        <skill>NPU转换</skill>
+      </技术>
+      <环境>
+        <env>Epic 1开发环境</env>
+        <env>模型转换测试环境</env>
+        <env>基准测试数据集</env>
+      </环境>
+    </resource_requirements>
+  </implementation_context>
+
+  <!-- ========================================
+       5. 风险上下文 (Risk Context)
+       ======================================== -->
+  <risk_context>
+    <risks>
+      <risk id="R1">
+        <name>验证准确性风险</name>
+        <category>Technical</category>
+        <probability>Medium</probability>
+        <impact>High</impact>
+        <description>验证结果可能存在误差，影响用户信心</description>
+        <mitigation>
+          <strategy>基于Epic 2转换经验，验证算法经过充分测试</strategy>
+          <owner>AI模型工程师</owner>
+          <status>可控</status>
+        </mitigation>
+      </risk>
+
+      <risk id="R2">
+        <name>性能影响风险</name>
+        <category>Performance</category>
+        <probability>Low</probability>
+        <impact>Medium</impact>
+        <description>验证过程可能影响转换性能</description>
+        <mitigation>
+          <strategy>异步验证和缓存机制</strategy>
+          <owner>AI模型工程师</owner>
+          <status>已缓解</status>
+        </mitigation>
+      </risk>
+
+      <risk id="R3">
+        <name>数据依赖风险</name>
+        <category>Data</category>
+        <probability>Low</probability>
+        <impact>High</impact>
+        <description>基准测试数据集可能不足或质量不高</description>
+        <mitigation>
+          <strategy>准备多套基准数据集</strategy>
+          <owner>AI模型工程师</owner>
+          <status>待处理</status>
+        </mitigation>
+      </risk>
+
+      <risk id="R4">
+        <name>进度风险</name>
+        <category>Schedule</category>
+        <probability>Low</probability>
+        <impact>Medium</impact>
+        <description>一天内完成可能时间紧张</description>
+        <mitigation>
+          <strategy>基于成熟架构，快速实现</strategy>
+          <owner>AI模型工程师</owner>
+          <status>可控</status>
+        </mitigation>
+      </risk>
+    </risks>
+
+    <assumptions>
+      <assumption>Epic 1架构稳定可用</assumption>
+      <assumption>Story 2.2-2.6转换流程已完成</assumption>
+      <assumption>基准测试数据集可准备</assumption>
+      <assumption>开发环境配置正确</assumption>
+    </assumptions>
+
+    <constraints>
+      <constraint>必须在2025-10-28完成</constraint>
+      <constraint>基于Epic 1架构设计</constraint>
+      <constraint>符合PRD质量标准</constraint>
+      <constraint>支持BMM v6流程</constraint>
+    </constraints>
+  </risk_context>
+
+  <!-- ========================================
+       6. 质量上下文 (Quality Context)
+       ======================================== -->
+  <quality_context>
+    <quality_attributes>
+      <attribute>
+        <name>可靠性</name>
+        <description>验证结果准确可靠</description>
+        <metrics>
+          <metric>验证准确性 >99%</metric>
+          <metric>误报率 <1%</metric>
+        </metrics>
+      </attribute>
+
+      <attribute>
+        <name>性能</name>
+        <description>验证过程高效快速</description>
+        <metrics>
+          <metric>验证速度 <30秒/模型</metric>
+          <metric>并发支持 >10模型</metric>
+        </metrics>
+      </attribute>
+
+      <attribute>
+        <name>可用性</name>
+        <description>易于使用和维护</description>
+        <metrics>
+          <metric>学习成本 <2小时</metric>
+          <metric>错误率 <1%</metric>
+        </metrics>
+      </attribute>
+
+      <attribute>
+        <name>可维护性</name>
+        <description>代码清晰，易于修改</description>
+        <metrics>
+          <metric>代码质量 >95/100</metric>
+          <metric>测试覆盖 >90%</metric>
+          <metric>技术债务 = 0</metric>
+        </metrics>
+      </attribute>
+    </quality_attributes>
+
+    <quality_processes>
+      <process>
+        <name>代码审查</name>
+        <description>所有代码必须通过审查</description>
+        <criteria>
+          <criterion>遵循Epic 1架构</criterion>
+          <criterion>100%文档字符串覆盖</criterion>
+          <criterion>符合代码规范</criterion>
+        </criteria>
+      </process>
+
+      <process>
+        <name>测试验证</name>
+        <description>所有功能必须有测试</description>
+        <criteria>
+          <criterion>单元测试覆盖 >90%</criterion>
+          <criterion>集成测试覆盖主要场景</criterion>
+          <criterion>性能测试达标</criterion>
+        </criteria>
+      </process>
+
+      <process>
+        <name>文档检查</name>
+        <description>文档完整性验证</description>
+        <criteria>
+          <criterion>API文档完整</criterion>
+          <criterion>用户指南清晰</criterion>
+          <criterion>示例代码可用</criterion>
+        </criteria>
+      </process>
+    </quality_processes>
+  </quality_context>
+
+  <!-- ========================================
+       7. 完成上下文 (Completion Context)
+       ======================================== -->
+  <completion_context>
+    <done_definition>
+      <functional>
+        <check>AC1-AC5全部完成</check>
+        <check>5维度验证框架实现</check>
+        <check>自动基准测试系统就绪</check>
+        <check>实时监控功能完成</check>
+        <check>批量验证功能可用</check>
+      </functional>
+
+      <technical>
+        <check>代码质量评分 >95/100</check>
+        <check>测试覆盖率 >90%</check>
+        <check>集成Epic 1架构</check>
+        <check>集成Story 2.2-2.6流程</check>
+        <check>无技术债务</check>
+      </technical>
+
+      <quality>
+        <check>验证准确性 >99%</check>
+        <check>性能达标</check>
+        <check>兼容性验证通过</check>
+        <check>所有测试通过</check>
+      </quality>
+
+      <documentation>
+        <check>API文档完整</check>
+        <check>用户指南完成</check>
+        <check>BMM v6报告生成</check>
+        <check>测试报告完成</check>
+        <check>部署清单创建</check>
+      </documentation>
+    </done_definition>
+
+    <acceptance_process>
+      <step id="1" name="自测验证">
+        <description>开发者自测所有功能</description>
+        <criteria>所有AC验收标准通过</criteria>
+      </step>
+
+      <step id="2" name="代码审查">
+        <description>代码质量审查</description>
+        <criteria>代码质量评分 >95/100</criteria>
+      </step>
+
+      <step id="3" name="集成测试">
+        <description>与Epic 1和Story 2.2-2.6集成测试</description>
+        <criteria>集成测试100%通过</criteria>
+      </step>
+
+      <step id="4" name="性能验证">
+        <description>性能指标验证</description>
+        <criteria>所有性能指标达标</criteria>
+      </step>
+
+      <step id="5" name="文档审查">
+        <description>文档完整性检查</description>
+        <criteria>文档完整性 >95%</criteria>
+      </step>
+
+      <step id="6" name="最终验收">
+        <description>BMM v6最终验收</description>
+        <criteria>所有BMM v6交付物完成</criteria>
+      </step>
+    </acceptance_process>
+
+    <signoff>
+      <角色>
+        <role>AI模型工程师</role>
+        <name>Jody</name>
+        <date>2025-10-28</date>
+      </角色>
+      <角色>
+        <role>BMM架构师</role>
+        <name>Claude Code</name>
+        <date>2025-10-28</date>
+      </角色>
+    </signoff>
+  </completion_context>
+
+  <!-- ========================================
+       8. 附录 (Appendix)
+       ======================================== -->
+  <appendix>
+    <references>
+      <reference id="REF1">
+        <type>Document</type>
+        <name>Epic 1架构文档</name>
+        <path>/home/sunrise/xlerobot/docs/stories/story-1.3.md</path>
+        <description>核心框架层架构</description>
+      </reference>
+
+      <reference id="REF2">
+        <type>Document</type>
+        <name>Story 2.2完成报告</name>
+        <path>/home/sunrise/xlerobot/docs/story-2.2-bmm-v6-completion-report.md</path>
+        <description>VITS-Cantonese转换实现参考</description>
+      </reference>
+
+      <reference id="REF3">
+        <type>Document</type>
+        <name>BMM v6交付物索引</name>
+        <path>/home/sunrise/xlerobot/docs/bmm-v6-deliverables-index.md</path>
+        <description>BMM v6流程参考</description>
+      </reference>
+
+      <reference id="REF4">
+        <type>Document</type>
+        <name>PRD产品需求文档</name>
+        <path>/home/sunrise/xlerobot/docs/PRD.md</path>
+        <description>产品质量标准</description>
+      </reference>
+    </references>
+
+    <glossary>
+      <term>
+        <word>BMM v6</word>
+        <definition>Business Model Canvas v6，标准化故事实施流程</definition>
+      </term>
+      <term>
+        <word>精度验证</word>
+        <definition>验证转换后模型与原模型的精度一致性</definition>
+      </term>
+      <term>
+        <word>基准测试</word>
+        <definition>使用标准数据集验证模型性能</definition>
+      </term>
+      <term>
+        <word>五维度验证</word>
+        <definition>结构、功能、性能、兼容性、量化五个维度</definition>
+      </term>
+    </glossary>
+
+    <change_log>
+      <change id="1">
+        <date>2025-10-28</date>
+        <author>Claude Code</author>
+        <description>初始创建Story 2.7 Context XML</description>
+        <version>1.0.0</version>
+      </change>
+    </change_log>
+  </appendix>
+</story_context>

@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<context id="story-3.2" title="内存使用优化">
+  <!--
+    Story Context for Story 3.2: 内存使用优化
+    Generated: 2025-10-28
+    Version: 1.0
+    Status: Ready for Development
+
+    Strategic Background:
+    Story 3.2 is part of Epic 3: Performance Optimization and Extension.
+    This story focuses on implementing comprehensive memory usage optimization
+    for NPU model conversion, ensuring efficient memory utilization for
+    large-scale model conversion and batch processing scenarios.
+  -->
+
+  <!-- === STORY METADATA === -->
+  <metadata>
+    <storyId>story-3.2</storyId>
+    <epicId>epic-3</epicId>
+    <epicPhase>Phase 2: 内存和性能优化</epicPhase>
+    <priority>High</priority>
+    <complexity>High</complexity>
+    <estimatedDays>10</estimatedDays>
+    <status>Ready for Development</status>
+    <createdDate>2025-10-28</createdDate>
+    <lastUpdated>2025-10-28</lastUpdated>
+    <version>1.0</version>
+  </metadata>
+
+  <!-- === STRATEGIC CONTEXT === -->
+  <strategicContext>
+    <background>
+      XLeRobot项目需要在大规模模型转换场景中实现高效的内存管理。
+      随着NPU硬件性能的提升，大模型转换成为核心需求，内存优化成为性能提升的关键。
+      Epic 3专注于性能优化和扩展能力，为企业级应用提供高性能解决方案。
+    </background>
+
+    <problemStatement>
+      大模型转换和批处理场景需要高效的内存管理解决方案。
+      当前内存使用效率不足，无法满足企业级大模型转换需求。
+      需要建立完整的内存优化体系，确保内存使用率优化和转换性能提升。
+    </problemStatement>
+
+    <solutionApproach>
+      基于Epic 1核心框架和Epic 2转换经验，集成Story 3.1性能基础架构，
+      实现多维度内存优化策略，包括动态分配、算子级优化、批处理管理、GC优化。
+      确保内存使用率>85%，转换性能提升>30%，支持大模型批处理转换。
+    </solutionApproach>
+
+    <strategicAlignment>
+      <primaryFocus>内存使用优化</primaryFocus>
+      <secondaryFocus>性能优化、批处理能力、可扩展性</secondaryFocus>
+      <justification>
+        内存优化是性能优化的基础，直接影响大模型转换效率。
+        通过高效内存管理，可以显著提升转换性能，支持企业级应用场景。
+        这是Epic 3性能优化战略的核心组成部分。
+      </justification>
+    </strategicAlignment>
+
+    <criticalSuccessFactors>
+      <factor>内存使用效率达到>85%</factor>
+      <factor>大模型转换性能提升>30%</factor>
+      <factor>内存泄漏率保持0%</factor>
+      <factor>与Epic 1、Epic 2、Story 3.1的完美集成</factor>
+      <factor>支持批处理和并发转换场景</factor>
+    </criticalSuccessFactors>
+  </strategicContext>
+
+  <!-- === BUSINESS CONTEXT === -->
+  <businessContext>
+    <businessObjective>
+      实现完整的内存使用优化系统，为大模型转换和批处理场景提供高效的内存管理解决方案，
+      确保内存使用率优化和转换性能提升，满足企业级应用需求。
+    </businessObjective>
+
+    <businessValue>
+      <value-proposition>
+        为XLeRobot用户提供内存高效转换解决方案，支持大模型批处理转换，
+        实现>30%性能提升，降低内存使用成本，提升企业级应用能力。
+      </value-proposition>
+
+      <targetUsers>
+        <user type="AI模型工程师">
+          需要将大模型部署到NPU硬件上，实现高效内存利用
+        </user>
+        <user type="系统架构师">
+          寻求可扩展的高性能转换系统，支持大规模部署
+        </user>
+        <user type="企业用户">
+          需要可靠的内存优化解决方案，降低运维成本
+        </user>
+      </targetUsers>
+
+      <keyMetrics>
+        <metric name="内存使用效率" target="&gt;85%" measurement="有效内存使用/总内存分配"/>
+        <metric name="性能提升倍数" target="&gt;30%" measurement="优化后转换性能/优化前转换性能"/>
+        <metric name="内存泄漏率" target="0%" measurement="泄漏内存字节数/总分配内存字节数"/>
+        <metric name="大模型转换成功率" target="&gt;95%" measurement="成功转换大模型数/总大模型转换尝试数"/>
+        <metric name="批处理内存效率" target="&gt;90%" measurement="批处理内存使用效率"/>
+      </keyMetrics>
+
+      <businessRisks>
+        <risk level="High" description="大模型内存复杂性可能导致优化失败" mitigation="采用成熟算法，充分测试"/>
+        <risk level="Medium" description="内存优化可能影响转换质量" mitigation="质量验证，优化策略可配置"/>
+        <risk level="Medium" description="批处理场景内存管理复杂性" mitigation="分阶段实现，充分验证"/>
+        <risk level="Low" description="代码质量问题影响系统稳定性" mitigation="严格代码审查，测试驱动开发"/>
+      </businessRisks>
+    </businessValue>
+  </businessContext>
+
+  <!-- === TECHNICAL CONTEXT === -->
+  <technicalContext>
+    <technicalObjective>
+      建立完整的内存使用优化体系，包括内存监控、动态分配、算子优化、批处理管理、GC优化，
+      确保在不影响转换质量的前提下，最大化内存使用效率。
+    </technicalObjective>
+
+    <architectureOverview>
+      <layer name="Core Framework">
+        <component>Epic 1基础架构</component>
+        <description>62类，236函数，5704行核心代码，提供基础内存管理能力</description>
+      </layer>
+
+      <layer name="Conversion Layer">
+        <component>Epic 2转换系统</component>
+        <description>完整转换流程，支持多种模型转换，提供内存使用场景</description>
+      </layer>
+
+      <layer name="Performance Layer">
+        <component>Story 3.1性能基础</component>
+        <description>性能监控、分析、优化基础架构</description>
+      </layer>
+
+      <layer name="Memory Optimization">
+        <component>Story 3.2内存优化</component>
+        <description>当前故事：内存使用监控、优化策略、分析报告、泄漏检测</description>
+      </layer>
+    </architectureOverview>
+
+    <keyComponents>
+      <component name="MemoryMonitor">
+        <purpose>实时监控内存使用情况</purpose>
+        <responsibility>
+          - 转换过程内存使用实时监控（当前值、峰值、平均值）
+          - 模型结构内存占用分析
+          - 批处理场景内存使用统计
+          - 内存使用趋势分析和预警
+        </responsibility>
+      </component>
+
+      <component name="MemoryStrategy">
+        <purpose>内存优化策略实施</purpose>
+        <responsibility>
+          - 动态内存分配优化（内存池、对象复用）
+          - 算子级内存优化（中间结果复用、内存压缩）
+          - 批处理内存管理（队列管理、批大小调整）
+          - GC优化策略（引用计数、循环检测）
+        </responsibility>
+      </component>
+
+      <component name="MemoryAnalyzer">
+        <purpose>内存使用分析和报告</purpose>
+        <responsibility>
+          - 内存使用模式和效率分析
+          - 优化建议生成
+          - 多格式报告生成（JSON/HTML/PDF）
+          - 内存使用统计和趋势分析
+        </responsibility>
+      </component>
+
+      <component name="MemoryLeakDetector">
+        <purpose>内存泄漏检测和防护</purpose>
+        <responsibility>
+          - 内存泄漏自动检测
+          - 内存越界检测
+          - 内存使用异常监控
+          - 内存问题诊断和修复建议
+        </responsibility>
+      </component>
+    </keyComponents>
+
+    <dataFlow>
+      <step name="Memory Monitoring">
+        <description>实时收集内存使用数据</description>
+        <output>内存使用指标数据</output>
+      </step>
+
+      <step name="Memory Analysis">
+        <description>分析内存使用模式和效率</description>
+        <output>内存分析报告</output>
+      </step>
+
+      <step name="Memory Optimization">
+        <description>应用内存优化策略</description>
+        <output>优化后的内存使用</output>
+      </step>
+
+      <step name="Memory Validation">
+        <description>验证优化效果和质量</description>
+        <output>优化效果验证报告</output>
+      </step>
+    </dataFlow>
+
+    <technologyStack>
+      <category name="Core Framework">
+        <tech>Python 3.10+</tech>
+        <tech>Epic 1 Core Layer</tech>
+        <tech>Pydantic Models</tech>
+      </category>
+
+      <category name="Memory Management">
+        <tech>Memory Pool Allocation</tech>
+        <tech>Garbage Collection Optimization</tech>
+        <tech>Weak References</tech>
+        <tech>Memory Profiling Tools</tech>
+      </category>
+
+      <category name="Monitoring & Analysis">
+        <tech>Memory Profiler</tech>
+        <tech>Tracemalloc</tech>
+        <tech>psutil</tech>
+        <tech>Custom Memory Metrics</tech>
+      </category>
+
+      <category name="Reporting">
+        <tech>Jinja2 Templates</tech>
+        <tech>matplotlib</tech>
+        <tech>Plotly</tech>
+        <tech>ReportLab</tech>
+      </category>
+    </technologyStack>
+  </technicalContext>
+
+  <!-- === DEPENDENCIES === -->
+  <dependencies>
+    <dependency type="Technical">
+      <name>Epic 1 - Core Framework</name>
+      <status>Completed</status>
+      <version>1.0</version>
+      <impact>提供基础内存管理和核心架构</impact>
+    </dependency>
+
+    <dependency type="Technical">
+      <name>Epic 2 - Model Conversion</name>
+      <status>Completed</status>
+      <version>1.0</version>
+      <impact>提供完整转换流程和内存使用场景</impact>
+    </dependency>
+
+    <dependency type="Technical">
+      <name>Story 3.1 - Performance Foundation</name>
+      <status>Completed</status>
+      <version>1.0</version>
+      <impact>提供性能监控和分析基础架构</impact>
+    </dependency>
+
+    <dependency type="Data">
+      <name>Performance Benchmark Data</name>
+      <status>Available</status>
+      <version>1.0</version>
+      <impact>提供性能基准数据用于对比分析</impact>
+    </dependency>
+
+    <dependency type="Configuration">
+      <name>Horizon X5 BPU Configuration</name>
+      <status>Available</status>
+      <version>1.0</version>
+      <impact>提供硬件配置信息和内存限制</impact>
+    </dependency>
+  </dependencies>
+
+  <!-- === ACCEPTANCE CRITERIA === -->
+  <acceptanceCriteria>
+    <criterion id="AC1" name="内存使用监控和测量">
+      <description>实现转换过程内存使用实时监控</description>
+      <items>
+        <item>转换过程内存使用实时监控（当前值、峰值、平均值）</item>
+        <item>模型结构内存占用分析（参数数量、算子内存占用）</item>
+        <item>批处理场景内存使用统计（单模型、批量、平均）</item>
+        <item>内存使用趋势分析和预警（阈值监控、异常检测）</item>
+        <item>内存效率指标计算（利用率、效率、浪费率）</item>
+      </items>
+      <verification>
+        <test>内存监控功能测试</test>
+        <test>内存分析准确性验证</test>
+        <test>预警机制测试</test>
+      </verification>
+    </criterion>
+
+    <criterion id="AC2" name="内存优化策略系统">
+      <description>实现多维度内存优化策略</description>
+      <items>
+        <item>动态内存分配优化（按需分配、内存池、对象复用）</item>
+        <item>算子级内存优化（中间结果复用、内存压缩、计算换内存）</item>
+        <item>批处理内存管理（队列管理、批大小动态调整）</item>
+        <item>GC优化策略（引用计数优化、循环检测、内存回收）</item>
+        <item>大模型分片处理（模型分割、分布式内存、并行处理）</item>
+      </items>
+      <verification>
+        <test>内存优化效果测试</test>
+        <test>性能提升验证</test>
+        <test>内存效率测试</test>
+      </verification>
+    </criterion>
+
+    <criterion id="AC3" name="内存使用分析和报告">
+      <description>生成详细内存分析报告</description>
+      <items>
+        <item>生成详细内存分析报告（使用模式、优化建议、效率评估）</item>
+        <item>集成Epic 2报告生成系统，支持JSON/HTML/PDF格式</item>
+        <item>提供内存使用统计和趋势分析</item>
+        <item>支持内存使用报告自动分发</item>
+        <item>提供内存优化进度跟踪</item>
+      </items>
+      <verification>
+        <test>报告生成测试</test>
+        <test>报告准确性验证</test>
+        <test>多格式输出测试</test>
+      </verification>
+    </criterion>
+
+    <criterion id="AC4" name="内存泄漏检测和防护">
+      <description>实现内存泄漏检测和防护</description>
+      <items>
+        <item>实现内存泄漏自动检测（引用追踪、泄漏定位、泄漏量计算）</item>
+        <item>实现内存越界检测（缓冲区溢出、数组越界、指针异常）</item>
+        <item>实现内存使用异常监控（异常增长、异常释放、异常分配）</item>
+        <item>提供内存问题诊断和修复建议</item>
+        <item>支持内存问题历史记录和学习</item>
+      </items>
+      <verification>
+        <test>泄漏检测准确性测试</test>
+        <test>异常监控测试</test>
+        <test>防护机制验证</test>
+      </verification>
+    </criterion>
+
+    <criterion id="AC5" name="内存优化配置和预设">
+      <description>实现内存优化配置和预设</description>
+      <items>
+        <item>实现内存优化策略配置（优化等级、策略组合、参数调整）</item>
+        <item>提供大模型转换内存优化预设（低内存模式、平衡模式、高性能模式）</item>
+        <item>支持内存优化策略动态切换和调整</item>
+        <item>提供内存优化效果验证和测试</item>
+        <item>支持内存优化配置备份和恢复</item>
+      </items>
+      <verification>
+        <test>配置系统测试</test>
+        <test>预设模式验证</test>
+        <test>动态切换测试</test>
+      </verification>
+    </criterion>
+  </acceptanceCriteria>
+
+  <!-- === TESTING STRATEGY === -->
+  <testingStrategy>
+    <testingLevels>
+      <level name="Unit Testing">
+        <scope>Individual components</scope>
+        <coverage target=">90%">All public methods and edge cases</coverage>
+        <tools>pytest, unittest</tools>
+      </level>
+
+      <level name="Integration Testing">
+        <scope>Component interactions</scope>
+        <coverage target=">85%">Memory optimization workflows</coverage>
+        <tools>pytest, integration test framework</tools>
+      </level>
+
+      <level name="Performance Testing">
+        <scope>Memory efficiency metrics</scope>
+        <coverage target="All scenarios">Large model conversion scenarios</coverage>
+        <tools>memory_profiler, custom benchmarks</tools>
+      </level>
+
+      <level name="End-to-End Testing">
+        <scope>Complete conversion workflows</scope>
+        <coverage target="All use cases">Real-world conversion scenarios</coverage>
+        <tools>End-to-end test suite</tools>
+      </level>
+    </testingLevels>
+
+    <testScenarios>
+      <scenario name="Memory Monitoring">
+        <description>Verify real-time memory monitoring accuracy</description>
+        <steps>
+          <step>Start model conversion with monitoring enabled</step>
+          <step>Verify memory metrics collection</step>
+          <step>Verify alert generation for abnormal usage</step>
+        </steps>
+        <successCriteria>Metrics within 5% accuracy, alerts trigger correctly</successCriteria>
+      </scenario>
+
+      <scenario name="Memory Optimization">
+        <description>Verify memory optimization effectiveness</description>
+        <steps>
+          <step>Run conversion without optimization</step>
+          <step>Run conversion with optimization</step>
+          <step>Compare memory usage and performance</step>
+        </steps>
+        <successCriteria>>30% performance improvement, >80% memory efficiency</successCriteria>
+      </scenario>
+
+      <scenario name="Large Model Batch Processing">
+        <description>Verify batch processing memory management</description>
+        <steps>
+          <step>Configure batch processing parameters</step>
+          <step>Run batch conversion of large models</step>
+          <step>Monitor memory usage and throughput</step>
+        </steps>
+        <successCriteria>No memory overflow, >90% batch efficiency</successCriteria>
+      </scenario>
+
+      <scenario name="Memory Leak Detection">
+        <description>Verify memory leak detection accuracy</description>
+        <steps>
+          <step>Run extended conversion workflows</step>
+          <step>Monitor memory growth patterns</step>
+          <step>Verify leak detection and reporting</step>
+        </steps>
+        <successCriteria>Detect leaks >1MB, 0% false positives</successCriteria>
+      </scenario>
+    </testScenarios>
+  </testingStrategy>
+
+  <!-- === DOCUMENTATION REQUIREMENTS === -->
+  <documentationRequirements>
+    <document type="API Reference" required="true">
+      <description>Complete API documentation for all memory optimization components</description>
+      <location>docs/api/memory-optimization/</location>
+    </document>
+
+    <document type="User Guide" required="true">
+      <description>Comprehensive guide for using memory optimization features</description>
+      <location>docs/guides/memory-optimization-guide.md</location>
+    </document>
+
+    <document type="Architecture Documentation" required="true">
+      <description>Technical architecture and design decisions</description>
+      <location>docs/architecture/memory-optimization.md</location>
+    </document>
+
+    <document type="Performance Benchmarks" required="true">
+      <description>Performance benchmarks and optimization results</description>
+      <location>docs/benchmarks/memory-optimization-benchmarks.md</location>
+    </document>
+
+    <document type="Troubleshooting Guide" required="true">
+      <description>Common issues and troubleshooting steps</description>
+      <location>docs/troubleshooting/memory-optimization.md</location>
+    </document>
+  </documentationRequirements>
+
+  <!-- === DEPLOYMENT CONSIDERATIONS === -->
+  <deploymentConsiderations>
+    <environment type="Development">
+      <requirements>
+        <requirement>Local memory profiling tools</requirement>
+        <requirement>Debug mode enabled</requirement>
+        <requirement>Verbose logging</requirement>
+      </requirements>
+      <verification>
+        <check>Memory profiling integration</check>
+        <check>Development tool compatibility</check>
+      </verification>
+    </environment>
+
+    <environment type="Testing">
+      <requirements>
+        <requirement>Automated testing environment</requirement>
+        <requirement>Performance monitoring</requirement>
+        <requirement>Continuous integration</requirement>
+      </requirements>
+      <verification>
+        <check>Test automation</check>
+        <check>Performance regression detection</check>
+      </verification>
+    </environment>
+
+    <environment type="Production">
+      <requirements>
+        <requirement>Optimized memory usage</requirement>
+        <requirement>Minimal overhead</requirement>
+        <requirement>Reliable monitoring</requirement>
+        <requirement>Alert system</requirement>
+      </requirements>
+      <verification>
+        <check>Production readiness</check>
+        <check>Performance targets met</check>
+        <check>Monitoring accuracy</check>
+      </verification>
+    </environment>
+  </deploymentConsiderations>
+
+  <!-- === RISK MITIGATION === -->
+  <riskMitigation>
+    <risk id="R1" name="Memory Complexity">
+      <level>High</level>
+      <description>Memory optimization complexity may exceed initial estimates</description>
+      <mitigation>
+        <strategy>Phased implementation with incremental testing</strategy>
+        <backup>Use existing memory optimization libraries as fallback</backup>
+      </mitigation>
+      <monitoring>
+        <metric>Development velocity</metric>
+        <threshold>80% of planned progress by day 7</threshold>
+      </monitoring>
+    </risk>
+
+    <risk id="R2" name="Performance Impact">
+      <level>Medium</level>
+      <description>Memory optimization overhead may negate performance gains</description>
+      <mitigation>
+        <strategy>Profiling and optimization of optimization code</strategy>
+        <backup>Configurable optimization levels</backup>
+      </mitigation>
+      <monitoring>
+        <metric>Net performance improvement</metric>
+        <threshold>>30% improvement net of optimization overhead</threshold>
+      </monitoring>
+    </risk>
+
+    <risk id="R3" name="Quality Degradation">
+      <level>Medium</level>
+      <description>Memory optimization may affect conversion quality</description>
+      <mitigation>
+        <strategy>Comprehensive quality validation after each optimization</strategy>
+        <backup>Disable specific optimizations if quality degrades</backup>
+      </mitigation>
+      <monitoring>
+        <metric>Quality metrics preservation</metric>
+        <threshold>>98% of original quality</threshold>
+      </monitoring>
+    </risk>
+
+    <risk id="R4" name="Integration Issues">
+      <level>Low</level>
+      <description>Memory optimization may not integrate well with existing code</description>
+      <mitigation>
+        <strategy>Extensive integration testing</strategy>
+        <backup>Modular design allows selective disabling</backup>
+      </mitigation>
+      <monitoring>
+        <metric>Integration test pass rate</metric>
+        <threshold>>95% pass rate</threshold>
+      </monitoring>
+    </risk>
+  </riskMitigation>
+
+  <!-- === SUCCESS METRICS === -->
+  <successMetrics>
+    <metric name="内存使用效率" target=">85%">
+      <measurement>Effective memory usage / Total memory allocation</measurement>
+      <validation>Automated benchmarks with multiple model types</validation>
+    </metric>
+
+    <metric name="性能提升倍数" target=">30%">
+      <measurement>(Optimized performance - Baseline performance) / Baseline performance</measurement>
+      <validation>Performance testing suite</validation>
+    </metric>
+
+    <metric name="内存泄漏率" target="0%">
+      <measurement>Leaked memory bytes / Total allocated memory bytes</measurement>
+      <validation>Extended stress testing with memory leak detection</validation>
+    </metric>
+
+    <metric name="大模型转换成功率" target=">95%">
+      <measurement>Successfully converted large models / Total conversion attempts</measurement>
+      <validation>Batch processing tests with various large models</validation>
+    </metric>
+
+    <metric name="批处理内存效率" target=">90%">
+      <measurement>Batch processing memory usage efficiency</measurement>
+      <validation>Batch processing scenario testing</validation>
+    </metric>
+
+    <metric name="代码覆盖率" target=">90%">
+      <measurement>Covered code lines / Total code lines</measurement>
+      <validation>Automated test coverage analysis</validation>
+    </metric>
+
+    <metric name="代码质量评分" target=">95/100">
+      <measurement>Static analysis and code review score</measurement>
+      <validation>Automated code quality tools and manual review</validation>
+    </metric>
+  </successMetrics>
+
+</context>

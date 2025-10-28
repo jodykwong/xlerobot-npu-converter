@@ -1,0 +1,66 @@
+{
+  "timestamp": "2025-10-28T07:57:38.261390",
+  "results": [
+    {
+      "model_name": "vits_cantonese",
+      "model_path": "models/vits_cantonese.onnx",
+      "dataset_name": "vits_cantonese_test",
+      "timestamp": "2025-10-28T07:57:38.261164",
+      "accuracy": 0.987,
+      "precision": 0.985,
+      "recall": 0.982,
+      "f1_score": 0.983,
+      "inference_time": 0.234,
+      "throughput": 45.2,
+      "memory_usage": 850.5,
+      "cpu_utilization": 65.3,
+      "gpu_utilization": 42.1,
+      "memory_bandwidth": 2126.25,
+      "concurrent_performance": 67.8,
+      "batch_sizes_tested": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "compatibility_score": 0.95,
+      "status": "passed"
+    },
+    {
+      "model_name": "sensevoice",
+      "model_path": "models/sensevoice.onnx",
+      "dataset_name": "sensevoice_test",
+      "timestamp": "2025-10-28T07:57:38.261224",
+      "accuracy": 0.982,
+      "precision": 0.98,
+      "recall": 0.978,
+      "f1_score": 0.979,
+      "inference_time": 0.156,
+      "throughput": 72.4,
+      "memory_usage": 765.2,
+      "cpu_utilization": 58.7,
+      "gpu_utilization": 38.9,
+      "memory_bandwidth": 1913.0,
+      "concurrent_performance": 108.6,
+      "batch_sizes_tested": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "compatibility_score": 0.93,
+      "status": "passed"
+    }
+  ],
+  "summary": {
+    "total_models": 2,
+    "passed": 2,
+    "warning": 0,
+    "failed": 0,
+    "avg_accuracy": 0.9844999999999999,
+    "avg_inference_time": 0.195,
+    "avg_concurrent_performance": 88.19999999999999
+  }
+}

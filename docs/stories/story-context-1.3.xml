@@ -1,0 +1,66 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>3</storyId>
+    <title>核心转换框架开发</title>
+    <status>Ready</status>
+    <generatedAt>2025-10-25</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>story-1.3.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>AI模型工程师</asA>
+    <iWant>一个基础的模型转换框架</iWant>
+    <soThat>能够加载和预处理ONNX格式模型文件</soThat>
+    <tasks>创建core目录结构;实现基础转换器接口;实现基础量化器接口;创建核心数据模型;定义异常处理体系</tasks>
+  </story>
+
+  <acceptanceCriteria>1. 支持ONNX格式模型文件的加载和验证;2. 实现模型结构分析和基本信息提取;3. 提供模型兼容性预检查功能;4. 建立转换流程的基础调用接口;5. 支持转换过程的错误处理和异常管理</acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc path="docs/architecture.md" title="XLeRobot NPU模型转换工具 - 决策架构文档" section="Project Structure" snippet="定义了完整的项目结构，包括src/npu_converter/core/目录结构，core模块包含converter.py（核心转换逻辑）、validator.py（模型验证）、benchmark.py（性能测试）、reporter.py（报告生成）" />
+      <doc path="docs/epics.md" title="XLeRobot NPU模型转换工具 - Epic Breakdown" section="Story 1.3" snippet="Epic 1: NPU模型转换工具核心基础设施 - Story 1.3: 核心转换框架开发，包含完整的验收标准和任务分解" />
+      <doc path="docs/PRD.md" title="产品需求文档" section="Technical Requirements" snippet="定义了NPU模型转换工具的技术要求，包括ONNX模型支持、Docker部署、性能目标等" />
+    </docs>
+    <code>
+      <code path="src/npu_converter/" kind="module" symbol="npu_converter package" reason="主要的NPU转换器包，包含所有核心功能模块" />
+      <code path="src/npu_converter/core/" kind="directory" symbol="core module" reason="核心转换框架模块，需要实现BaseConverter抽象基类和相关接口" />
+      <code path="src/npu_converter/models/" kind="directory" symbol="models module" reason="数据模型模块，需要实现ConversionModel、ValidationResult等核心数据结构" />
+    </code>
+    <dependencies>
+      <ecosystem name="python">
+        <package name="click" version="8.x" />
+        <package name="pyyaml" />
+        <package name="onnx" />
+        <package name="numpy" />
+        <package name="pytest" version="7.x" />
+      </ecosystem>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+  <constraint>Core层必须为抽象接口层，不包含具体实现</constraint>
+  <constraint>必须建立清晰的依赖层次：转换器 → core → 配置</constraint>
+  <constraint>支持插件化架构，便于未来扩展新转换器类型</constraint>
+  <constraint>所有接口必须支持进度跟踪和状态管理</constraint>
+  <constraint>必须遵循Python PEP 8编码规范和类型提示要求</constraint>
+</constraints>
+  <interfaces>
+    <interface name="BaseConverter" kind="abstract class" signature="def convert(model_path, config) -> ResultModel" path="src/npu_converter/core/converter.py" />
+    <interface name="BaseValidator" kind="abstract class" signature="def validate(model_path) -> ValidationResult" path="src/npu_converter/core/validator.py" />
+    <interface name="ConversionModel" kind="dataclass" signature="model_path: str, status: str, metadata: dict" path="src/npu_converter/models/conversion_result.py" />
+  </interfaces>
+  <tests>
+    <standards>使用pytest 7.x测试框架，遵循AAA模式（Arrange-Act-Assert），包含完整的单元测试和集成测试覆盖</standards>
+    <locations>tests/unit/test_core.py, tests/integration/test_conversion_flow.py, tests/fixtures/</locations>
+    <ideas>
+      <idea ac="1">测试BaseConverter抽象基类接口实现</idea>
+      <idea ac="2">测试ONNX模型加载和验证功能</idea>
+      <idea ac="3">测试模型结构分析和信息提取</idea>
+      <idea ac="4">测试兼容性预检查功能</idea>
+      <idea ac="5">测试错误处理和异常管理</idea>
+    </ideas>
+  </tests>
+</story-context>

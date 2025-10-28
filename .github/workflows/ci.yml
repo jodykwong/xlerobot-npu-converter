@@ -1,0 +1,268 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # 每天UTC时间02:00运行夜间测试
+    - cron: '0 2 * * *'
+
+jobs:
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.10]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+
+    - name: Lint with ruff
+      run: |
+        ruff check --output-format=github src/ tests/
+
+    - name: Type check with mypy
+      run: |
+        mypy src/ --ignore-missing-imports
+
+    - name: Format check with black
+      run: |
+        black --check --diff src/ tests/
+
+    - name: Run tests with coverage
+      run: |
+        pytest --cov=src --cov-report=xml --cov-report=html --cov-report=json --cov-report=term-missing --cov-fail-under=85
+
+    - name: Generate coverage report
+      run: |
+        python scripts/coverage_monitor.py report --format json
+        python scripts/enhance_coverage_report.py
+        python scripts/generate_coverage_badge.py
+
+    - name: Coverage threshold check
+      run: |
+        python scripts/coverage_monitor.py check
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+
+    - name: Generate comprehensive test report
+      run: |
+        python scripts/test_report_generator.py
+        python scripts/test_visualizer.py
+        python scripts/performance_trend_analyzer.py
+
+    - name: Run performance benchmarks
+      run: |
+        pytest tests/benchmarks/ --benchmark-only --benchmark-json=benchmark_results.json
+
+    - name: Archive all reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: comprehensive-test-reports-${{ matrix.python-version }}
+        path: |
+          htmlcov/
+          coverage.json
+          coverage_report.json
+          coverage_history.json
+          docs/coverage_badge.svg
+          reports/
+          benchmark_results.json
+        retention-days: 30
+
+    - name: Archive test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.python-version }}
+        path: |
+          htmlcov/
+          pytest.xml
+        retention-days: 7
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install bandit safety
+
+    - name: Run Bandit security scan
+      run: |
+        bandit -r src/ -f json -o bandit-report.json || true
+
+    - name: Run Safety check
+      run: |
+        safety check --json --output safety-report.json || true
+
+    - name: Upload security reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          safety-report.json
+        retention-days: 7
+
+  docker:
+    name: Docker Build and Test
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Login to Docker Hub
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: xlerobot/npu-converter
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{version}}
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Test Docker image
+      run: |
+        docker run --rm xlerobot/npu-converter:latest python -m npu_converter.cli --version
+        docker run --rm xlerobot/npu-converter:latest python -m npu_converter.cli --help
+
+  performance:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+        pip install pytest-benchmark
+
+    - name: Run performance tests
+      run: |
+        pytest tests/benchmarks/ --benchmark-json=benchmark-report.json
+
+    - name: Upload performance report
+      uses: actions/upload-artifact@v4
+      with:
+        name: performance-report
+        path: benchmark-report.json
+        retention-days: 30
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: [test, docker]
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ github.ref_name }}
+        draft: false
+        prerelease: false
+
+  notify:
+    name: Notify Results
+    runs-on: ubuntu-latest
+    needs: [test, security, docker]
+    if: always()
+
+    steps:
+    - name: Notify Slack on Success
+      if: needs.test.result == 'success' && needs.security.result == 'success' && needs.docker.result == 'success'
+      uses: 8398a7/action-slack-notify@v3
+      with:
+        status: success
+        text: '✅ CI pipeline passed successfully!'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+    - name: Notify Slack on Failure
+      if: needs.test.result == 'failure' || needs.security.result == 'failure' || needs.docker.result == 'failure'
+      uses: 8398a7/action-slack-notify@v3
+      with:
+        status: failure
+        text: '❌ CI pipeline failed! Please check the logs.'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}

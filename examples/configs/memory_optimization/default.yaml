@@ -1,0 +1,59 @@
+# 默认内存优化配置
+# Story 3.2: 内存使用优化
+# 版本: 1.0
+# 日期: 2025-10-28
+
+# === 基础配置 ===
+# 内存优化级别: minimal, balanced, aggressive, custom
+optimization_level: balanced
+
+# 内存使用模式: low_memory, standard, high_performance, batch_processing
+memory_mode: standard
+
+# === 内存监控配置 ===
+monitoring_enabled: true
+monitoring_interval: 0.1
+peak_memory_threshold: 0.85
+
+# === 内存分配优化配置 ===
+memory_pool_enabled: true
+memory_pool_size: 104857600  # 100MB (字节)
+object_reuse_enabled: true
+object_reuse_threshold: 100
+
+# === 算子级优化配置 ===
+operator_optimization_enabled: true
+intermediate_result_reuse: true
+memory_compression_enabled: false
+compute_memory_tradeoff: 0.7
+
+# === 批处理配置 ===
+batch_processing_enabled: false
+batch_size: 4
+dynamic_batch_adjustment: true
+batch_memory_limit: 2147483648  # 2GB (字节)
+
+# === GC优化配置 ===
+gc_optimization_enabled: true
+gc_threshold_adjustment: true
+reference_counting_optimization: true
+cycle_detection_enabled: true
+gc_aggressiveness: 0.8
+
+# === 大模型分片配置 ===
+model_sharding_enabled: false
+shard_size_threshold: 524288000  # 500MB (字节)
+max_shards: 4
+
+# === 泄漏检测配置 ===
+leak_detection_enabled: true
+leak_detection_interval: 1.0
+leak_threshold: 10485760  # 10MB (字节)
+out_of_bounds_detection: true
+
+# === 报告配置 ===
+reporting_enabled: true
+report_format:
+  - json
+  - html
+auto_report_generation: true

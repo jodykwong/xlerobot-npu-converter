@@ -1,0 +1,77 @@
+{
+  "timestamp": "Sat Oct 25 04:33:11 AM CST 2025",
+  "project_root": "/home/sunrise/xlerobot",
+  "validation_type": "Configuration Only (No Docker Runtime)",
+  "results": [
+    {
+      "test": "文件存在检查 - Docker镜像定义文件",
+      "passed": true,
+      "details": "Dockerfile"
+    },
+    {
+      "test": "文件存在检查 - 生产依赖文件",
+      "passed": true,
+      "details": "requirements.txt"
+    },
+    {
+      "test": "文件存在检查 - 开发依赖文件",
+      "passed": true,
+      "details": "requirements-dev.txt"
+    },
+    {
+      "test": "文件存在检查 - Docker忽略文件",
+      "passed": true,
+      "details": ".dockerignore"
+    },
+    {
+      "test": "文件存在检查 - Docker Compose配置",
+      "passed": true,
+      "details": "docker-compose.yml"
+    },
+    {
+      "test": "文件存在检查 - pytest配置文件",
+      "passed": true,
+      "details": "pytest.ini"
+    },
+    {
+      "test": "Dockerfile内容验证",
+      "passed": true,
+      "details": "检查了10项内容"
+    },
+    {
+      "test": "Requirements文件验证",
+      "passed": true,
+      "details": "验证生产依赖和开发依赖包"
+    },
+    {
+      "test": "Docker Compose配置验证",
+      "passed": true,
+      "details": "检查了11项配置"
+    },
+    {
+      "test": ".dockerignore验证",
+      "passed": true,
+      "details": "检查排除规则"
+    },
+    {
+      "test": "脚本文件验证",
+      "passed": true,
+      "details": "检查了3个脚本"
+    },
+    {
+      "test": "Pytest配置验证",
+      "passed": true,
+      "details": "检查pytest配置文件"
+    },
+    {
+      "test": "目录结构验证",
+      "passed": true,
+      "details": "检查项目目录结构"
+    }
+  ],
+  "summary": {
+    "total_checks": 13,
+    "passed": 13,
+    "failed": 0
+  }
+}

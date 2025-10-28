@@ -1,0 +1,66 @@
+[run]
+# 覆盖率运行配置
+source = src
+omit =
+    */tests/*
+    */test_*
+    */__pycache__/*
+    */site-packages/*
+    */migrations/*
+    */venv/*
+    */env/*
+    */build/*
+    */dist/*
+    setup.py
+    */conftest.py
+
+branch = True
+parallel = True
+concurrency = thread
+
+[report]
+# 报告配置
+exclude_lines =
+    # 排除特定的代码模式
+    pragma: no cover
+    def __repr__
+    if self.debug:
+    if settings.DEBUG
+    raise AssertionError
+    raise NotImplementedError
+    if 0:
+    if __name__ == .__main__.:
+    class .*\bProtocol\):
+    @(abc\.)?abstractmethod
+
+    # 排除类型检查和导入相关代码
+    from typing import
+    import typing
+    TYPE_CHECKING = True
+    if TYPE_CHECKING:
+
+precision = 2
+show_missing = True
+skip_covered = False
+skip_empty = True
+fail_under = 85
+
+[html]
+# HTML报告配置
+directory = htmlcov
+title = XLeRobot NPU Converter - Coverage Report
+
+[xml]
+# XML报告配置
+output = coverage.xml
+
+[paths]
+# 源码路径映射
+source =
+    src/
+    */site-packages/src/
+
+[json]
+# JSON报告配置
+output = coverage.json
+pretty_print = true

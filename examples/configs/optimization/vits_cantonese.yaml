@@ -1,0 +1,145 @@
+# VITS-Cantonese TTS Model Optimization Configuration
+# Optimized for Cantonese text-to-speech models
+
+# Optimization Strategy Configuration
+optimization:
+  strategy: "bayesian"
+  max_iterations: 100
+  convergence_threshold: 0.01
+  time_limit: 600.0
+  early_stopping: true
+  patience: 10
+  random_seed: 42
+  verbose: true
+
+# Optimization Objective - Prioritize quality for TTS
+objective:
+  primary: "maximize_accuracy"
+
+# Trade-off Strategy - Prioritize quality
+tradeoff:
+  strategy: "quality_first"
+  custom_weights:
+    accuracy: 0.70    # Critical for TTS quality
+    latency: 0.20     # Important but secondary to quality
+    throughput: 0.05  # Less critical
+    memory: 0.03      # Less critical
+    compatibility: 0.01
+    success_rate: 0.01
+
+# Model Analysis Settings
+model_analysis:
+  auto_detect: true
+  default_type: "tts"
+  analyze_quantization: true
+
+# Preprocessing Optimization
+preprocessing:
+  enabled: true
+  optimize:
+    normalization: true
+    resize: false      # TTS uses mel-spectrograms
+    channel_format: true
+    data_type: true
+  respect_constraints: true
+  preset: "tts"
+
+# Parameter Space Definition for VITS-Cantonese
+parameter_space:
+  quantization_bits:
+    type: "choice"
+    values: [8, 16]
+    default: 16
+    # Note: 16-bit strongly recommended for TTS quality
+
+  sample_rate:
+    type: "choice"
+    values: [22050, 44100]
+    default: 22050
+
+  n_mels:
+    type: "choice"
+    values: [80, 128, 256]
+    default: 80
+
+  hop_length:
+    type: "choice"
+    values: [256, 512]
+    default: 256
+
+  win_length:
+    type: "choice"
+    values: [1024, 2048]
+    default: 1024
+
+  batch_size:
+    type: "choice"
+    values: [8, 16, 32]
+    default: 16
+
+  normalize:
+    type: "choice"
+    values: [true, false]
+    default: true
+
+# Preprocessing Parameters for VITS-Cantonese
+preprocessing_params:
+  normalize: true
+  normalize_mode: "custom"
+  channel_format: "NC"
+  target_format: "NC"
+  mean: [0.0]
+  std: [1.0]
+  data_type: "float32"
+  sample_rate: 22050
+
+# Cantonese-Specific Parameters
+cantonese_params:
+  # Cantonese tone modeling
+  enable_tone_modeling: true
+  tone_types: 6  # 九声六调
+
+  # Multi-voice support
+  voice_types:
+    - "male"
+    - "female"
+    - "child"
+
+  # Cantonese prosody
+  enable_prosody: true
+  rhythm_factor: 1.0
+
+# Validation Settings
+validation:
+  enabled: true
+  split_ratio: 0.2
+  min_accuracy: 0.94    # TTS models need high quality
+  max_latency: 150.0    # Acceptable latency for synthesis
+
+# Specific Recommendations for VITS-Cantonese
+recommendations:
+  - "Use 16-bit quantization to maintain audio quality"
+  - "Enable Cantonese tone modeling (九声六调)"
+  - "Use 22.05kHz sample rate for good quality/performance balance"
+  - "Optimize mel-spectrogram parameters for Cantonese characteristics"
+  - "Apply mu-law companding for better dynamic range"
+  - "Support multiple voice types (male, female, child)"
+
+# Quality Metrics for TTS
+quality_metrics:
+  # Audio quality thresholds
+  min_stoi_score: 0.85    # Short-Time Objective Intelligibility
+  min_pesq_score: 3.0     # Perceptual Evaluation of Speech Quality
+  min_snr_db: 20.0        # Signal-to-Noise Ratio
+
+# Model-Specific Notes
+notes: |
+  VITS-Cantonese TTS models require careful attention to audio quality preservation.
+  The model synthesizes speech from text, so output quality is paramount.
+  16-bit quantization is strongly recommended to maintain audio fidelity.
+  Cantonese-specific optimizations include tone modeling (九声六调),
+  prosody optimization, and multi-voice support.
+
+  The model processes text input to generate mel-spectrograms, which are then
+  converted to audio. Key parameters include sample rate, mel bins, and
+  normalization settings.

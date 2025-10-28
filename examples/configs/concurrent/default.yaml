@@ -1,0 +1,135 @@
+# 并发优化默认配置文件
+# Story 3.3: 并行处理能力
+# 创建日期: 2025-10-28
+
+# === 基础配置 ===
+# 并发级别: minimal, moderate, high, maximum
+concurrency_level: moderate
+
+# 处理模式: throughput, latency, balanced, resource_efficient
+processing_mode: balanced
+
+# === 并发控制配置 ===
+# 最大并发任务数 (1-100)
+max_concurrent_tasks: 10
+
+# 最大队列大小
+max_queue_size: 1000
+
+# 任务超时时间（秒）
+task_timeout: 300.0
+
+# 任务重试次数
+task_retry_count: 3
+
+# === 批处理配置 ===
+# 启用批处理
+batch_processing_enabled: true
+
+# 批处理策略: fixed_size, dynamic, adaptive, time_based
+batch_strategy: dynamic
+
+# 批大小
+batch_size: 10
+
+# 批处理超时（秒）
+batch_timeout: 1.0
+
+# 最大批等待时间（秒）
+max_batch_wait_time: 5.0
+
+# === 负载均衡配置 ===
+# 启用负载均衡
+load_balancing_enabled: true
+
+# 负载均衡类型
+load_balancer_type: round_robin
+
+# 工作节点健康检查间隔（秒）
+worker_health_check_interval: 10.0
+
+# === 资源管理配置 ===
+# 启用资源监控
+resource_monitoring_enabled: true
+
+# CPU使用率阈值 (0.0-1.0)
+cpu_threshold: 0.80
+
+# 内存使用率阈值 (0.0-1.0)
+memory_threshold: 0.85
+
+# 启用自动扩缩容
+auto_scaling_enabled: false
+
+# 扩容阈值 (0.0-1.0)
+scale_up_threshold: 0.75
+
+# 缩容阈值 (0.0-1.0)
+scale_down_threshold: 0.30
+
+# === 任务调度配置 ===
+# 调度策略
+scheduling_strategy: priority
+
+# 优先级级别数
+priority_levels: 4
+
+# 启用公平调度
+fairness_enabled: true
+
+# 启用饥饿预防
+starvation_prevention: true
+
+# === 内存优化配置 ===
+# 启用内存优化
+memory_optimization_enabled: true
+
+# 内存池大小（字节）
+memory_pool_size: 104857600  # 100MB
+
+# 启用GC优化
+gc_optimization_enabled: true
+
+# === 性能优化配置 ===
+# 启用性能监控
+performance_monitoring_enabled: true
+
+# 指标收集间隔（秒）
+metrics_collection_interval: 1.0
+
+# 性能历史记录大小
+performance_history_size: 1000
+
+# 启用自动优化
+optimization_enabled: true
+
+# 优化间隔（秒）
+optimization_interval: 60.0
+
+# === 错误处理配置 ===
+# 启用错误处理
+error_handling_enabled: true
+
+# 启用断路器
+circuit_breaker_enabled: true
+
+# 断路器阈值
+circuit_breaker_threshold: 5
+
+# 断路器超时（秒）
+circuit_breaker_timeout: 30.0
+
+# === 报告配置 ===
+# 启用报告生成
+reporting_enabled: true
+
+# 报告格式列表
+report_formats:
+  - json
+  - html
+
+# 自动报告生成
+auto_report_generation: true
+
+# 报告生成间隔（秒）
+report_interval: 300.0

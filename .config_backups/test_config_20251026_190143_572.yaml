@@ -1,0 +1,35 @@
+# Debug Test Configuration File for Story 1.4
+# This file will NOT be automatically cleaned up for debugging
+
+project:
+  name: "debug_test_model"
+  version: "1.0.0"
+  model_type: "sensevoice"
+  description: "Debug test configuration for validation"
+
+hardware:
+  target_device: "horizon_x5"
+  optimization_level: "O2"
+  memory_limit: "4GB"
+
+conversion_params:
+  input_format: "onnx"
+  output_format: "bpu"
+  quantization:
+    enabled: true
+    precision: "int8"
+    calibration_method: "minmax"
+
+performance:
+  batch_size: 1
+  num_workers: 2
+  memory_limit: "4GB"
+  target_latency_ms: 100
+
+model_config:
+  model_type: "sensevoice"
+  input_format: "onnx"
+  output_format: "bpu"
+  model_path: null
+  model_version: "1.0.0"
+  sample_rate: 16000

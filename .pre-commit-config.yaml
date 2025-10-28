@@ -1,0 +1,141 @@
+# Pre-commit hooks configuration for XLeRobot NPU Converter
+# Ensures code quality and consistency before commits
+
+repos:
+  # Basic Python hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=files]
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: [--maxkb=1000]
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-toml
+
+  # Python code formatting
+  - repo: https://github.com/psf/black
+    rev: 23.7.0
+    hooks:
+      - id: black
+        language_version: python3
+        args: [--line-length=100]
+
+  # Import sorting and formatting
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args: [--profile=black, --line-length=100]
+
+  # Fast Python linting
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.3
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+
+  # Type checking
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.5.1
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-PyYAML]
+        args: [--ignore-missing-imports, --show-error-codes]
+
+  # Security scanning
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.5
+    hooks:
+      - id: bandit
+        args: [-c, pyproject.toml]
+
+  # Documentation checks
+  - repo: https://github.com/pycqa/pydocstyle
+    rev: 6.3.0
+    hooks:
+      - id: pydocstyle
+        args: [--convention=google]
+
+  # Check for secrets
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: [--baseline, .secrets.baseline]
+
+  # Dependency vulnerability check
+  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+    rev: v1.3.2
+    hooks:
+      - id: python-safety-dependencies-check
+        files: requirements*.txt
+
+  # Test coverage
+  - repo: https://github.com/pre-commit/mirrors-pytest-cov
+    rev: v4.1.0
+    hooks:
+      - id: pytest-cov
+        args: [--config-file=pytest.ini]
+
+  # Commit message checks
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: 3.10.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
+  # YAML formatting
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.0.3
+    hooks:
+      - id: prettier
+        types: [yaml]
+
+# Local hooks for development
+# Run: pre-commit install
+# Run: pre-commit run --all-files
+# Run: pre-commit run --files <file1> <file2> ...
+# Run: pre-commit run doc-check --all-files
+# Run: pre-commit run doc-sync-check --all-files
+
+# Local document checking hooks
+  - repo: local
+    hooks:
+      # Document consistency check
+      - id: doc-sync-check
+        name: 检查文档同步状态
+        entry: python scripts/sync_docs.py --check-only
+        language: system
+        files: '^(README\.md|docs/.*\.md|docs/.*\.yaml)$'
+        pass_filenames: false
+
+      # Document quality audit (quick check)
+      - id: doc-audit-check
+        name: 快速文档质量检查
+        entry: python scripts/doc_audit.py --quick
+        language: system
+        files: '^(docs/.*\.md|README\.md)$'
+        pass_filenames: false
+        stages: [commit]
+
+      # Check for broken internal links
+      - id: doc-link-check
+        name: 检查文档链接有效性
+        entry: bash -c 'grep -r "](.*\.md" docs/ README.md | grep -v "http" | grep -v "mailto" | grep -v "^#" | while read line; do echo "⚠️ $line"; done'
+        language: system
+        files: '^(docs/.*\.md|README\.md)$'
+        pass_filenames: false
+        stages: [commit]
+
+      # Check README last updated date
+      - id: readme-date-check
+        name: 检查README更新时间戳
+        entry: bash -c 'if grep -q "\*最后更新:" README.md; then echo "✅ README更新时间戳存在"; else echo "❌ README缺少更新时间戳"; exit 1; fi'
+        language: system
+        files: '^README\.md$'
+        pass_filenames: false
+        stages: [commit]

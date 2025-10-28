@@ -1,0 +1,218 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>7</storyId>
+    <title>错误处理和日志系统</title>
+    <status>Ready</status>
+    <generatedAt>2025-10-27</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/story-1.7.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>AI模型工程师</asA>
+    <iWant>完善的错误处理和日志系统</iWant>
+    <soThat>能够快速诊断和解决转换过程中的问题</soThat>
+    <tasks>
+      - Task 1: 设计和实现分级日志系统 (AC: 1)
+        - Subtask 1.1: 创建结构化日志记录器 (src/npu_converter/utils/logger.py)
+        - Subtask 1.2: 实现DEBUG, INFO, WARN, ERROR四个日志级别
+        - Subtask 1.3: 支持日志格式自定义和上下文信息记录
+        - Subtask 1.4: 实现控制台和文件双输出模式
+      - Task 2: 实现自定义异常体系 (AC: 2)
+        - Subtask 2.1: 创建基础异常类 (src/npu_converter/utils/exceptions.py)
+        - Subtask 2.2: 实现模型转换相关异常类
+        - Subtask 2.3: 定义错误代码体系和错误消息格式
+        - Subtask 2.4: 实现异常链和上下文信息捕获
+      - Task 3: 实现日志文件管理功能 (AC: 3)
+        - Subtask 3.1: 实现日志文件自动轮转（按大小和时间）
+        - Subtask 3.2: 支持日志文件压缩和归档
+        - Subtask 3.3: 实现日志清理和存储空间管理
+        - Subtask 3.4: 支持日志文件级别过滤和查询
+      - Task 4: 开发错误诊断和分析系统 (AC: 4)
+        - Subtask 4.1: 实现转换失败的根本原因分析算法
+        - Subtask 4.2: 创建错误分类和优先级评估机制
+        - Subtask 4.3: 实现错误上下文收集和环境信息记录
+        - Subtask 4.4: 开发错误报告生成功能
+      - Task 5: 构建错误解决建议系统 (AC: 5)
+        - Subtask 5.1: 创建常见错误知识库
+        - Subtask 5.2: 实现智能错误解决方案匹配算法
+        - Subtask 5.3: 开发交互式错误诊断助手
+        - Subtask 5.4: 集成错误建议到CLI输出和日志中
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1. 实现分级日志记录（DEBUG, INFO, WARN, ERROR）
+    2. 提供详细的错误信息和错误代码
+    3. 支持日志文件的自动轮转和管理
+    4. 实现转换失败的根本原因分析
+    5. 提供常见错误的自助解决建议
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>XLeRobot NPU模型转换工具 - Epic Breakdown</title>
+        <section>Story 1.7: 错误处理和日志系统</section>
+        <snippet>作为 AI模型工程师，我想要 完善的错误处理和日志系统，以便 能够快速诊断和解决转换过程中的问题。Acceptance Criteria: 1. 实现分级日志记录（DEBUG, INFO, WARN, ERROR）2. 提供详细的错误信息和错误代码</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>XLeRobot NPU模型转换工具 - 决策架构文档</title>
+        <section>Decision Summary</section>
+        <snippet>错误处理: 混合方式 - 针对不同错误类型提供最合适的处理机制；日志格式: 结构化文本日志 - 人眼可读且便于工具过滤，包含丰富上下文信息</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>XLeRobot NPU模型转换工具 Product Requirements Document</title>
+        <section>Functional Requirements - 错误处理和诊断</section>
+        <snippet>FR011: 转换失败诊断 - 自动识别转换失败原因，提供解决方案建议；FR012: 错误日志分析 - 详细的转换过程日志记录，支持问题排查</snippet>
+      </doc>
+      <doc>
+        <path>docs/technical-decisions.md</path>
+        <title>XLeRobot NPU模型转换工具 - 技术决策记录</title>
+        <section>跨切关注点决策</section>
+        <snippet>采用企业级代码质量标准，包含类型注解和文档字符串，确保错误处理系统的可维护性和可扩展性</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/npu_converter/utils/logger.py</path>
+        <kind>utility</kind>
+        <symbol>StructuredLogger</symbol>
+        <lines>新建文件</lines>
+        <reason>核心日志记录器，支持分级日志和结构化输出</reason>
+      </artifact>
+      <artifact>
+        <path>src/npu_converter/utils/exceptions.py</path>
+        <kind>utility</kind>
+        <symbol>ConverterException</symbol>
+        <lines>新建文件</lines>
+        <reason>自定义异常体系基础类，支持错误代码和上下文</reason>
+      </artifact>
+      <artifact>
+        <path>src/npu_converter/utils/error_analyzer.py</path>
+        <kind>utility</kind>
+        <symbol>ErrorAnalyzer</symbol>
+        <lines>新建文件</lines>
+        <reason>错误分析引擎，实现根本原因分析和诊断</reason>
+      </artifact>
+      <artifact>
+        <path>src/npu_converter/utils/knowledge_base.py</path>
+        <kind>utility</kind>
+        <symbol>ErrorKnowledgeBase</symbol>
+        <lines>新建文件</lines>
+        <reason>错误解决方案知识库，提供智能建议</reason>
+      </artifact>
+      <artifact>
+        <path>src/npu_converter/cli.py</path>
+        <kind>interface</kind>
+        <symbol>CLI入口点</symbol>
+        <lines>需要集成日志和错误处理</lines>
+        <reason>需要集成新的日志系统和异常处理</reason>
+      </artifact>
+      <artifact>
+        <path>src/npu_converter/core/converter.py</path>
+        <kind>core</kind>
+        <symbol>BaseConverter</symbol>
+        <lines>需要集成异常处理</lines>
+        <reason>转换核心逻辑需要集成新的异常体系</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <python>
+        <package name="logging" version="standard">Python标准日志库</package>
+        <package name="typing" version="standard">类型注解支持</package>
+        <package name="dataclasses" version="standard">数据类支持</package>
+        <package name="pathlib" version="standard">路径操作</package>
+        <package name="gzip" version="standard">日志压缩支持</package>
+        <package name="json" version="standard">结构化日志格式</package>
+      </python>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>
+      <name>架构约束</name>
+      <description>使用Python标准库logging模块作为核心日志框架</description>
+      <source>architecture.md#Decision Summary</source>
+    </constraint>
+    <constraint>
+      <name>代码质量</name>
+      <description>企业级代码标准，包含类型注解和文档字符串</description>
+      <source>technical-decisions.md#Cross-Cutting Decisions</source>
+    </constraint>
+    <constraint>
+      <name>日志格式</name>
+      <description>结构化文本日志，人眼可读且便于工具过滤</description>
+      <source>architecture.md#Decision Summary</source>
+    </constraint>
+    <constraint>
+      <name>集成要求</name>
+      <description>与现有CLI工具和配置系统无缝集成</description>
+      <source>story-1.7.md#Dev Notes</source>
+    </constraint>
+    <constraint>
+      <name>项目结构</name>
+      <description>遵循标准包结构，模块放置在src/npu_converter/utils/目录</description>
+      <source>architecture.md#Project Structure</source>
+    </constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>StructuredLogger</name>
+      <kind>class</kind>
+      <signature>class StructuredLogger:\n    def __init__(self, name: str, level: str = "INFO")\n    def debug(self, message: str, **context)\n    def info(self, message: str, **context)\n    def warning(self, message: str, **context)\n    def error(self, message: str, exception: Exception = None, **context)</signature>
+      <path>src/npu_converter/utils/logger.py</path>
+    </interface>
+    <interface>
+      <name>ConverterException</name>
+      <kind>class</kind>
+      <signature>class ConverterException(Exception):\n    def __init__(self, message: str, error_code: str, context: Dict[str, Any] = None)\n    def to_dict(self) -> Dict[str, Any]</signature>
+      <path>src/npu_converter/utils/exceptions.py</path>
+    </interface>
+    <interface>
+      <name>ErrorAnalyzer</name>
+      <kind>class</kind>
+      <signature>class ErrorAnalyzer:\n    def analyze_exception(self, exception: Exception) -> AnalysisResult\n    def suggest_solutions(self, analysis: AnalysisResult) -> List[Solution]</signature>
+      <path>src/npu_converter/utils/error_analyzer.py</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      使用pytest测试框架，遵循AAA模式（Arrange-Act-Assert）。单元测试覆盖所有日志级别和异常类型，集成测试验证错误分析算法准确性，性能测试确保日志系统不影响转换性能。
+    </standards>
+    <locations>
+      tests/unit/test_logger.py
+      tests/unit/test_exceptions.py
+      tests/unit/test_error_analyzer.py
+      tests/integration/test_error_handling_flow.py
+    </locations>
+    <ideas>
+      <test>
+        <ac>1</ac>
+        <idea>测试StructuredLogger的四个日志级别输出格式和内容</idea>
+      </test>
+      <test>
+        <ac>2</ac>
+        <idea>测试ConverterException的错误代码体系和上下文信息</idea>
+      </test>
+      <test>
+        <ac>3</ac>
+        <idea>测试日志文件轮转功能，验证大小和时间触发条件</idea>
+      </test>
+      <test>
+        <ac>4</ac>
+        <idea>测试ErrorAnalyzer的根本原因分析算法准确性</idea>
+      </test>
+      <test>
+        <ac>5</ac>
+        <idea>测试错误建议系统的解决方案匹配和输出</idea>
+      </test>
+    </ideas>
+  </tests>
+</story-context>

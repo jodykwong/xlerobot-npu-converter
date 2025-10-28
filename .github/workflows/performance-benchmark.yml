@@ -1,0 +1,261 @@
+name: Performance Benchmark Testing
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'src/npu_converter/performance/**'
+      - 'config/performance/**'
+      - '.github/workflows/performance-benchmark.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'src/npu_converter/performance/**'
+      - 'config/performance/**'
+  schedule:
+    # 每天凌晨2点运行基准测试
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Test suite to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - unit
+          - integration
+          - e2e
+      benchmark_mode:
+        description: 'Benchmark mode'
+        required: true
+        default: 'quick'
+        type: choice
+        options:
+          - quick
+          - full
+          - extended
+
+env:
+  PYTHON_VERSION: '3.10'
+  PROJECT_NAME: 'XLeRobot Performance Benchmark'
+
+jobs:
+  benchmark:
+    name: Performance Benchmark Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test-type: [unit, integration, e2e]
+      fail-fast: false
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-cov pytest-benchmark
+        pip install -r requirements.txt
+        if [ -f requirements-test.txt ]; then pip install -r requirements-test.txt; fi
+        pip install psutil matplotlib plotly pandas numpy
+
+    - name: Install package in development mode
+      run: pip install -e .
+
+    - name: Lint code (only for unit tests)
+      if: matrix.test-type == 'unit'
+      run: |
+        # 代码规范检查
+        pip install flake8 black isort
+        flake8 src/npu_converter/performance --count --select=E9,F63,F7,F82 --show-source --statistics
+        black --check src/npu_converter/performance
+        isort --check-only src/npu_converter/performance
+
+    - name: Run Performance Unit Tests
+      if: matrix.test-type == 'unit'
+      run: |
+        pytest tests/performance/unit/ \
+          --cov=src/npu_converter/performance \
+          --cov-report=xml \
+          --cov-report=html \
+          --cov-report=term \
+          -v
+
+    - name: Run Performance Integration Tests
+      if: matrix.test-type == 'integration'
+      run: |
+        pytest tests/performance/integration/ \
+          -v \
+          --tb=short
+
+    - name: Run Performance End-to-End Tests
+      if: matrix.test-type == 'e2e'
+      run: |
+        pytest tests/e2e/performance/ \
+          -v \
+          --tb=short \
+          --timeout=3600
+
+    - name: Upload coverage to Codecov
+      if: matrix.test-type == 'unit'
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: performance
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+    - name: Generate Performance Report
+      if: always()
+      run: |
+        mkdir -p reports/performance
+        python scripts/generate_benchmark_report.py \
+          --output-dir reports/performance \
+          --format html,pdf
+
+    - name: Upload Performance Reports
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance-reports-${{ matrix.test-type }}
+        path: reports/performance/
+        retention-days: 30
+
+  benchmark-regression:
+    name: Performance Regression Detection
+    runs-on: ubuntu-latest
+    needs: benchmark
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # 获取完整历史用于性能回归检测
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-benchmark
+        pip install -r requirements.txt
+        pip install psutil matplotlib plotly pandas numpy
+
+    - name: Install package
+      run: pip install -e .
+
+    - name: Run Baseline Benchmark
+      run: |
+        python -m pytest tests/performance/ \
+          --benchmark-only \
+          --benchmark-json=reports/performance/baseline.json
+
+    - name: Upload Baseline
+      uses: actions/upload-artifact@v3
+      with:
+        name: benchmark-baseline
+        path: reports/performance/baseline.json
+
+    - name: Performance Regression Check
+      if: github.event_name == 'pull_request'
+      uses: benchmark-action/github-action-benchmark@v1
+      with:
+        tool: 'pytest'
+        output-file-path: reports/performance/benchmark-results.json
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        auto-push: false
+        comment-on-alert: true
+        alert-threshold: '200%'
+        fail-on-alert: false
+
+  benchmark-nightly:
+    name: Nightly Full Benchmark
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-benchmark
+        pip install -r requirements.txt
+        pip install psutil matplotlib plotly pandas numpy
+        pip install memory-profiler
+
+    - name: Install package
+      run: pip install -e .
+
+    - name: Run Full Benchmark Suite
+      run: |
+        pytest tests/performance/ \
+          --benchmark-only \
+          --benchmark-compare=baseline \
+          --benchmark-json=reports/performance/nightly.json \
+          --verbose
+
+    - name: Generate Daily Report
+      run: |
+        python scripts/generate_daily_benchmark_report.py \
+          --input reports/performance/nightly.json \
+          --output reports/performance/daily-$(date +%Y-%m-%d).html
+
+    - name: Upload Daily Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: benchmark-daily-report
+        path: reports/performance/daily-*.html
+        retention-days: 90
+
+    - name: Deploy to Benchmark Dashboard
+      if: github.ref == 'refs/heads/main'
+      run: |
+        # 部署到benchmark dashboard (如果配置了)
+        echo "Deploying to benchmark dashboard..."
+        # 这里可以添加实际的部署脚本
+
+  notify:
+    name: Notify Results
+    runs-on: ubuntu-latest
+    needs: [benchmark, benchmark-regression]
+    if: always()
+
+    steps:
+    - name: Notify on Success
+      if: needs.benchmark.result == 'success'
+      run: |
+        echo "✅ All performance benchmark tests passed!"
+        # 可以添加Slack/Email通知
+
+    - name: Notify on Failure
+      if: needs.benchmark.result == 'failure'
+      run: |
+        echo "❌ Performance benchmark tests failed!"
+        # 可以添加失败通知

@@ -1,0 +1,156 @@
+# Default Parameter Optimization Configuration
+# This file contains default settings for parameter optimization
+
+# Optimization Strategy Configuration
+optimization:
+  # Default optimization strategy
+  # Options: grid_search, bayesian, genetic, random
+  strategy: "bayesian"
+
+  # Maximum number of iterations
+  max_iterations: 100
+
+  # Convergence threshold for stopping optimization
+  convergence_threshold: 0.01
+
+  # Time limit in seconds (10 minutes)
+  time_limit: 600.0
+
+  # Enable early stopping
+  early_stopping: true
+
+  # Patience for early stopping (iterations to wait for improvement)
+  patience: 10
+
+  # Random seed for reproducibility
+  random_seed: 42
+
+  # Enable verbose logging
+  verbose: true
+
+# Optimization Objective
+objective:
+  # Primary objective
+  # Options: maximize_accuracy, minimize_latency, maximize_throughput,
+  #          minimize_memory, maximize_compatibility, balanced
+  primary: "balanced"
+
+# Trade-off Strategy
+tradeoff:
+  # Predefined strategy
+  # Options: quality_first, performance_first, balanced, resource_saving, custom
+  strategy: "balanced"
+
+  # Custom weights (only used when strategy is "custom")
+  custom_weights:
+    accuracy: 0.25
+    latency: 0.25
+    throughput: 0.15
+    memory: 0.15
+    compatibility: 0.1
+    success_rate: 0.1
+
+# Model Analysis Settings
+model_analysis:
+  # Enable automatic model type detection
+  auto_detect: true
+
+  # Default model type if detection fails
+  default_type: "generic"
+
+  # Enable quantization sensitivity analysis
+  analyze_quantization: true
+
+# Preprocessing Optimization
+preprocessing:
+  # Enable preprocessing parameter optimization
+  enabled: true
+
+  # Optimize these parameters
+  optimize:
+    normalization: true
+    resize: true
+    channel_format: true
+    data_type: true
+
+  # Respect Horizon X5 BPU constraints
+  respect_constraints: true
+
+# History Management
+history:
+  # Enable history tracking
+  enabled: true
+
+  # Auto-save history to disk
+  auto_save: true
+
+  # Storage format (yaml or json)
+  format: "yaml"
+
+  # Maximum number of entries to keep (0 = unlimited)
+  max_entries: 100
+
+# Reporting
+reporting:
+  # Generate reports after optimization
+  enabled: true
+
+  # Output formats (comma-separated)
+  # Options: json, html, markdown, pdf
+  formats: ["html", "json"]
+
+  # Include charts in reports
+  include_charts: true
+
+  # Include recommendations in reports
+  include_recommendations: true
+
+  # Output directory for reports
+  output_dir: "./reports"
+
+# Parameter Space Definition
+# Define the parameters to optimize
+parameter_space:
+  # Quantization bits
+  quantization_bits:
+    type: "choice"
+    values: [8, 16]
+    default: 16
+
+  # Learning rate
+  learning_rate:
+    type: "float"
+    bounds: [1e-5, 1e-2]
+    default: 1e-3
+
+  # Batch size
+  batch_size:
+    type: "choice"
+    values: [8, 16, 32, 64]
+    default: 32
+
+  # Number of calibration samples
+  calibration_samples:
+    type: "int"
+    bounds: [100, 10000]
+    default: 1000
+
+  # Optimizer type
+  optimizer:
+    type: "choice"
+    values: ["adam", "sgd", "rmsprop"]
+    default: "adam"
+
+# Validation Settings
+validation:
+  # Enable validation during optimization
+  enabled: true
+
+  # Validation split ratio
+  split_ratio: 0.2
+
+  # Minimum accuracy threshold
+  min_accuracy: 0.90
+
+  # Maximum latency threshold (milliseconds)
+  max_latency: 200.0

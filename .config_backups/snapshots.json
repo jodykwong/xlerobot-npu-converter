@@ -1,0 +1,92 @@
+{
+  ".config_backups/piper_test_20251026_072008_532.yaml": {
+    "timestamp": 1761434408.532037,
+    "datetime_str": "20251026_072008_532",
+    "config_file_path": "piper_test.yaml",
+    "backup_path": ".config_backups/piper_test_20251026_072008_532.yaml",
+    "file_size": 1232,
+    "checksum": "d0dd18c3bddc89c1",
+    "recovery_reason": "initial_load"
+  },
+  ".config_backups/piper_test_20251026_072027_266.yaml": {
+    "timestamp": 1761434427.266138,
+    "datetime_str": "20251026_072027_266",
+    "config_file_path": "piper_test.yaml",
+    "backup_path": ".config_backups/piper_test_20251026_072027_266.yaml",
+    "file_size": 1232,
+    "checksum": "d0dd18c3bddc89c1",
+    "recovery_reason": "initial_load"
+  },
+  ".config_backups/piper_test_20251026_072032_713.yaml": {
+    "timestamp": 1761434432.713145,
+    "datetime_str": "20251026_072032_713",
+    "config_file_path": "piper_test.yaml",
+    "backup_path": ".config_backups/piper_test_20251026_072032_713.yaml",
+    "file_size": 1232,
+    "checksum": "d0dd18c3bddc89c1",
+    "recovery_reason": "initial_load"
+  },
+  ".config_backups/piper_test_20251026_072042_854.yaml": {
+    "timestamp": 1761434442.8548844,
+    "datetime_str": "20251026_072042_854",
+    "config_file_path": "piper_test.yaml",
+    "backup_path": ".config_backups/piper_test_20251026_072042_854.yaml",
+    "file_size": 1232,
+    "checksum": "3cf91d1275351f4b",
+    "recovery_reason": "initial_load"
+  },
+  ".config_backups/piper_test_20251026_072120_568.yaml": {
+    "timestamp": 1761434480.568526,
+    "datetime_str": "20251026_072120_568",
+    "config_file_path": "piper_test.yaml",
+    "backup_path": ".config_backups/piper_test_20251026_072120_568.yaml",
+    "file_size": 1232,
+    "checksum": "3cf91d1275351f4b",
+    "recovery_reason": "initial_load"
+  },
+  ".config_backups/test_config_debug_20251026_190128_826.yaml": {
+    "timestamp": 1761476488.8263743,
+    "datetime_str": "20251026_190128_826",
+    "config_file_path": "test_config_debug.yaml",
+    "backup_path": ".config_backups/test_config_debug_20251026_190128_826.yaml",
+    "file_size": 719,
+    "checksum": "b4c652ca728d88ea",
+    "recovery_reason": "initial_load"
+  },
+  ".config_backups/test_config_20251026_190136_043.yaml": {
+    "timestamp": 1761476496.043547,
+    "datetime_str": "20251026_190136_043",
+    "config_file_path": "test_config.yaml",
+    "backup_path": ".config_backups/test_config_20251026_190136_043.yaml",
+    "file_size": 719,
+    "checksum": "b4c652ca728d88ea",
+    "recovery_reason": "initial_load"
+  },
+  ".config_backups/test_config_20251026_190143_572.yaml": {
+    "timestamp": 1761476503.5724149,
+    "datetime_str": "20251026_190143_572",
+    "config_file_path": "test_config.yaml",
+    "backup_path": ".config_backups/test_config_20251026_190143_572.yaml",
+    "file_size": 740,
+    "checksum": "4c7b641064d6c59f",
+    "recovery_reason": "initial_load"
+  },
+  ".config_backups/test_config_20251026_190213_091.yaml": {
+    "timestamp": 1761476533.0910232,
+    "datetime_str": "20251026_190213_091",
+    "config_file_path": "test_config.yaml",
+    "backup_path": ".config_backups/test_config_20251026_190213_091.yaml",
+    "file_size": 1385,
+    "checksum": "32fc5bedfb2d5fbf",
+    "recovery_reason": "initial_load"
+  },
+  ".config_backups/test_config_debug_20251026_190221_644.yaml": {
+    "timestamp": 1761476541.6449504,
+    "datetime_str": "20251026_190221_644",
+    "config_file_path": "test_config_debug.yaml",
+    "backup_path": ".config_backups/test_config_debug_20251026_190221_644.yaml",
+    "file_size": 1385,
+    "checksum": "32fc5bedfb2d5fbf",
+    "recovery_reason": "initial_load"
+  }
+}
