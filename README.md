@@ -1,3 +1,16 @@
+## ⚡ High-Performance Edge AI Deployment
+> **Bridging the gap between Cloud LLMs and Edge Silicon.**
+
+A specialized solution for deploying high-efficiency models (including Local LLMs/SLMs) onto NPU-accelerated hardware.
+
+- **Edge AI Optimization:** Achieve 2-5x performance gains via deep hardware-level quantization (PTQ).
+- **Deployment Reliability:** >95% conversion success rate for complex vision and speech models on Horizon X5 BPU.
+- **Production-Grade Tooling:** Includes real-time monitoring and automated accuracy verification for mission-critical AI applications.
+
+*Targeting: Robotics, Autonomous Systems, and IoT teams scaling on-device AI.*
+
+---
+
 # XLeRobot NPU Converter - 企业级模型转换工具
 
 XLeRobot NPU模型转换工具是一个专业的深度学习模型转换解决方案，专注于将ONNX格式模型高效转换为NPU可执行的BPU格式。基于Horizon X5 BPU工具链深度集成，实现2-5倍性能提升和>95%转换成功率。
